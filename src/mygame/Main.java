@@ -25,8 +25,9 @@ import com.jme3.scene.Spatial;
  * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication {
-    private Spatial town;
     private BulletAppState bulletAppState;
+    
+    private Spatial town;
     private RigidBodyControl landscape;
     
     private CharacterControl player;
@@ -55,24 +56,19 @@ public class Main extends SimpleApplication {
         initKeys();
     }
     
+    @Override
+    public void simpleUpdate(float tpf) {
+        updatePlayer();
+        updateWeapon();
+    }
+    
     private void initPhysics(boolean debug) {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         
         if (debug)
             bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-    }
-    
-    private void initLight() {
-        AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(1.3f));
-        rootNode.addLight(al);
-
-        DirectionalLight dl = new DirectionalLight();
-        dl.setColor(ColorRGBA.White);
-        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-        rootNode.addLight(dl);
-    }
+    } 
     
     private void initScene() {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
@@ -88,6 +84,17 @@ public class Main extends SimpleApplication {
         landscape = new RigidBodyControl(townShape, 0);
         town.addControl(landscape);
         bulletAppState.getPhysicsSpace().add(landscape);
+    }
+    
+    private void initLight() {
+        AmbientLight al = new AmbientLight();
+        al.setColor(ColorRGBA.White.mult(1.3f));
+        rootNode.addLight(al);
+
+        DirectionalLight dl = new DirectionalLight();
+        dl.setColor(ColorRGBA.White);
+        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+        rootNode.addLight(dl);
     }
     
     public void initShadow()
@@ -115,7 +122,7 @@ public class Main extends SimpleApplication {
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
         
-        rayGun = new Weapon(assetManager, bulletAppState, viewPort);
+        rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
     
@@ -138,6 +145,34 @@ public class Main extends SimpleApplication {
 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
+    }
+    
+    public void updatePlayer() {
+        camDir.set(cam.getDirection()).multLocal(0.5f);
+        camLeft.set(cam.getLeft()).multLocal(0.5f);
+        walkDirection.set(0, 0, 0);
+
+        if (left) {
+            walkDirection.addLocal(camLeft);
+        }
+        if (right) {
+            walkDirection.addLocal(camLeft.negate());
+        }
+        if (up) {
+            walkDirection.addLocal(camDir.x, 0 ,camDir.z);
+        }
+        if (down) {
+            walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
+        }
+
+        player.setWalkDirection(walkDirection);
+        cam.setLocation(player.getPhysicsLocation());
+    }
+    
+    public void updateWeapon() {
+        rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
+        rayGun.setLocalRotation(cam.getRotation());
+        rayGun.restoreEnergy();
     }
     
     private ActionListener actionListener = new ActionListener() {
@@ -174,37 +209,9 @@ public class Main extends SimpleApplication {
     
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
-            if (binding.equals("Shoot") && timer.getTimeInSeconds() > rayGun.getRateOfFire()) {
+            if (binding.equals("Shoot")) {
                 rayGun.shoot(cam.getLocation().add(cam.getDirection().mult(4)), cam.getRotation(), cam.getDirection());
-                timer.reset();
             }
         }
     };
-    
-    @Override
-    public void simpleUpdate(float tpf) {
-        float speed = tpf * 80f;
-        camDir.set(cam.getDirection()).multLocal(speed);
-        camLeft.set(cam.getLeft()).multLocal(speed);
-        walkDirection.set(0, 0, 0);
-
-        if (left) {
-            walkDirection.addLocal(camLeft);
-        }
-        if (right) {
-            walkDirection.addLocal(camLeft.negate());
-        }
-        if (up) {
-            walkDirection.addLocal(camDir.x, 0 ,camDir.z);
-        }
-        if (down) {
-            walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
-        }
-
-        player.setWalkDirection(walkDirection);
-        cam.setLocation(player.getPhysicsLocation());
-
-        rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
-        rayGun.setLocalRotation(cam.getRotation());
-    }
 }

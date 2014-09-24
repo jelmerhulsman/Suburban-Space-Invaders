@@ -15,6 +15,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Cylinder;
+import com.jme3.system.Timer;
 
 /**
  *
@@ -27,17 +28,31 @@ public class Weapon extends Node {
     private ViewPort viewPort;
     private Material bullet_mat;
     private AudioNode bullet_snd;
-    float damage;
-    float rateOfFire;
+    private AudioNode empty_snd;
+    private float damage;
+    private float fireRate;
+    private float currentEnergy;
+    private float maxEnergy;
+    private float rechargeRate;
+    private Timer fireTimer;
+    private Timer energyTimer;
 
-    public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort) {
+    public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort, Timer timer) {
         super();
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
         this.viewPort = viewPort;
         
-        damage = 5f; //5 damage per shot
-        rateOfFire = 1/5f; //5 shots per second
+        damage = 5f; // 5 damage per shot
+        fireRate = 1/5f; // 5 shots per second
+        currentEnergy = 50f; // also know as ammo
+        maxEnergy = 50f; // maximum ammo
+        rechargeRate = 1/2f; // recharge 2 shots per second
+        
+        fireTimer = timer;
+        fireTimer.reset();
+        energyTimer = timer;
+        energyTimer.reset(); 
         
         initModel();
         initMaterial();
@@ -65,42 +80,52 @@ public class Weapon extends Node {
         bullet_snd.setLooping(false);
         bullet_snd.setVolume(0.75f);
         this.attachChild(bullet_snd);
+        
+        empty_snd = new AudioNode(assetManager, "Sounds/no_energy.wav", false);
+        empty_snd.setPositional(false);
+        empty_snd.setLooping(false);
+        empty_snd.setVolume(0.75f);
+        this.attachChild(empty_snd);
     }
-
-    public float getDamage() {
-        return damage;
-    }
-
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
-
-    public float getRateOfFire() {
-        return rateOfFire;
-    }
-
-    public void setRateOfFire(float rateOfFire) {
-        this.rateOfFire = rateOfFire;
+    
+    public void restoreEnergy() {
+        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy)
+        {
+            currentEnergy++;
+            energyTimer.reset();
+        }
     }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
-        //All actions to create and fire a projectile
-        Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
-        Geometry geom = new Geometry("Bullet", c);
-        geom.setMaterial(bullet_mat);
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 1f)
+        {
+            Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
+            Geometry geom = new Geometry("Bullet", c);
+            geom.setMaterial(bullet_mat);
 
-        geom.setLocalTranslation(loc);
-        geom.rotate(rot);
+            geom.setLocalTranslation(loc);
+            geom.rotate(rot);
 
-        RigidBodyControl physics = new RigidBodyControl();
-        geom.addControl(physics);
-        physics.setLinearVelocity(dir.mult(350));
-        physics.setGravity(Vector3f.ZERO);
-        bulletAppState.getPhysicsSpace().add(physics);
+            RigidBodyControl physics = new RigidBodyControl();
+            geom.addControl(physics);
+            physics.setLinearVelocity(dir.mult(350));
+            physics.setGravity(Vector3f.ZERO);
+            bulletAppState.getPhysicsSpace().add(physics);
 
-        bullet_snd.stop();
-        bullet_snd.play();
-
-        this.attachChild(geom);
+            this.attachChild(geom);
+            
+            bullet_snd.stop();
+            empty_snd.stop();
+            
+            bullet_snd.play();
+            
+            currentEnergy--;
+            fireTimer.reset();
+        } else if (currentEnergy < 1f) {
+            bullet_snd.stop();
+            empty_snd.stop();
+            
+            empty_snd.play();
+        }
     }
 }
