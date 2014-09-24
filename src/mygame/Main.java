@@ -19,7 +19,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.util.TangentBinormalGenerator;
 
 /**
  *
@@ -44,9 +43,9 @@ public class Main extends SimpleApplication {
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
+        cam.setFrustumFar(100f);
         
         initPhysics(false);
-        
         initScene();
         initCollision();
         initLight();
@@ -79,9 +78,8 @@ public class Main extends SimpleApplication {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
         
-        town = assetManager.loadModel("Models/Omgeving/Omgeving.j3o");
-        TangentBinormalGenerator.generate(town);
-        town.scale(7f);
+        town = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
+        town.scale(5f);
         rootNode.attachChild(town);
     }
     
@@ -109,11 +107,11 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
         
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
+        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
-        player.setJumpSpeed(20);
-        player.setFallSpeed(30);
-        player.setGravity(30);
+        player.setJumpSpeed(15f);
+        player.setFallSpeed(30f);
+        player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
         

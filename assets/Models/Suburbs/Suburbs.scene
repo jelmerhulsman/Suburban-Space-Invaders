@@ -1,0 +1,782 @@
+<scene export_time="1411556690.721463" previous_export_time="0" formatVersion="1.0.1" exported_by="Hulsman" >
+  <nodes >
+    <node name="road-straight-house-1-low.031" >
+      <position y="0.000000" z="-9.000000" x="94.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707106" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.031", name="cycles_visibility", address=0x0000000D6490E9C8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.031", name="cycles", address=0x0000000D6490EDB8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.063" lock_trans_z="False" meshFile="Cube.063.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.063", name="cycles", address=0x0000000D648D15E8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.030" >
+      <position y="0.000000" z="-9.000000" x="78.000000" />
+      <rotation qw="-0.000001" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.030", name="cycles_visibility", address=0x0000000D6490C9B8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.030", name="cycles", address=0x0000000D6490CEC8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.062" lock_trans_z="False" meshFile="Cube.062.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.062", name="cycles", address=0x0000000D648D11F8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.029" >
+      <position y="0.000000" z="-17.000000" x="78.000000" />
+      <rotation qw="-0.000001" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.029", name="cycles_visibility", address=0x0000000D6490C808&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.029", name="cycles", address=0x0000000D6490C928&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.061" lock_trans_z="False" meshFile="Cube.061.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.061", name="cycles", address=0x0000000D648D1C18&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.028" >
+      <position y="0.000000" z="-17.000000" x="62.000000" />
+      <rotation qw="-0.000001" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.028", name="cycles_visibility", address=0x0000000D6490C1D8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.028", name="cycles", address=0x0000000D6490C778&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.060" lock_trans_z="False" meshFile="Cube.060.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.060", name="cycles", address=0x0000000D648D0CE8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.027" >
+      <position y="0.000000" z="-9.000000" x="54.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707106" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.027", name="cycles_visibility", address=0x0000000D6490B4E8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.027", name="cycles", address=0x0000000D6490C658&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.059" lock_trans_z="False" meshFile="Cube.059.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.059", name="cycles", address=0x0000000D648D0988&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.026" >
+      <position y="0.000000" z="-9.000000" x="30.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707106" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.026", name="cycles_visibility", address=0x0000000D6490BF98&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.026", name="cycles", address=0x0000000D6490C4A8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.058" lock_trans_z="False" meshFile="Cube.058.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.058", name="cycles", address=0x0000000D648D2758&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.025" >
+      <position y="0.000000" z="-17.000000" x="-10.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.025", name="cycles_visibility", address=0x0000000D6490BC38&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.025", name="cycles", address=0x0000000D6490B458&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.057" lock_trans_z="False" meshFile="Cube.057.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.057", name="cycles", address=0x0000000D648D0AA8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.024" >
+      <position y="0.000000" z="-9.000000" x="-18.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707106" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.024", name="cycles_visibility", address=0x0000000D6490C148&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.024", name="cycles", address=0x0000000D6490CDA8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.056" lock_trans_z="False" meshFile="Cube.056.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.056", name="cycles", address=0x0000000D648D1B88&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.023" >
+      <position y="0.000000" z="-17.000000" x="-34.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.023", name="cycles_visibility", address=0x0000000D6490CBF8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.023", name="cycles", address=0x0000000D6490B2A8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.055" lock_trans_z="False" meshFile="Cube.055.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.055", name="cycles", address=0x0000000D648D1048&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.022" >
+      <position y="0.000000" z="-9.000000" x="-34.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.022", name="cycles_visibility", address=0x0000000D6490B188&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.022", name="cycles", address=0x0000000D6490C6E8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.054" lock_trans_z="False" meshFile="Cube.054.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.054", name="cycles", address=0x0000000D648D1AF8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.021" >
+      <position y="0.000000" z="15.000000" x="-34.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.021", name="cycles_visibility", address=0x0000000D6490B068&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.021", name="cycles", address=0x0000000D6490B0F8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.052" lock_trans_z="False" meshFile="Cube.052.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.052", name="cycles", address=0x0000000D648D2488&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.020" >
+      <position y="0.000000" z="7.000000" x="-34.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.020", name="cycles_visibility", address=0x0000000D6490CAD8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.020", name="cycles", address=0x0000000D6490CB68&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.051" lock_trans_z="False" meshFile="Cube.051.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.051", name="cycles", address=0x0000000D648D0BC8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.019" >
+      <position y="0.000000" z="7.000000" x="-26.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.019", name="cycles_visibility", address=0x0000000D6490BF08&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.019", name="cycles", address=0x0000000D6490AD98&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.050" lock_trans_z="False" meshFile="Cube.050.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.050", name="cycles", address=0x0000000D648D1798&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.017" >
+      <position y="0.000000" z="7.000000" x="-18.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.017", name="cycles_visibility", address=0x0000000D6490D108&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.017", name="cycles", address=0x0000000D6490C2F8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.049" lock_trans_z="False" meshFile="Cube.049.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.049", name="cycles", address=0x0000000D648D2878&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.013" >
+      <position y="0.000000" z="15.000000" x="14.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.013", name="cycles_visibility", address=0x0000000D6490BCC8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.013", name="cycles", address=0x0000000D6490B728&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.048" lock_trans_z="False" meshFile="Cube.048.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.048", name="cycles", address=0x0000000D648D0A18&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.012" >
+      <position y="0.000000" z="15.000000" x="54.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.012", name="cycles_visibility", address=0x0000000D6490BDE8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.012", name="cycles", address=0x0000000D6490B848&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.046" lock_trans_z="False" meshFile="Cube.046.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.046", name="cycles", address=0x0000000D64910948&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.011" >
+      <position y="0.000000" z="15.000000" x="94.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.011", name="cycles_visibility", address=0x0000000D6490CA48&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.011", name="cycles", address=0x0000000D6490CD18&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.045" lock_trans_z="False" meshFile="Cube.045.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.045", name="cycles", address=0x0000000D64910318&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.018" >
+      <position y="0.000000" z="7.000000" x="94.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.018", name="cycles_visibility", address=0x0000000D6490B968&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.018", name="cycles", address=0x0000000D6490B3C8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.043" lock_trans_z="False" meshFile="Cube.043.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.043", name="cycles", address=0x0000000D6490FF28&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.016" >
+      <position y="0.000000" z="7.000000" x="30.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.016", name="cycles_visibility", address=0x0000000D6490B8D8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.016", name="cycles", address=0x0000000D6490C028&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.041" lock_trans_z="False" meshFile="Cube.041.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.041", name="cycles", address=0x0000000D649108B8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.015" >
+      <position y="0.000000" z="7.000000" x="38.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.015", name="cycles_visibility", address=0x0000000D6490BA88&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.015", name="cycles", address=0x0000000D6490AE28&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.040" lock_trans_z="False" meshFile="Cube.040.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.040", name="cycles", address=0x0000000D64910828&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.014" >
+      <position y="0.000000" z="7.000000" x="46.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.014", name="cycles_visibility", address=0x0000000D6490B7B8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.014", name="cycles", address=0x0000000D6490BE78&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.039" lock_trans_z="False" meshFile="Cube.039.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.039", name="cycles", address=0x0000000D649104C8&gt;' />
+      </entity>
+    </node>
+    <node name="house-small-garage" >
+      <position y="0.000000" z="7.000000" x="-10.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707106" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-garage", name="cycles_visibility", address=0x0000000D64909B08&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-garage", name="cycles", address=0x0000000D64909298&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.036" lock_trans_z="False" meshFile="Cube.036.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.036", name="cycles", address=0x0000000D6490FE08&gt;' />
+      </entity>
+    </node>
+    <node name="house-small-carport-left" >
+      <position y="0.000000" z="-9.000000" x="-2.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-carport-left", name="cycles_visibility", address=0x0000000D6490AD08&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-carport-left", name="cycles", address=0x0000000D6490AC78&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.035" lock_trans_z="False" meshFile="Cube.035.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.035", name="cycles", address=0x0000000D6490FCE8&gt;' />
+      </entity>
+    </node>
+    <node name="house-small-carport-right" >
+      <position y="0.000000" z="-9.000000" x="6.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-carport-right", name="cycles_visibility", address=0x0000000D6490A648&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small-carport-right", name="cycles", address=0x0000000D64909F88&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.034" lock_trans_z="False" meshFile="Cube.034.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.034", name="cycles", address=0x0000000D6490FFB8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.010" >
+      <position y="0.000000" z="-1.000000" x="94.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.010", name="cycles_visibility", address=0x0000000D6490CFE8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.010", name="cycles", address=0x0000000D6490C538&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.033" lock_trans_z="False" meshFile="Cube.033.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.033", name="cycles", address=0x0000000D64910708&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.009" >
+      <position y="0.000000" z="-1.000000" x="86.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.009", name="cycles_visibility", address=0x0000000D6490A9A8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.009", name="cycles", address=0x0000000D6490AAC8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.032" lock_trans_z="False" meshFile="Cube.032.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.032", name="cycles", address=0x0000000D6490F7D8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.008" >
+      <position y="0.000000" z="-1.000000" x="78.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.008", name="cycles_visibility", address=0x0000000D6490A7F8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.008", name="cycles", address=0x0000000D6490A498&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.031" lock_trans_z="False" meshFile="Cube.031.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.031", name="cycles", address=0x0000000D64910678&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.007" >
+      <position y="0.000000" z="-1.000000" x="-34.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.007", name="cycles_visibility", address=0x0000000D6490A768&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.007", name="cycles", address=0x0000000D6490A378&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.030" lock_trans_z="False" meshFile="Cube.030.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.030", name="cycles", address=0x0000000D6490FBC8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.006" >
+      <position y="0.000000" z="-1.000000" x="-26.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.006", name="cycles_visibility", address=0x0000000D649097A8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.006", name="cycles", address=0x0000000D64909C28&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.029" lock_trans_z="False" meshFile="Cube.029.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.029", name="cycles", address=0x0000000D6490F6B8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.005" >
+      <position y="0.000000" z="-1.000000" x="-18.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.005", name="cycles_visibility", address=0x0000000D6490AA38&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.005", name="cycles", address=0x0000000D64909EF8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.028" lock_trans_z="False" meshFile="Cube.028.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.028", name="cycles", address=0x0000000D6490F598&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.004" >
+      <position y="0.000000" z="-1.000000" x="38.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.004", name="cycles_visibility", address=0x0000000D6490A1C8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.004", name="cycles", address=0x0000000D6490A2E8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.027" lock_trans_z="False" meshFile="Cube.027.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.027", name="cycles", address=0x0000000D64910EE8&gt;' />
+      </entity>
+    </node>
+    <node name="house-luxurious" >
+      <position y="0.000000" z="-13.000000" x="42.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-luxurious", name="cycles_visibility", address=0x0000000D649079D8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-luxurious", name="cycles", address=0x0000000D64907B88&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.024" lock_trans_z="False" meshFile="Cube.024.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.024", name="cycles", address=0x0000000D6490FC58&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.008" >
+      <position y="0.000000" z="-9.000000" x="62.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.008", name="cycles_visibility", address=0x0000000D6490A258&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.008", name="cycles", address=0x0000000D6490A0A8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.022" lock_trans_z="False" meshFile="Cube.022.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.022", name="cycles", address=0x0000000D64910168&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.003" >
+      <position y="0.000000" z="-1.000000" x="70.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.003", name="cycles_visibility", address=0x0000000D64909208&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.003", name="cycles", address=0x0000000D64909328&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.021" lock_trans_z="False" meshFile="Cube.021.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.021", name="cycles", address=0x0000000D6490FA18&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low.005" >
+      <position y="0.000000" z="-1.000000" x="-10.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.005", name="cycles_visibility", address=0x0000000D6490DE88&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.005", name="cycles", address=0x0000000D6490F088&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.019" lock_trans_z="False" meshFile="Cube.019.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.019", name="cycles", address=0x0000000D64910DC8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low.004" >
+      <position y="0.000000" z="-1.000000" x="-2.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.004", name="cycles_visibility", address=0x0000000D6490E6F8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.004", name="cycles", address=0x0000000D6490D8E8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.016" lock_trans_z="False" meshFile="Cube.016.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.016", name="cycles", address=0x0000000D6490EFF8&gt;' />
+      </entity>
+    </node>
+    <node name="house-mid.004" >
+      <position y="0.000000" z="7.000000" x="-2.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.004", name="cycles_visibility", address=0x0000000D64909D48&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.004", name="cycles", address=0x0000000D6490A018&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.010" lock_trans_z="False" meshFile="Cube.010.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.010", name="cycles", address=0x0000000D6490EAE8&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.007" >
+      <position y="0.000000" z="-9.000000" x="-10.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.007", name="cycles_visibility", address=0x0000000D64908D88&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.007", name="cycles", address=0x0000000D64908BD8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.006" lock_trans_z="False" meshFile="Cube.006.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.006", name="cycles", address=0x0000000D6490EF68&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.005" >
+      <position y="0.000000" z="-9.000000" x="70.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.005", name="cycles_visibility", address=0x0000000D6490A5B8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.005", name="cycles", address=0x0000000D64908AB8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.017" lock_trans_z="False" meshFile="Cube.017.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.017", name="cycles", address=0x0000000D6490F8F8&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.004" >
+      <position y="0.000000" z="7.000000" x="54.000000" />
+      <rotation qw="-0.000001" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.004", name="cycles_visibility", address=0x0000000D64909718&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.004", name="cycles", address=0x0000000D64909E68&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.015" lock_trans_z="False" meshFile="Cube.015.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.015", name="cycles", address=0x0000000D6490EB78&gt;' />
+      </entity>
+    </node>
+    <node name="house-mid.003" >
+      <position y="0.000000" z="-9.000000" x="22.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.003", name="cycles_visibility", address=0x0000000D64909CB8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.003", name="cycles", address=0x0000000D64908B48&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.013" lock_trans_z="False" meshFile="Cube.013.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.013", name="cycles", address=0x0000000D6490E938&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.001" >
+      <position y="0.000000" z="-9.000000" x="14.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.001", name="cycles_visibility", address=0x0000000D649098C8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.001", name="cycles", address=0x0000000D6490AB58&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="house-small.001" lock_trans_z="False" meshFile="house-small.001.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MEhouse-small.001", name="cycles", address=0x0000000D648D0D78&gt;' />
+      </entity>
+    </node>
+    <node name="house-mid.002" >
+      <position y="0.000000" z="7.000000" x="-2.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.002", name="cycles_visibility", address=0x0000000D649086C8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.002", name="cycles", address=0x0000000D64908998&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.012" lock_trans_z="False" meshFile="Cube.012.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.012", name="cycles", address=0x0000000D6490E5D8&gt;' />
+      </entity>
+    </node>
+    <node name="house-mid.001" >
+      <position y="0.000000" z="7.000000" x="6.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.001", name="cycles_visibility", address=0x0000000D64908368&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid.001", name="cycles", address=0x0000000D649083F8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.009" lock_trans_z="False" meshFile="Cube.009.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.009", name="cycles", address=0x0000000D6490EC98&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.002" >
+      <position y="0.000000" z="-1.000000" x="62.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.002", name="cycles_visibility", address=0x0000000D6490A6D8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.002", name="cycles", address=0x0000000D649090E8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.005" lock_trans_z="False" meshFile="Cube.005.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.005", name="cycles", address=0x0000000D6490F358&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low.001" >
+      <position y="0.000000" z="-1.000000" x="54.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.001", name="cycles_visibility", address=0x0000000D64908E18&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low.001", name="cycles", address=0x0000000D64909688&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.004" lock_trans_z="False" meshFile="Cube.004.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.004", name="cycles", address=0x0000000D6490DA98&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low.003" >
+      <position y="0.000000" z="-1.000000" x="22.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.003", name="cycles_visibility", address=0x0000000D6490D348&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.003", name="cycles", address=0x0000000D6490D7C8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.002" lock_trans_z="False" meshFile="Cube.002.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.002", name="cycles", address=0x0000000D6490D978&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low.002" >
+      <position y="0.000000" z="-1.000000" x="14.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.002", name="cycles_visibility", address=0x0000000D6490E398&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.002", name="cycles", address=0x0000000D6490F508&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.001" lock_trans_z="False" meshFile="Cube.001.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.001", name="cycles", address=0x0000000D6490E038&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low.001" >
+      <position y="0.000000" z="-1.000000" x="6.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.001", name="cycles_visibility", address=0x0000000D6490D858&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low.001", name="cycles", address=0x0000000D6490D198&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.000" lock_trans_z="False" meshFile="Cube.000.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.000", name="cycles", address=0x0000000D6490E668&gt;' />
+      </entity>
+    </node>
+    <node name="gas-station" >
+      <position y="0.000000" z="-1.000000" x="30.000000" />
+      <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBgas-station", name="cycles_visibility", address=0x0000000D64907438&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBgas-station", name="cycles", address=0x0000000D64908098&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.047" lock_trans_z="False" meshFile="Cube.047.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.047", name="cycles", address=0x0000000D64910CA8&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-1-low" >
+      <position y="0.000000" z="-1.000000" x="46.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low", name="cycles_visibility", address=0x0000000D649095F8&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-1-low", name="cycles", address=0x0000000D6490A528&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.044" lock_trans_z="False" meshFile="Cube.044.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.044", name="cycles", address=0x0000000D6490FE98&gt;' />
+      </entity>
+    </node>
+    <node name="road-straight-house-2-low" >
+      <position y="0.000000" z="-1.000000" x="-2.000000" />
+      <rotation qw="-0.000000" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low", name="cycles_visibility", address=0x0000000D6490D588&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBroad-straight-house-2-low", name="cycles", address=0x0000000D6490F478&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.011" lock_trans_z="False" meshFile="Cube.011.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.011", name="cycles", address=0x0000000D6490E158&gt;' />
+      </entity>
+    </node>
+    <node name="house-small.2" >
+      <position y="0.000000" z="7.000000" x="14.000000" />
+      <rotation qw="-0.000001" qx="0.000000" qy="1.000000" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.2", name="cycles_visibility", address=0x0000000D64908A28&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-small.2", name="cycles", address=0x0000000D64908EA8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.008" lock_trans_z="False" meshFile="Cube.008.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.008", name="cycles", address=0x0000000D6490DD68&gt;' />
+      </entity>
+    </node>
+    <node name="house-mid" >
+      <position y="0.000000" z="7.000000" x="22.000000" />
+      <rotation qw="0.707107" qx="0.000000" qy="-0.707107" qz="-0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data name="cycles_visibility" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid", name="cycles_visibility", address=0x0000000D64908128&gt;' />
+      <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBhouse-mid", name="cycles", address=0x0000000D649081B8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_y="False" inertia_tensor="0.4000000059604645" lock_rot_z="False" anisotropic_friction="False" friction_y="1.0" physics_type="STATIC" actor="False" velocity_max="0.0" damping_rot="0.1589999943971634" name="Cube.007" lock_trans_z="False" meshFile="Cube.007.mesh" lock_rot_x="False" mass_radius="1.0" friction_z="1.0" velocity_min="0.0" damping_trans="0.02539999969303608" ghost="False" mass="1.0" friction_x="1.0" lock_trans_x="False" lock_rot_y="False" >
+        <user_data name="cycles" type="IDPropertyGroup" value='&lt;bpy id prop: owner="MECube.007", name="cycles", address=0x0000000D6490EED8&gt;' />
+      </entity>
+    </node>
+    <node name="the eye" >
+      <position y="37.438927" z="37.117287" x="24.847589" />
+      <rotation qw="0.882203" qx="0.435581" qy="0.160461" qz="-0.078994" />
+      <scale y="10.000001" z="10.000000" x="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera name="the eye" projectionType="perspective" fov="0.8575560548920329" >
+        <clipping nearPlaneDist="0.10000000149011612" far="500.0" farPlaneDist="500.0" near="0.10000000149011612" />
+      </camera>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="C:\Users\Hulsman\Desktop\Test\Suburbs.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourBackground g="0.8075169920921326" b="1.0" r="0.30614975094795227" />
+    <colourAmbient g="0.0" b="0.0" r="0.0" />
+    <colourDiffuse g="0.8075169920921326" b="1.0" r="0.30614975094795227" />
+  </environment>
+</scene>
