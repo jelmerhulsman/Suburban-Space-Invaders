@@ -11,11 +11,11 @@ import com.jme3.ui.Picture;
  *
  * @author Hulsman
  */
-public class HUD extends Main{
+public class HUD{
     AssetManager assetManager;
     Node guiNode;
     AppSettings settings;
-    BitmapText EnergyText;
+    BitmapText EnergyText,HealthText;
     BitmapFont GuiFont;
 
     public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
@@ -27,14 +27,20 @@ public class HUD extends Main{
     
     public void initText()
     {
- 
         GuiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        
         EnergyText = new BitmapText(GuiFont, false);
         EnergyText.setSize(GuiFont.getCharSet().getRenderedSize());
         EnergyText.setText("");
         EnergyText.setLocalTranslation(300, EnergyText.getLineHeight(), 0);
-        guiNode.attachChild(EnergyText);
         
+        HealthText = new BitmapText(GuiFont, false);
+        HealthText.setSize(GuiFont.getCharSet().getRenderedSize());
+        HealthText.setText("");
+        HealthText.setLocalTranslation(300, HealthText.getLineHeight() + 20, 0);
+        
+        guiNode.attachChild(EnergyText);
+        guiNode.attachChild(HealthText);
     }
  
     void initCrossHair(int size){
@@ -51,8 +57,9 @@ public class HUD extends Main{
         guiNode.attachChild(pic);
     }
     
-public void updateHUD(float RayGunEnergy)
+public void updateHUD(float RayGunEnergy, float playerHealth)
 {
     EnergyText.setText("Energy Level " + (int)RayGunEnergy);
+    HealthText.setText("Health " + (int)playerHealth);
 }
 }

@@ -25,17 +25,18 @@ import com.jme3.scene.Spatial;
  * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication {
+
     private BulletAppState bulletAppState;
-    
     private Spatial town;
     private RigidBodyControl landscape;
-    
     private CharacterControl player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
+    private boolean debugMode;
     private Vector3f camDir;
     private Vector3f camLeft;
-    public Weapon rayGun;
+    private Weapon rayGun;
+    private float playerHealth;
     HUD hud;
 
     public static void main(String[] args) {
@@ -46,7 +47,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         cam.setFrustumFar(100f);
-        
+
         initPhysics(false);
         initScene();
         initCollision();
@@ -56,38 +57,46 @@ public class Main extends SimpleApplication {
         initHUD();
         initKeys();
     }
-    
+
     @Override
     public void simpleUpdate(float tpf) {
         updatePlayer();
         updateWeapon();
-        hud.updateHUD(rayGun.getEnergy());
+        hud.updateHUD(rayGun.getEnergy(), getPlayerHealth());
+        if (debugMode) {
+            setDisplayStatView(true);
+            setDisplayFps(true);
+        } else {
+            setDisplayStatView(false);
+            setDisplayFps(false);
+        }
     }
-    
+
     private void initPhysics(boolean debug) {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        
-        if (debug)
+
+        if (debug) {
             bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-    } 
-    
+        }
+    }
+
     private void initScene() {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
-        
+
         town = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         town.scale(5f);
         rootNode.attachChild(town);
     }
-    
+
     private void initCollision() {
         CollisionShape townShape = CollisionShapeFactory.createMeshShape((Node) town);
         landscape = new RigidBodyControl(townShape, 0);
         town.addControl(landscape);
         bulletAppState.getPhysicsSpace().add(landscape);
     }
-    
+
     private void initLight() {
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
@@ -98,13 +107,11 @@ public class Main extends SimpleApplication {
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
     }
-    
-    public void initShadow()
-    {
-        
+
+    public void initShadow() {
     }
-    
-    private void initPlayer () {
+
+    private void initPlayer() {
         walkDirection = new Vector3f();
         left = false;
         right = false;
@@ -112,10 +119,10 @@ public class Main extends SimpleApplication {
         down = false;
         camDir = new Vector3f();
         camLeft = new Vector3f();
-        
+
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
-        
+
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
         player.setJumpSpeed(15f);
@@ -123,33 +130,37 @@ public class Main extends SimpleApplication {
         player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
-        
+
+        playerHealth = 100;
+
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
-    
+
     private void initHUD() {
         hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
         hud.initText();
     }
-    
+
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Debug", new KeyTrigger(KeyInput.KEY_Q));
         inputManager.addListener(actionListener, "Left");
         inputManager.addListener(actionListener, "Right");
         inputManager.addListener(actionListener, "Up");
         inputManager.addListener(actionListener, "Down");
         inputManager.addListener(actionListener, "Jump");
+        inputManager.addListener(actionListener, "Debug");
 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
     }
-    
+
     public void updatePlayer() {
         camDir.set(cam.getDirection()).multLocal(0.5f);
         camLeft.set(cam.getLeft()).multLocal(0.5f);
@@ -162,7 +173,7 @@ public class Main extends SimpleApplication {
             walkDirection.addLocal(camLeft.negate());
         }
         if (up) {
-            walkDirection.addLocal(camDir.x, 0 ,camDir.z);
+            walkDirection.addLocal(camDir.x, 0, camDir.z);
         }
         if (down) {
             walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
@@ -171,14 +182,13 @@ public class Main extends SimpleApplication {
         player.setWalkDirection(walkDirection);
         cam.setLocation(player.getPhysicsLocation());
     }
-    
+
     public void updateWeapon() {
         rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
         rayGun.setLocalRotation(cam.getRotation());
         rayGun.restoreEnergy();
         rayGun.isShooting = false;
     }
-    
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean keyPressed, float tpf) {
             if (binding.equals("Left")) {
@@ -208,9 +218,16 @@ public class Main extends SimpleApplication {
             } else if (binding.equals("Jump")) {
                 player.jump();
             }
+            if (binding.equals("Debug")) {
+                if(keyPressed)
+                if (debugMode) {
+                    debugMode = false;
+                } else {
+                    debugMode = true;
+                }
+            }
         }
     };
-    
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
@@ -219,4 +236,8 @@ public class Main extends SimpleApplication {
             }
         }
     };
+
+    public float getPlayerHealth() {
+        return playerHealth;
+    }
 }
