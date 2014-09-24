@@ -135,4 +135,9 @@ public class Weapon extends Node {
     {
         return currentEnergy;
     }
+    
+    public float getMaxEnergy()
+    {
+        return maxEnergy;
+    }
 }

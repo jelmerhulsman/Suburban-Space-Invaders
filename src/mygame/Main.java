@@ -62,7 +62,14 @@ public class Main extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         updatePlayer();
         updateWeapon();
-        hud.updateHUD(rayGun.getEnergy(), getPlayerHealth());
+        updateHUD();
+    }
+    
+    public void updateHUD()
+    {
+        float percentageEnergy = 1 + ((rayGun.getEnergy() - rayGun.getMaxEnergy()) / rayGun.getMaxEnergy());
+        hud.updateHUD(percentageEnergy, getPlayerHealth());
+        
         if (debugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
@@ -140,7 +147,7 @@ public class Main extends SimpleApplication {
     private void initHUD() {
         hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
-        hud.initText();
+        hud.initBars();
     }
 
     private void initKeys() {

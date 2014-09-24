@@ -17,6 +17,7 @@ public class HUD{
     AppSettings settings;
     BitmapText EnergyText,HealthText;
     BitmapFont GuiFont;
+    Picture healthbarInline,energybarInline;
 
     public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
         this.assetManager = assetManager;
@@ -25,22 +26,35 @@ public class HUD{
         this.GuiFont = guifont;
     }
     
-    public void initText()
+    public void initBars()
     {
-        GuiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        Picture healthbarOutline = new Picture("HUD bar_outline");
+        healthbarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
+        healthbarInline = new Picture("HUD bar_inline");
+        healthbarInline.setImage(assetManager, "Textures/healthbar_inline.png", true);
+        Picture energybarOutline = new Picture("HUD bar_outline");
+        energybarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
+        energybarInline = new Picture("HUD bar_inline");
+        energybarInline.setImage(assetManager, "Textures/energybar_inline.png", true);
         
-        EnergyText = new BitmapText(GuiFont, false);
-        EnergyText.setSize(GuiFont.getCharSet().getRenderedSize());
-        EnergyText.setText("");
-        EnergyText.setLocalTranslation(300, EnergyText.getLineHeight(), 0);
+        healthbarOutline.setWidth(120);
+        healthbarOutline.setHeight(20);
+        healthbarInline.setWidth(120);
+        healthbarInline.setHeight(20);
+        energybarOutline.setWidth(120);
+        energybarOutline.setHeight(20);
+        energybarInline.setWidth(120);
+        energybarInline.setHeight(20);
         
-        HealthText = new BitmapText(GuiFont, false);
-        HealthText.setSize(GuiFont.getCharSet().getRenderedSize());
-        HealthText.setText("");
-        HealthText.setLocalTranslation(300, HealthText.getLineHeight() + 20, 0);
+        healthbarOutline.setPosition(0, 50);
+        healthbarInline.setPosition(0, 50);
+        energybarOutline.setPosition(0, 20);
+        energybarInline.setPosition(0, 20);
         
-        guiNode.attachChild(EnergyText);
-        guiNode.attachChild(HealthText);
+        guiNode.attachChild(healthbarOutline);
+        guiNode.attachChild(healthbarInline);
+        guiNode.attachChild(energybarOutline);
+        guiNode.attachChild(energybarInline);
     }
  
     void initCrossHair(int size){
@@ -59,7 +73,6 @@ public class HUD{
     
 public void updateHUD(float RayGunEnergy, float playerHealth)
 {
-    EnergyText.setText("Energy Level " + (int)RayGunEnergy);
-    HealthText.setText("Health " + (int)playerHealth);
+    energybarInline.setWidth(120 * RayGunEnergy);
 }
 }
