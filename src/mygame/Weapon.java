@@ -6,6 +6,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
@@ -34,6 +35,7 @@ public class Weapon extends Node {
     private float currentEnergy;
     private float maxEnergy;
     private float rechargeRate;
+    private float spread = 0.3f;
     private Timer fireTimer;
     private Timer energyTimer;
     public boolean isShooting;
@@ -96,6 +98,11 @@ public class Weapon extends Node {
             energyTimer.reset();
         }
     }
+    
+    public void recoil()
+    {
+        
+    }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
         if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy >= 1f)
@@ -104,9 +111,9 @@ public class Weapon extends Node {
             Geometry geom = new Geometry("Bullet", c);
             geom.setMaterial(bullet_mat);
 
-            geom.setLocalTranslation(loc);
+            geom.setLocalTranslation(loc.x  + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread));
             geom.rotate(rot);
-
+            
             RigidBodyControl physics = new RigidBodyControl();
             geom.addControl(physics);
             physics.setLinearVelocity(dir.mult(350));
@@ -122,6 +129,7 @@ public class Weapon extends Node {
             
             currentEnergy--;
             fireTimer.reset();
+            recoil();
         }
         if (currentEnergy < 1f) {
             bullet_snd.stop();

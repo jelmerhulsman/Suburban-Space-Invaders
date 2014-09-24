@@ -46,10 +46,10 @@ public class HUD{
         energybarInline.setWidth(120);
         energybarInline.setHeight(20);
         
-        healthbarOutline.setPosition(0, 50);
-        healthbarInline.setPosition(0, 50);
-        energybarOutline.setPosition(0, 20);
-        energybarInline.setPosition(0, 20);
+        healthbarOutline.setPosition(1, 50);
+        healthbarInline.setPosition(1, 50);
+        energybarOutline.setPosition(1, 20);
+        energybarInline.setPosition(1, 20);
         
         guiNode.attachChild(healthbarOutline);
         guiNode.attachChild(healthbarInline);
@@ -74,5 +74,7 @@ public class HUD{
 public void updateHUD(float RayGunEnergy, float playerHealth)
 {
     energybarInline.setWidth(120 * RayGunEnergy);
+    // TODO : Texture fix
+    //energybarInline.setPosition(1 * RayGunEnergy, 20);
 }
 }
