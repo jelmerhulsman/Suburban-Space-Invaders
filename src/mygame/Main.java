@@ -2,6 +2,8 @@ package mygame;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
@@ -15,21 +17,24 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 
 /**
  *
  * @author Bralts & Hulsman
  */
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements PhysicsCollisionListener {
+
     private BulletAppState bulletAppState;
-    
-    private Spatial town;
-    private RigidBodyControl landscape;
-    
+    private Spatial suburbs;
+    private RigidBodyControl suburbsControl;
     private CharacterControl player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
@@ -44,9 +49,8 @@ public class Main extends SimpleApplication {
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        cam.setFrustumFar(100f);
-        
-        initPhysics(false);
+
+        initPhysics();
         initScene();
         initCollision();
         initLight();
@@ -55,37 +59,35 @@ public class Main extends SimpleApplication {
         initHUD();
         initKeys();
     }
-    
+
     @Override
     public void simpleUpdate(float tpf) {
         updatePlayer();
         updateWeapon();
     }
-    
-    private void initPhysics(boolean debug) {
+
+    private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        
-        if (debug)
-            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-    } 
-    
+        bulletAppState.getPhysicsSpace().addCollisionListener(this);
+    }
+
     private void initScene() {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
-        
-        town = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
-        town.scale(5f);
-        rootNode.attachChild(town);
+
+        suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
+        suburbs.scale(5f);
+        rootNode.attachChild(suburbs);
     }
-    
+
     private void initCollision() {
-        CollisionShape townShape = CollisionShapeFactory.createMeshShape((Node) town);
-        landscape = new RigidBodyControl(townShape, 0);
-        town.addControl(landscape);
-        bulletAppState.getPhysicsSpace().add(landscape);
+        CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
+        suburbsControl = new RigidBodyControl(suburbsShape, 0f);
+        suburbs.addControl(suburbsControl);
+        bulletAppState.getPhysicsSpace().add(suburbsControl);
     }
-    
+
     private void initLight() {
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
@@ -96,13 +98,11 @@ public class Main extends SimpleApplication {
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
     }
-    
-    public void initShadow()
-    {
-        
+
+    public void initShadow() {
     }
-    
-    private void initPlayer () {
+
+    private void initPlayer() {
         walkDirection = new Vector3f();
         left = false;
         right = false;
@@ -110,10 +110,10 @@ public class Main extends SimpleApplication {
         down = false;
         camDir = new Vector3f();
         camLeft = new Vector3f();
-        
+
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
-        
+
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
         player.setJumpSpeed(15f);
@@ -121,16 +121,16 @@ public class Main extends SimpleApplication {
         player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
-        
+
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
-    
+
     private void initHUD() {
         HUD hud = new HUD(assetManager, guiNode, settings);
         hud.initCrossHair(40);
     }
-    
+
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -146,7 +146,7 @@ public class Main extends SimpleApplication {
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
     }
-    
+
     public void updatePlayer() {
         camDir.set(cam.getDirection()).multLocal(0.5f);
         camLeft.set(cam.getLeft()).multLocal(0.5f);
@@ -159,7 +159,7 @@ public class Main extends SimpleApplication {
             walkDirection.addLocal(camLeft.negate());
         }
         if (up) {
-            walkDirection.addLocal(camDir.x, 0 ,camDir.z);
+            walkDirection.addLocal(camDir.x, 0, camDir.z);
         }
         if (down) {
             walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
@@ -167,14 +167,15 @@ public class Main extends SimpleApplication {
 
         player.setWalkDirection(walkDirection);
         cam.setLocation(player.getPhysicsLocation());
+        
+        fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
     }
-    
+
     public void updateWeapon() {
         rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
         rayGun.setLocalRotation(cam.getRotation());
         rayGun.restoreEnergy();
     }
-    
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean keyPressed, float tpf) {
             if (binding.equals("Left")) {
@@ -206,7 +207,6 @@ public class Main extends SimpleApplication {
             }
         }
     };
-    
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
@@ -214,4 +214,23 @@ public class Main extends SimpleApplication {
             }
         }
     };
+
+    public void collision(PhysicsCollisionEvent event) {
+        if (event.getNodeA() != null) {
+            if ( event.getNodeA().getName().equals("Bullet") ){
+                /*Vector3f xyz = event.getNodeA().getWorldTranslation();
+                Box boxMesh = new Box(1f,1f,1f); 
+                Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
+                Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+                boxMat.setBoolean("UseMaterialColors", true); 
+                boxMat.setColor("Ambient", ColorRGBA.Pink); 
+                boxMat.setColor("Diffuse", ColorRGBA.Pink); 
+                boxGeo.setMaterial(boxMat); 
+                boxGeo.setLocalTranslation(xyz);
+                rootNode.attachChild(boxGeo);*/
+            
+                rayGun.detachChild(event.getNodeA());
+            }
+        }
+    }
 }

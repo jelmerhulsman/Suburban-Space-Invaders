@@ -66,8 +66,8 @@ public class Weapon extends Node {
 
     private void initMaterial() {
         bullet_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        bullet_mat.setColor("Color", ColorRGBA.Green);
-        bullet_mat.setColor("GlowColor", ColorRGBA.Green);
+        bullet_mat.setColor("Color", ColorRGBA.Yellow);
+        bullet_mat.setColor("GlowColor", ColorRGBA.Yellow);
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
         fpp.addFilter(bloom);
@@ -108,10 +108,11 @@ public class Weapon extends Node {
 
             RigidBodyControl physics = new RigidBodyControl();
             geom.addControl(physics);
-            physics.setLinearVelocity(dir.mult(350));
-            physics.setGravity(Vector3f.ZERO);
+            physics.setLinearVelocity(dir.mult(250f));
+            
             bulletAppState.getPhysicsSpace().add(physics);
-
+            bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
+            
             this.attachChild(geom);
             
             bullet_snd.stop();
