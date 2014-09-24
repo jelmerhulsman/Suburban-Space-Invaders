@@ -36,6 +36,7 @@ public class Weapon extends Node {
     private float rechargeRate;
     private Timer fireTimer;
     private Timer energyTimer;
+    public boolean isShooting;
 
     public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort, Timer timer) {
         super();
@@ -89,7 +90,7 @@ public class Weapon extends Node {
     }
     
     public void restoreEnergy() {
-        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy)
+        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false)
         {
             currentEnergy++;
             energyTimer.reset();
@@ -97,7 +98,7 @@ public class Weapon extends Node {
     }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 1f)
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy >= 1f)
         {
             Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
             Geometry geom = new Geometry("Bullet", c);
@@ -121,11 +122,17 @@ public class Weapon extends Node {
             
             currentEnergy--;
             fireTimer.reset();
-        } else if (currentEnergy < 1f) {
+        }
+        if (currentEnergy < 1f) {
             bullet_snd.stop();
             empty_snd.stop();
             
             empty_snd.play();
         }
+    }
+    
+    public float getEnergy()
+    {
+        return currentEnergy;
     }
 }

@@ -35,7 +35,8 @@ public class Main extends SimpleApplication {
     private boolean left, right, up, down;
     private Vector3f camDir;
     private Vector3f camLeft;
-    private Weapon rayGun;
+    public Weapon rayGun;
+    HUD hud;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -60,6 +61,7 @@ public class Main extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         updatePlayer();
         updateWeapon();
+        hud.updateHUD(rayGun.getEnergy());
     }
     
     private void initPhysics(boolean debug) {
@@ -127,8 +129,9 @@ public class Main extends SimpleApplication {
     }
     
     private void initHUD() {
-        HUD hud = new HUD(assetManager, guiNode, settings);
+        hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
+        hud.initText();
     }
     
     private void initKeys() {
@@ -173,6 +176,7 @@ public class Main extends SimpleApplication {
         rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
         rayGun.setLocalRotation(cam.getRotation());
         rayGun.restoreEnergy();
+        rayGun.isShooting = false;
     }
     
     private ActionListener actionListener = new ActionListener() {
@@ -211,6 +215,7 @@ public class Main extends SimpleApplication {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
                 rayGun.shoot(cam.getLocation().add(cam.getDirection().mult(4)), cam.getRotation(), cam.getDirection());
+                rayGun.isShooting = true;
             }
         }
     };
