@@ -17,30 +17,28 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 
 /**
  *
  * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
-
     private BulletAppState bulletAppState;
-    private Spatial suburbs;
-    private RigidBodyControl suburbsControl;
+    private Spatial town;
+    private RigidBodyControl landscape;
     private CharacterControl player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
+    private boolean debugMode;
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
+    private float playerHealth;
+    HUD hud;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -51,6 +49,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
         initPhysics();
+        cam.setFrustumFar(100f);
+
+        initPhysics(false);
         initScene();
         initCollision();
         initLight();
@@ -64,6 +65,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void simpleUpdate(float tpf) {
         updatePlayer();
         updateWeapon();
+        updateHUD();
     }
 
     private void initPhysics() {
@@ -71,21 +73,44 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         stateManager.attach(bulletAppState);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
+    
+    public void updateHUD()
+    {
+        float percentageEnergy = 1 + ((rayGun.getEnergy() - rayGun.getMaxEnergy()) / rayGun.getMaxEnergy());
+        hud.updateHUD(percentageEnergy, getPlayerHealth());
+        
+        if (debugMode) {
+            setDisplayStatView(true);
+            setDisplayFps(true);
+        } else {
+            setDisplayStatView(false);
+            setDisplayFps(false);
+        }
+    }
+
+    private void initPhysics(boolean debug) {
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+
+        if (debug) {
+            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        }
+    }
 
     private void initScene() {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
 
-        suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
-        suburbs.scale(5f);
-        rootNode.attachChild(suburbs);
+        town = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
+        town.scale(5f);
+        rootNode.attachChild(town);
     }
 
     private void initCollision() {
-        CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
-        suburbsControl = new RigidBodyControl(suburbsShape, 0f);
-        suburbs.addControl(suburbsControl);
-        bulletAppState.getPhysicsSpace().add(suburbsControl);
+        CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(town);
+        landscape = new RigidBodyControl(suburbsShape, 0f);
+        town.addControl(landscape);
+        bulletAppState.getPhysicsSpace().add(landscape);
     }
 
     private void initLight() {
@@ -121,14 +146,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
-
+        
+        playerHealth = 100;
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
 
     private void initHUD() {
-        HUD hud = new HUD(assetManager, guiNode, settings);
+        hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
+        hud.initBars();
     }
 
     private void initKeys() {
@@ -137,11 +164,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Debug", new KeyTrigger(KeyInput.KEY_Q));
         inputManager.addListener(actionListener, "Left");
         inputManager.addListener(actionListener, "Right");
         inputManager.addListener(actionListener, "Up");
         inputManager.addListener(actionListener, "Down");
         inputManager.addListener(actionListener, "Jump");
+        inputManager.addListener(actionListener, "Debug");
 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
@@ -175,6 +204,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rayGun.setLocalTranslation(cam.getLocation().add(cam.getDirection().mult(3)));
         rayGun.setLocalRotation(cam.getRotation());
         rayGun.restoreEnergy();
+        rayGun.isShooting = false;
     }
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean keyPressed, float tpf) {
@@ -205,12 +235,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             } else if (binding.equals("Jump")) {
                 player.jump();
             }
+            if (binding.equals("Debug")) {
+                if(keyPressed)
+                if (debugMode) {
+                    debugMode = false;
+                } else {
+                    debugMode = true;
+                }
+            }
         }
     };
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
                 rayGun.shoot(cam.getLocation().add(cam.getDirection().mult(4)), cam.getRotation(), cam.getDirection());
+                rayGun.isShooting = true;
             }
         }
     };
@@ -232,5 +271,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 rayGun.detachChild(event.getNodeA());
             }
         }
+    }
+    
+    public float getPlayerHealth() {
+        return playerHealth;
     }
 }

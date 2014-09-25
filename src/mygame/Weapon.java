@@ -6,6 +6,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
@@ -34,8 +35,10 @@ public class Weapon extends Node {
     private float currentEnergy;
     private float maxEnergy;
     private float rechargeRate;
+    private float spread = 0.3f;
     private Timer fireTimer;
     private Timer energyTimer;
+    public boolean isShooting;
 
     public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort, Timer timer) {
         super();
@@ -89,23 +92,28 @@ public class Weapon extends Node {
     }
     
     public void restoreEnergy() {
-        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy)
+        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false)
         {
             currentEnergy++;
             energyTimer.reset();
         }
     }
+    
+    public void recoil()
+    {
+        
+    }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 1f)
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy >= 1f)
         {
             Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
             Geometry geom = new Geometry("Bullet", c);
             geom.setMaterial(bullet_mat);
 
-            geom.setLocalTranslation(loc);
+            geom.setLocalTranslation(loc.x  + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread));
             geom.rotate(rot);
-
+            
             RigidBodyControl physics = new RigidBodyControl();
             geom.addControl(physics);
             physics.setLinearVelocity(dir.mult(250f));
@@ -122,11 +130,23 @@ public class Weapon extends Node {
             
             currentEnergy--;
             fireTimer.reset();
-        } else if (currentEnergy < 1f) {
+            recoil();
+        }
+        if (currentEnergy < 1f) {
             bullet_snd.stop();
             empty_snd.stop();
             
             empty_snd.play();
         }
+    }
+    
+    public float getEnergy()
+    {
+        return currentEnergy;
+    }
+    
+    public float getMaxEnergy()
+    {
+        return maxEnergy;
     }
 }
