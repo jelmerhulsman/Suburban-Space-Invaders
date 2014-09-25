@@ -2,6 +2,7 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.audio.AudioSource;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
@@ -106,7 +107,7 @@ public class Weapon extends Node {
     }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy >= 1f)
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped)
         {
             Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
             Geometry geom = new Geometry("Bullet", c);
@@ -125,19 +126,15 @@ public class Weapon extends Node {
             this.attachChild(geom);
             
             bullet_snd.stop();
-            empty_snd.stop();
-            
             bullet_snd.play();
             
             currentEnergy--;
             fireTimer.reset();
             recoil();
         }
-        if (currentEnergy < 1f) {
-            bullet_snd.stop();
-            empty_snd.stop();
-            
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             empty_snd.play();
+            fireTimer.reset();
         }
     }
     
