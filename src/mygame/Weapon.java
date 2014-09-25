@@ -113,7 +113,11 @@ public class Weapon extends Node {
             Geometry geom = new Geometry("Bullet", c);
             geom.setMaterial(bullet_mat);
 
-            geom.setLocalTranslation(loc.x  + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread),loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread));
+            float locX = loc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread); 
+            float locY = loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
+            float locZ = loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
+                    
+            geom.setLocalTranslation(locX, locY, locZ);
             geom.rotate(rot);
             
             RigidBodyControl physics = new RigidBodyControl();
