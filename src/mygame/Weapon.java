@@ -35,7 +35,7 @@ public class Weapon extends Node {
     private float currentEnergy;
     private float maxEnergy;
     private float rechargeRate;
-    private float spread = 0.3f;
+    private float spread;
     private Timer fireTimer;
     private Timer energyTimer;
     public boolean isShooting;
@@ -51,6 +51,7 @@ public class Weapon extends Node {
         currentEnergy = 50f; // also know as ammo
         maxEnergy = 50f; // maximum ammo
         rechargeRate = 1/2f; // recharge 2 shots per second
+        spread = 0.3f;
         
         fireTimer = timer;
         fireTimer.reset();

@@ -28,8 +28,8 @@ import com.jme3.scene.Spatial;
  */
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
     private BulletAppState bulletAppState;
-    private Spatial town;
-    private RigidBodyControl landscape;
+    private Spatial suburbs;
+    private RigidBodyControl suburbsControl;
     private CharacterControl player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
@@ -101,16 +101,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
 
-        town = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
-        town.scale(5f);
-        rootNode.attachChild(town);
+        suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
+        suburbs.scale(5f);
+        rootNode.attachChild(suburbs);
     }
 
     private void initCollision() {
-        CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(town);
-        landscape = new RigidBodyControl(suburbsShape, 0f);
-        town.addControl(landscape);
-        bulletAppState.getPhysicsSpace().add(landscape);
+        CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
+        suburbsControl = new RigidBodyControl(suburbsShape, 0f);
+        suburbs.addControl(suburbsControl);
+        bulletAppState.getPhysicsSpace().add(suburbsControl);
     }
 
     private void initLight() {
