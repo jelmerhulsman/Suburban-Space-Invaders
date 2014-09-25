@@ -15,10 +15,12 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.light.SpotLight;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.scene.Spatial;
 
 /**
@@ -38,7 +40,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Weapon rayGun;
     private float playerHealth;
     private HUD hud;
-    private SpotLight viewRadius;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -53,8 +54,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initScene();
         initCollision();
         initLight();
-        initShadow();
         initPlayer();
+        initFog();
         initHUD();
         initKeys();
     }
@@ -65,11 +66,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateWeapon();
         updateHUD();
         
-        float locX = player.getPhysicsLocation().x;
-        float locY = player.getPhysicsLocation().y + 5f;
-        float locZ = player.getPhysicsLocation().z;
-        viewRadius.setPosition(new Vector3f(locX, locY, locZ));
-        
+        //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
     }
 
     private void initPhysics() {
@@ -104,26 +101,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initLight() {
-        /*AmbientLight al = new AmbientLight();
+        AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
 
         DirectionalLight dl = new DirectionalLight();
         dl.setColor(ColorRGBA.White);
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-        rootNode.addLight(dl);*/
-        
-        viewRadius = new SpotLight();
-        viewRadius.setColor(ColorRGBA.White);
-        viewRadius.setSpotInnerAngle(5f);
-        viewRadius.setSpotOuterAngle(75f);
-        viewRadius.setSpotRange(100f);
-        rootNode.addLight(viewRadius);
+        rootNode.addLight(dl);
     }
-
-    public void initShadow() {
-    }
-
+    
     private void initPlayer() {
         walkDirection = new Vector3f();
         left = false;
@@ -144,9 +131,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
         
-        playerHealth = 100;
+        playerHealth = 100f;
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
+    }
+    
+    public void initFog() {
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        FogFilter fog = new FogFilter();
+        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+        fog.setFogDistance(150f);
+        fog.setFogDensity(2f);
+        fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
     }
 
     private void initHUD() {
@@ -168,19 +165,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addListener(actionListener, "Down");
         inputManager.addListener(actionListener, "Jump");
         inputManager.addListener(actionListener, "Debug");
-        
-        inputManager.addMapping("1", new KeyTrigger(keyInput.KEY_1));
-        inputManager.addMapping("2", new KeyTrigger(KeyInput.KEY_2));
-        inputManager.addMapping("3", new KeyTrigger(KeyInput.KEY_3));
-        inputManager.addMapping("4", new KeyTrigger(KeyInput.KEY_4));
-        inputManager.addMapping("5", new KeyTrigger(KeyInput.KEY_5));
-        inputManager.addMapping("6", new KeyTrigger(KeyInput.KEY_6));
-        inputManager.addListener(actionListener, "1");
-        inputManager.addListener(actionListener, "2");
-        inputManager.addListener(actionListener, "3");
-        inputManager.addListener(actionListener, "4");
-        inputManager.addListener(actionListener, "5");
-        inputManager.addListener(actionListener, "6");
 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
@@ -206,8 +190,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         player.setWalkDirection(walkDirection);
         cam.setLocation(player.getPhysicsLocation());
-        
-        fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
     }
 
     public void updateWeapon() {
@@ -269,19 +251,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     debugMode = true;
                 }
             }
-            
-            if (binding.equals("1"))
-                    viewRadius.setSpotInnerAngle(viewRadius.getSpotInnerAngle() + 1);
-            else if (binding.equals("2"))
-                    viewRadius.setSpotInnerAngle(viewRadius.getSpotInnerAngle() - 1);
-            if (binding.equals("3"))
-                    viewRadius.setSpotOuterAngle(viewRadius.getSpotOuterAngle() + 1);
-            else if (binding.equals("4"))
-                    viewRadius.setSpotOuterAngle(viewRadius.getSpotOuterAngle() - 1);
-            if (binding.equals("5"))
-                    viewRadius.setSpotRange(viewRadius.getSpotRange() + 1);
-            else if (binding.equals("6"))
-                    viewRadius.setSpotRange(viewRadius.getSpotRange() - 1);
         }
     };
     
