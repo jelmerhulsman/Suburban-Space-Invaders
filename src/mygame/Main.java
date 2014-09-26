@@ -5,9 +5,7 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.KeyInput;
@@ -157,14 +155,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
-
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
-        player = new CharacterControl(capsuleShape, 0.05f);
-        player.setJumpSpeed(15f);
-        player.setPhysicsLocation(new Vector3f(0, 15f, 0));
-        bulletAppState.getPhysicsSpace().add(player);
-        
-        playerHealth = 100f;
 
         player = new Player();
 
