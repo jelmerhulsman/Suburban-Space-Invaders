@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -17,11 +18,19 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
+import com.jme3.post.ssao.SSAOFilter;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
+import com.jme3.shadow.EdgeFilteringMode;
+import com.jme3.shadow.PointLightShadowFilter;
+import com.jme3.shadow.PointLightShadowRenderer;
 
 /**
  *
@@ -34,12 +43,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private CharacterControl player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
-    private boolean debugMode;
+    private boolean bDebugMode;
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
     private float playerHealth,maxPlayerHealth;
     private HUD hud;
+    private BoundingBox suburbsBox;
+    private PointLight sun;
+    
+    final boolean bEnableShadows = false;
+    final int ShadowSize = 1024;
+    
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -48,12 +63,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-
+        
         initPhysics();
         initPhysics(false);
         initScene();
         initCollision();
         initLight();
+        if(bEnableShadows)
+        initShadow();
         initPlayer();
         initFog();
         initHUD();
@@ -91,6 +108,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
+        
+        suburbsBox = (BoundingBox)suburbs.getWorldBound();
     }
 
     private void initCollision() {
@@ -101,14 +120,32 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initLight() {
-        AmbientLight al = new AmbientLight();
+        /*AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
-        rootNode.addLight(al);
-
+        rootNode.addLight(al);*/
+       
+        sun = new PointLight();
+        sun.setColor(ColorRGBA.White);
+        sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2,300,suburbsBox.getZExtent() / 2));
+        sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
+        rootNode.addLight(sun);
+        
         DirectionalLight dl = new DirectionalLight();
         dl.setColor(ColorRGBA.White);
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
+    }
+    
+    public void initShadow()
+    {
+        suburbs.setShadowMode(ShadowMode.CastAndReceive);
+        
+        
+        PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, ShadowSize);
+        dlsr.setLight(sun);
+        dlsr.setShadowIntensity(0.5f);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
+        viewPort.addProcessor(dlsr);
     }
     
     private void initPlayer() {
@@ -207,7 +244,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         float percentageHealth = ((playerHealth / maxPlayerHealth));
         hud.updateHUD(percentageEnergy, percentageHealth);
         
-        if (debugMode) {
+        if (bDebugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
         } else {
@@ -247,10 +284,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
             if (binding.equals("Debug")) {
                 if(keyPressed)
-                if (debugMode) {
-                    debugMode = false;
+                if (bDebugMode) {
+                    bDebugMode = false;
                 } else {
-                    debugMode = true;
+                    bDebugMode = true;
                 }
             }
         }

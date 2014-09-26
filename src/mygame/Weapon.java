@@ -13,6 +13,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -66,6 +68,7 @@ public class Weapon extends Node {
 
     private void initModel() {
         Spatial model = assetManager.loadModel("Models/GranadeLauncher/GranadeLauncher.j3o");
+        model.setShadowMode(ShadowMode.Receive);
         this.attachChild(model);
     }
 
