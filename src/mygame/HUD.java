@@ -9,7 +9,7 @@ import com.jme3.ui.Picture;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
 public class HUD {
 

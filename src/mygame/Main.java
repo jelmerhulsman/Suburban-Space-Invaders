@@ -36,14 +36,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private BulletAppState bulletAppState;
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
-    private CharacterControl player;
+    private Player player;
     private Vector3f walkDirection;
     private boolean left, right, up, down;
     private boolean bDebugMode;
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
-    private float playerHealth, maxPlayerHealth;
     private HUD hud;
     private BoundingBox suburbsBox;
     private PointLight sun;
@@ -74,7 +73,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     @Override
     public void simpleUpdate(float tpf) {
-        updatePlayer();
+        updatePlayerWalk();
         updateWeapon();
         updateHUD();
 
@@ -154,16 +153,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
 
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
-        player = new CharacterControl(capsuleShape, 0.05f);
-        player.setJumpSpeed(15f);
-        player.setFallSpeed(30f);
-        player.setGravity(30f);
-        player.setPhysicsLocation(new Vector3f(0, 15f, 0));
-        bulletAppState.getPhysicsSpace().add(player);
+        player = new Player();
 
-        playerHealth = 100f;
-        maxPlayerHealth = 100f;
+        bulletAppState.getPhysicsSpace().add(player.getCharacterControl());
+
+
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
@@ -202,7 +196,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addListener(analogListener, "Shoot");
     }
 
-    public void updatePlayer() {
+    public void updatePlayerWalk() {
         camDir.set(cam.getDirection()).multLocal(0.5f);
         camLeft.set(cam.getLeft()).multLocal(0.5f);
         walkDirection.set(0, 0, 0);
@@ -219,9 +213,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (down) {
             walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
         }
-
-        player.setWalkDirection(walkDirection);
-        cam.setLocation(player.getPhysicsLocation());
+        player.Move(walkDirection);
+        cam.setLocation(player.getCharacterControl().getPhysicsLocation());
     }
 
     public void updateWeapon() {
@@ -234,7 +227,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void updateHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / rayGun.getMaxEnergy()));
-        float percentageHealth = ((playerHealth / maxPlayerHealth));
+        float percentageHealth = ((player.getHealth() / player.getMaxHealth()));
         hud.updateHUD(percentageEnergy, percentageHealth);
 
         if (bDebugMode) {
@@ -272,7 +265,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     down = false;
                 }
             } else if (binding.equals("Jump")) {
-                player.jump();
+                player.Jump();
             }
             if (binding.equals("Debug")) {
                 if (keyPressed) {
@@ -312,9 +305,5 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 rayGun.detachChild(event.getNodeA());
             }
         }
-    }
-
-    public float getPlayerHealth() {
-        return playerHealth;
     }
 }

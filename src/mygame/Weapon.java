@@ -22,7 +22,7 @@ import com.jme3.system.Timer;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
 public class Weapon extends Node {
 
