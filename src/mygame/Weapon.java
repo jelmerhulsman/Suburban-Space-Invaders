@@ -4,6 +4,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -123,6 +124,7 @@ public class Weapon extends Node {
             RigidBodyControl physics = new RigidBodyControl();
             geom.addControl(physics);
             physics.setLinearVelocity(dir.mult(250f));
+            physics.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_16);
             
             bulletAppState.getPhysicsSpace().add(physics);
             bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);

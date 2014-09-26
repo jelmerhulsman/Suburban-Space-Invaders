@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -18,6 +19,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
@@ -40,6 +42,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Weapon rayGun;
     private float playerHealth;
     private HUD hud;
+    
+    Enemy enemy;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -58,6 +62,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initFog();
         initHUD();
         initKeys();
+        
+        enemy = new Enemy(assetManager, bulletAppState);
+        rootNode.attachChild(enemy);
     }
 
     @Override
@@ -66,7 +73,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateWeapon();
         updateHUD();
         
+        enemy.rotateAndMove(cam.getLocation());
+        enemy.checkGhostCollision();
         //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
+        fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
     }
 
     private void initPhysics() {
@@ -78,10 +88,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private void initPhysics(boolean debug) {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-
-        if (debug) {
-            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        }
     }
 
     private void initScene() {
@@ -126,8 +132,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
         player.setJumpSpeed(15f);
-        player.setFallSpeed(30f);
-        player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
         
