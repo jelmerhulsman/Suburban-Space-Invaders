@@ -13,7 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.ViewPort;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -48,19 +47,19 @@ public class Weapon extends Node {
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
         this.viewPort = viewPort;
-        
+
         damage = 5f; // 5 damage per shot
-        fireRate = 1/5f; // 5 shots per second
+        fireRate = 1 / 5f; // 5 shots per second
         currentEnergy = 50f; // also know as ammo
         maxEnergy = 50f; // maximum ammo
-        rechargeRate = 1/2f; // recharge 2 shots per second
+        rechargeRate = 1 / 2f; // recharge 2 shots per second
         spread = 0.3f;
-        
+
         fireTimer = timer;
         fireTimer.reset();
         energyTimer = timer;
-        energyTimer.reset(); 
-        
+        energyTimer.reset();
+
         initModel();
         initMaterial();
         initAudio();
@@ -88,53 +87,49 @@ public class Weapon extends Node {
         bullet_snd.setLooping(false);
         bullet_snd.setVolume(0.75f);
         this.attachChild(bullet_snd);
-        
+
         empty_snd = new AudioNode(assetManager, "Sounds/no_energy.wav", false);
         empty_snd.setPositional(false);
         empty_snd.setLooping(false);
         empty_snd.setVolume(0.75f);
         this.attachChild(empty_snd);
     }
-    
+
     public void restoreEnergy() {
-        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false)
-        {
+        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false) {
             currentEnergy++;
             energyTimer.reset();
         }
     }
-    
-    public void recoil()
-    {
-        
+
+    public void recoil() {
     }
 
     public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped)
-        {
+        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
             Geometry geom = new Geometry("Bullet", c);
             geom.setMaterial(bullet_mat);
 
-            float locX = loc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread); 
+            float locX = loc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
             float locY = loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
             float locZ = loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
-                    
+
             geom.setLocalTranslation(locX, locY, locZ);
             geom.rotate(rot);
-            
+
             RigidBodyControl physics = new RigidBodyControl();
             geom.addControl(physics);
             physics.setLinearVelocity(dir.mult(250f));
-            
+
             bulletAppState.getPhysicsSpace().add(physics);
             bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
-            
+
             this.attachChild(geom);
-            
+
             bullet_snd.stop();
             bullet_snd.play();
-            
+
             currentEnergy--;
             fireTimer.reset();
             recoil();
@@ -144,14 +139,12 @@ public class Weapon extends Node {
             fireTimer.reset();
         }
     }
-    
-    public float getEnergy()
-    {
+
+    public float getEnergy() {
         return currentEnergy;
     }
-    
-    public float getMaxEnergy()
-    {
+
+    public float getMaxEnergy() {
         return maxEnergy;
     }
 }

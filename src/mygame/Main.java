@@ -16,20 +16,15 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.post.ssao.SSAOFilter;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
-import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
-import com.jme3.shadow.PointLightShadowFilter;
 import com.jme3.shadow.PointLightShadowRenderer;
 
 /**
@@ -37,6 +32,7 @@ import com.jme3.shadow.PointLightShadowRenderer;
  * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
+
     private BulletAppState bulletAppState;
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
@@ -47,14 +43,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
-    private float playerHealth,maxPlayerHealth;
+    private float playerHealth, maxPlayerHealth;
     private HUD hud;
     private BoundingBox suburbsBox;
     private PointLight sun;
-    
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
-    
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -63,14 +57,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        
+
         initPhysics();
         initPhysics(false);
         initScene();
         initCollision();
         initLight();
-        if(bEnableShadows)
-        initShadow();
+        if (bEnableShadows) {
+            initShadow();
+        }
         initPlayer();
         initFog();
         initHUD();
@@ -82,7 +77,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updatePlayer();
         updateWeapon();
         updateHUD();
-        
+
         //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
     }
 
@@ -108,8 +103,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
-        
-        suburbsBox = (BoundingBox)suburbs.getWorldBound();
+
+        suburbsBox = (BoundingBox) suburbs.getWorldBound();
     }
 
     private void initCollision() {
@@ -121,33 +116,32 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     private void initLight() {
         /*AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(1.3f));
-        rootNode.addLight(al);*/
-       
+         al.setColor(ColorRGBA.White.mult(1.3f));
+         rootNode.addLight(al);*/
+
         sun = new PointLight();
         sun.setColor(ColorRGBA.White);
-        sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2,300,suburbsBox.getZExtent() / 2));
+        sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2, 300, suburbsBox.getZExtent() / 2));
         sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
         rootNode.addLight(sun);
-        
+
         DirectionalLight dl = new DirectionalLight();
         dl.setColor(ColorRGBA.White);
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
     }
-    
-    public void initShadow()
-    {
+
+    public void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
-        
-        
+
+
         PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, ShadowSize);
         dlsr.setLight(sun);
         dlsr.setShadowIntensity(0.5f);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
         viewPort.addProcessor(dlsr);
     }
-    
+
     private void initPlayer() {
         walkDirection = new Vector3f();
         left = false;
@@ -167,13 +161,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         player.setGravity(30f);
         player.setPhysicsLocation(new Vector3f(0, 15f, 0));
         bulletAppState.getPhysicsSpace().add(player);
-        
+
         playerHealth = 100f;
         maxPlayerHealth = 100f;
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
-    
+
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         FogFilter fog = new FogFilter();
@@ -189,7 +183,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         hud.initCrossHair(40);
         hud.initBars();
     }
-    
+
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -237,13 +231,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rayGun.restoreEnergy();
         rayGun.isShooting = false;
     }
-    
-    public void updateHUD()
-    {
+
+    public void updateHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / rayGun.getMaxEnergy()));
         float percentageHealth = ((playerHealth / maxPlayerHealth));
         hud.updateHUD(percentageEnergy, percentageHealth);
-        
+
         if (bDebugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
@@ -252,7 +245,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             setDisplayFps(false);
         }
     }
-    
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean keyPressed, float tpf) {
             if (binding.equals("Left")) {
@@ -283,16 +275,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 player.jump();
             }
             if (binding.equals("Debug")) {
-                if(keyPressed)
-                if (bDebugMode) {
-                    bDebugMode = false;
-                } else {
-                    bDebugMode = true;
+                if (keyPressed) {
+                    if (bDebugMode) {
+                        bDebugMode = false;
+                    } else {
+                        bDebugMode = true;
+                    }
                 }
             }
         }
     };
-    
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
@@ -305,23 +297,23 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() != null) {
-            if ( event.getNodeA().getName().equals("Bullet") ){
+            if (event.getNodeA().getName().equals("Bullet")) {
                 /*Vector3f xyz = event.getNodeA().getWorldTranslation();
-                Box boxMesh = new Box(1f,1f,1f); 
-                Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
-                Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-                boxMat.setBoolean("UseMaterialColors", true); 
-                boxMat.setColor("Ambient", ColorRGBA.Pink); 
-                boxMat.setColor("Diffuse", ColorRGBA.Pink); 
-                boxGeo.setMaterial(boxMat); 
-                boxGeo.setLocalTranslation(xyz);
-                rootNode.attachChild(boxGeo);*/
-            
+                 Box boxMesh = new Box(1f,1f,1f); 
+                 Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
+                 Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+                 boxMat.setBoolean("UseMaterialColors", true); 
+                 boxMat.setColor("Ambient", ColorRGBA.Pink); 
+                 boxMat.setColor("Diffuse", ColorRGBA.Pink); 
+                 boxGeo.setMaterial(boxMat); 
+                 boxGeo.setLocalTranslation(xyz);
+                 rootNode.attachChild(boxGeo);*/
+
                 rayGun.detachChild(event.getNodeA());
             }
         }
     }
-    
+
     public float getPlayerHealth() {
         return playerHealth;
     }
