@@ -5,9 +5,7 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.KeyInput;
@@ -16,7 +14,6 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -124,10 +121,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
         rootNode.addLight(sun);
 
-        DirectionalLight dl = new DirectionalLight();
-        dl.setColor(ColorRGBA.White);
-        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-        rootNode.addLight(dl);
+        /*DirectionalLight dl = new DirectionalLight();
+         dl.setColor(ColorRGBA.White);
+         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+         rootNode.addLight(dl);*/
     }
 
     public void initShadow() {
