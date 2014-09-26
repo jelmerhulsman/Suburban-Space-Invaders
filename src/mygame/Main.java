@@ -38,7 +38,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
-    private float playerHealth;
+    private float playerHealth,maxPlayerHealth;
     private HUD hud;
 
     public static void main(String[] args) {
@@ -132,6 +132,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().add(player);
         
         playerHealth = 100f;
+        maxPlayerHealth = 100f;
         rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
         rootNode.attachChild(rayGun);
     }
@@ -202,8 +203,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
     public void updateHUD()
     {
-        float percentageEnergy = 1 + ((rayGun.getEnergy() - rayGun.getMaxEnergy()) / rayGun.getMaxEnergy());
-        hud.updateHUD(percentageEnergy, getPlayerHealth());
+        float percentageEnergy = ((rayGun.getEnergy() / rayGun.getMaxEnergy()));
+        float percentageHealth = ((playerHealth / maxPlayerHealth));
+        hud.updateHUD(percentageEnergy, percentageHealth);
         
         if (debugMode) {
             setDisplayStatView(true);

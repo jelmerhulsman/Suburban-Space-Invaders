@@ -18,6 +18,9 @@ public class HUD{
     BitmapText EnergyText,HealthText;
     BitmapFont GuiFont;
     Picture healthbarInline,energybarInline;
+    final int posBarsY = 20;
+    final int posBarsX = 1;
+    
 
     public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
         this.assetManager = assetManager;
@@ -46,10 +49,10 @@ public class HUD{
         energybarInline.setWidth(120);
         energybarInline.setHeight(20);
         
-        healthbarOutline.setPosition(1, 50);
-        healthbarInline.setPosition(1, 50);
-        energybarOutline.setPosition(1, 20);
-        energybarInline.setPosition(1, 20);
+        healthbarOutline.setPosition(posBarsX, posBarsY + 30);
+        healthbarInline.setPosition(posBarsX, posBarsY + 30);
+        energybarOutline.setPosition(posBarsX, posBarsY);
+        energybarInline.setPosition(posBarsX, posBarsY);
         
         guiNode.attachChild(healthbarOutline);
         guiNode.attachChild(healthbarInline);
@@ -74,7 +77,9 @@ public class HUD{
 public void updateHUD(float RayGunEnergy, float playerHealth)
 {
     energybarInline.setWidth(120 * RayGunEnergy);
-    // TODO : Texture fix
-    //energybarInline.setPosition(1 * RayGunEnergy, 20);
+    energybarInline.setPosition(10 + ((1 -RayGunEnergy * 10) ) , posBarsY);
+    
+    healthbarInline.setWidth(120 * playerHealth);
+    healthbarInline.setPosition(10 + ((1 -playerHealth * 10) ) , posBarsY + 30);
 }
 }
