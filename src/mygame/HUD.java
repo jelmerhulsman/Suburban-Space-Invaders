@@ -9,15 +9,18 @@ import com.jme3.ui.Picture;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
-public class HUD{
+public class HUD {
+
     AssetManager assetManager;
     Node guiNode;
     AppSettings settings;
-    BitmapText EnergyText,HealthText;
+    BitmapText EnergyText, HealthText;
     BitmapFont GuiFont;
-    Picture healthbarInline,energybarInline;
+    Picture healthbarInline, energybarInline;
+    final int posBarsY = 20;
+    final int posBarsX = 1;
 
     public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
         this.assetManager = assetManager;
@@ -25,9 +28,8 @@ public class HUD{
         this.settings = settings;
         this.GuiFont = guifont;
     }
-    
-    public void initBars()
-    {
+
+    public void initBars() {
         Picture healthbarOutline = new Picture("HUD bar_outline");
         healthbarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
         healthbarInline = new Picture("HUD bar_inline");
@@ -36,7 +38,7 @@ public class HUD{
         energybarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
         energybarInline = new Picture("HUD bar_inline");
         energybarInline.setImage(assetManager, "Textures/energybar_inline.png", true);
-        
+
         healthbarOutline.setWidth(120);
         healthbarOutline.setHeight(20);
         healthbarInline.setWidth(120);
@@ -45,36 +47,37 @@ public class HUD{
         energybarOutline.setHeight(20);
         energybarInline.setWidth(120);
         energybarInline.setHeight(20);
-        
-        healthbarOutline.setPosition(1, 50);
-        healthbarInline.setPosition(1, 50);
-        energybarOutline.setPosition(1, 20);
-        energybarInline.setPosition(1, 20);
-        
+
+        healthbarOutline.setPosition(posBarsX, posBarsY + 30);
+        healthbarInline.setPosition(posBarsX, posBarsY + 30);
+        energybarOutline.setPosition(posBarsX, posBarsY);
+        energybarInline.setPosition(posBarsX, posBarsY);
+
         guiNode.attachChild(healthbarOutline);
         guiNode.attachChild(healthbarInline);
         guiNode.attachChild(energybarOutline);
         guiNode.attachChild(energybarInline);
     }
- 
-    void initCrossHair(int size){
+
+    void initCrossHair(int size) {
         Picture pic = new Picture("HUD Picture");
         pic.setImage(assetManager, "Textures/neon_crosshair.png", true);
-        
+
         pic.setWidth(size);
         pic.setHeight(size);
-        
-        float width = settings.getWidth()/2 - size/2;
-        float height = settings.getHeight()/2 - size/2;
+
+        float width = settings.getWidth() / 2 - size / 2;
+        float height = settings.getHeight() / 2 - size / 2;
         pic.setPosition(width, height);
-        
+
         guiNode.attachChild(pic);
     }
-    
-public void updateHUD(float RayGunEnergy, float playerHealth)
-{
-    energybarInline.setWidth(120 * RayGunEnergy);
-    // TODO : Texture fix
-    //energybarInline.setPosition(1 * RayGunEnergy, 20);
-}
+
+    public void updateHUD(float RayGunEnergy, float playerHealth) {
+        energybarInline.setWidth(120 * RayGunEnergy);
+        energybarInline.setPosition(10 + ((1 - RayGunEnergy * 10)), posBarsY);
+
+        healthbarInline.setWidth(120 * playerHealth);
+        healthbarInline.setPosition(10 + ((1 - playerHealth * 10)), posBarsY + 30);
+    }
 }
