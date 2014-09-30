@@ -152,8 +152,8 @@ public class Enemy extends Node {
             Geometry boxGeo = new Geometry("Colored Box", boxMesh);
             Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
             boxMat.setBoolean("UseMaterialColors", true); 
-            boxMat.setColor("Ambient", ColorRGBA.Green); 
-            boxMat.setColor("Diffuse", ColorRGBA.Green); 
+            boxMat.setColor("Ambient", ColorRGBA.Cyan); 
+            boxMat.setColor("Diffuse", ColorRGBA.Cyan); 
             boxGeo.setMaterial(boxMat); 
             this.attachChild(boxGeo);
         }
