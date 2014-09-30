@@ -8,7 +8,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.collision.shapes.ConeCollisionShape;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
@@ -19,7 +18,6 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.List;
@@ -62,6 +60,8 @@ public class Enemy extends LivingThing {
     private void initCollision() {
         CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
         enemyControl = new CharacterControl(cylinder, 0.05f);
+        enemyControl.setCollisionGroup(1);
+        enemyControl.removeCollideWithGroup(1);
         this.addControl(enemyControl);
         
         bulletAppState.getPhysicsSpace().add(this);
@@ -102,6 +102,8 @@ public class Enemy extends LivingThing {
         alienCollisionShape.addChildShape(sphere, new Vector3f(0, 3.35f, 2.25f));
         
         enemyGhostControl = new GhostControl(alienCollisionShape);
+        enemyGhostControl.setCollisionGroup(1);
+        enemyGhostControl.removeCollideWithGroup(1);
         enemyModel.addControl(enemyGhostControl);
         
         bulletAppState.getPhysicsSpace().add(enemyModel);
@@ -126,21 +128,6 @@ public class Enemy extends LivingThing {
         
         enemyControl.setLinearVelocity(new Vector3f(x, 0, z));*/
         
-    }
-    
-    public void checkGhostCollision() {
-        if (this.enemyGhostControl.getOverlappingCount() > 2)
-        {
-            List<PhysicsCollisionObject> objList = this.enemyGhostControl.getOverlappingObjects();
-            for (PhysicsCollisionObject o : objList)
-            {
-                if (o.getCollisionGroup() == 32768)
-                {
-                    health--;
-                    checkHP();
-                }
-            }
-        }
     }
     
     public void checkHP() {

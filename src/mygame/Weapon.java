@@ -4,7 +4,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -29,7 +28,7 @@ public class Weapon extends Node {
     private AssetManager assetManager;
     private BulletAppState bulletAppState;
     private ViewPort viewPort;
-    private Material bullet_mat;
+
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
     private float damage;
@@ -61,7 +60,6 @@ public class Weapon extends Node {
         energyTimer.reset(); 
         
         initModel();
-        initMaterial();
         initAudio();
     }
 
@@ -69,17 +67,7 @@ public class Weapon extends Node {
         Spatial model = assetManager.loadModel("Models/GranadeLauncher/GranadeLauncher.j3o");
         this.attachChild(model);
     }
-
-    private void initMaterial() {
-        bullet_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        bullet_mat.setColor("Color", ColorRGBA.Yellow);
-        bullet_mat.setColor("GlowColor", ColorRGBA.Yellow);
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
-        fpp.addFilter(bloom);
-        viewPort.addProcessor(fpp);
-    }
-
+    
     private void initAudio() {
         bullet_snd = new AudioNode(assetManager, "Sounds/space_gun.wav", false);
         bullet_snd.setPositional(false);
@@ -107,41 +95,24 @@ public class Weapon extends Node {
         
     }
 
-    public void shoot(Vector3f loc, Quaternion rot, Vector3f dir) {
+    public boolean shoot() {
         if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped)
         {
-            Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
-            Geometry geom = new Geometry("Bullet", c);
-            geom.setMaterial(bullet_mat);
-
-            float locX = loc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread); 
-            float locY = loc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
-            float locZ = loc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
-                    
-            geom.setLocalTranslation(locX, locY, locZ);
-            geom.rotate(rot);
-            
-            RigidBodyControl physics = new RigidBodyControl();
-            geom.addControl(physics);
-            physics.setLinearVelocity(dir.mult(250f));
-            physics.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_16);
-            
-            bulletAppState.getPhysicsSpace().add(physics);
-            bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
-            
-            this.attachChild(geom);
-            
             bullet_snd.stop();
             bullet_snd.play();
             
             currentEnergy--;
             fireTimer.reset();
             recoil();
+            
+            return true;
         }
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+        else if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             empty_snd.play();
             fireTimer.reset();
         }
+        
+        return false;
     }
     
     public float getEnergy()

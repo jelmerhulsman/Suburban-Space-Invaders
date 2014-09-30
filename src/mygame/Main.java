@@ -3,11 +3,11 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -16,7 +16,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
@@ -24,12 +23,14 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Bralts & Hulsman
  */
-public class Main extends SimpleApplication implements PhysicsCollisionListener {
+public class Main extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     private Spatial suburbs;
@@ -42,13 +43,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Vector3f camLeft;
     private Weapon rayGun;
     private HUD hud;
-    
     Enemy enemy;
-
     private BoundingBox suburbsBox;
     private PointLight sun;
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
+    ArrayList bulletList = new ArrayList();
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -70,7 +70,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initFog();
         initHUD();
         initKeys();
-        
+
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
     }
@@ -80,17 +80,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updatePlayerWalk();
         updateWeapon();
         updateHUD();
-        
+
         enemy.rotateAndMove(cam.getLocation());
-        enemy.checkGhostCollision();
-        //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
-        fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
+        checkResults();
     }
 
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().addCollisionListener(this);
+        //bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
     private void initPhysics(boolean debug) {
@@ -283,27 +281,40 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
                 Vector3f bulletLoc = cam.getLocation().add(cam.getDirection().mult(3));
-                rayGun.shoot(bulletLoc, cam.getRotation(), cam.getDirection());
-                rayGun.isShooting = true;
+                 
+                if (rayGun.shoot())
+                {
+                    rayGun.isShooting = true;
+                    bulletList.add(new Bullet())
+                }
             }
         }
     };
 
-    public void collision(PhysicsCollisionEvent event) {
-        if (event.getNodeA() != null) {
-            if (event.getNodeA().getName().equals("Bullet")) {
-                /*Vector3f xyz = event.getNodeA().getWorldTranslation();
-                 Box boxMesh = new Box(1f,1f,1f); 
-                 Geometry boxGeo = new Geometry("Colored Box", boxMesh); 
-                 Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-                 boxMat.setBoolean("UseMaterialColors", true); 
-                 boxMat.setColor("Ambient", ColorRGBA.Pink); 
-                 boxMat.setColor("Diffuse", ColorRGBA.Pink); 
-                 boxGeo.setMaterial(boxMat); 
-                 boxGeo.setLocalTranslation(xyz);
-                 rootNode.attachChild(boxGeo);*/
+    public void checkResults() {
+        CollisionResults results = new CollisionResults();
+        //enemy.collideWith(rayGun, results);
 
-                rayGun.detachChild(event.getNodeA());
+        if (results.size() > 0) {
+            fpsText.setText("hit");
+        }
+    }
+
+    public void checkGhostCollision() {
+        if (enemy.enemyGhostControl.getOverlappingCount() > 1) {
+            List<PhysicsCollisionObject> objList = enemy.enemyGhostControl.getOverlappingObjects();
+            for (PhysicsCollisionObject o : objList) {
+                if (o.getUserObject() == null) {
+                    break;
+                }
+
+                if (o.getUserObject().toString().equals("Bullet (Geometry)")) {
+
+
+                    enemy.health--;
+                    
+                    enemy.checkHP();
+                }
             }
         }
     }
