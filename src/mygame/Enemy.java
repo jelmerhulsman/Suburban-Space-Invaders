@@ -26,17 +26,15 @@ import java.util.List;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
-public class Enemy extends Node {
+public class Enemy extends LivingThing {
     AssetManager assetManager;
     BulletAppState bulletAppState;
     
     Spatial enemyModel;
     CharacterControl enemyControl;
     GhostControl enemyGhostControl;
-    
-    float enemyHP;
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
         super();
@@ -48,7 +46,8 @@ public class Enemy extends Node {
         initCollision();
         initGhostCollision();
         
-        enemyHP = 10f;
+        health = 10f;
+        maxHealth = 10f;
         
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         enemyControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
@@ -137,7 +136,7 @@ public class Enemy extends Node {
             {
                 if (o.getCollisionGroup() == 32768)
                 {
-                    enemyHP--;
+                    health--;
                     checkHP();
                 }
             }
@@ -145,7 +144,7 @@ public class Enemy extends Node {
     }
     
     public void checkHP() {
-        if (this.enemyHP <= 0f)
+        if (this.health <= 0f)
         {
             /* A colored lit cube. Needs light source! */ 
             Box boxMesh = new Box(0.5f, 100f, 0.5f); 

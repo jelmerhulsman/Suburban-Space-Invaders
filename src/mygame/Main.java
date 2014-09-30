@@ -105,7 +105,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
-
         suburbsBox = (BoundingBox) suburbs.getWorldBound();
     }
 
