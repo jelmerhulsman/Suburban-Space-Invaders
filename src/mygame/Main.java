@@ -14,6 +14,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -82,8 +83,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateHUD();
         
         enemy.rotateAndMove(cam.getLocation());
+        
         enemy.checkGhostCollision();
-        //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
+        
+        
+        //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
         fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
     }
 
@@ -116,9 +120,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initLight() {
-        /*AmbientLight al = new AmbientLight();
+        AmbientLight al = new AmbientLight();
          al.setColor(ColorRGBA.White.mult(1.3f));
-         rootNode.addLight(al);*/
+         rootNode.addLight(al);
 
         sun = new PointLight();
         sun.setColor(ColorRGBA.White);

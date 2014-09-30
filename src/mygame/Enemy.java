@@ -49,7 +49,7 @@ public class Enemy extends LivingThing {
         health = 10f;
         maxHealth = 10f;
         
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         enemyControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
@@ -63,7 +63,7 @@ public class Enemy extends LivingThing {
         CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
         enemyControl = new CharacterControl(cylinder, 0.05f);
         this.addControl(enemyControl);
-        
+        enemyControl.setUseViewDirection(false);
         bulletAppState.getPhysicsSpace().add(this);
     }
     
@@ -107,24 +107,34 @@ public class Enemy extends LivingThing {
         bulletAppState.getPhysicsSpace().add(enemyModel);
     }
     
+    
     public void rotateAndMove(Vector3f loc) {
         /*float x = 0;
-        if (locPlayer.x != this.enemyControl.getPhysicsLocation().x) {
-            if (locPlayer.x > this.enemyControl.getPhysicsLocation().x)
+        if (loc.x != this.enemyControl.getPhysicsLocation().x) {
+            if (loc.x > this.enemyControl.getPhysicsLocation().x)
                 x = 1f;
             else
                 x = -1f;
         }
         
         float z = 0;
-        if (locPlayer.z != this.enemyControl.getPhysicsLocation().z) {
-            if (locPlayer.z > this.enemyControl.getPhysicsLocation().z)
+        if (loc.z != this.enemyControl.getPhysicsLocation().z) {
+            if (loc.z > this.enemyControl.getPhysicsLocation().z)
                 z = 1f;
             else
                 z = -1f;
         }
         
         enemyControl.setLinearVelocity(new Vector3f(x, 0, z));*/
+        
+        float playerDist = loc.distance(this.getLocalTranslation());
+        
+        Vector3f newloc = new Vector3f(loc.x,-1,loc.z);
+        
+        if(playerDist < 30)
+        this.lookAt(newloc, new Vector3f(0,1,0));
+        else
+        this.lookAt(loc, new Vector3f(0,1,0));
         
     }
     
