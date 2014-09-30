@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @author Hulsman
  */
-public class Enemy extends Node {
+public class Enemy extends LivingThing {
     AssetManager assetManager;
     BulletAppState bulletAppState;
     
