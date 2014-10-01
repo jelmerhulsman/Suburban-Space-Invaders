@@ -7,6 +7,7 @@ import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -24,6 +25,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
@@ -94,7 +96,7 @@ public class Main extends SimpleApplication {
         enemy.rotateAndMove(cam.getLocation());
         checkResults();
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
-        fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
+        fpsText.setText(FastMath.floor(enemy.control.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().z));
     }
 
     private void initPhysics() {
@@ -318,30 +320,39 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(addBullet);
                     bullets.add(0, addBullet);
                     
-                    int lastIndex = bullets.size() - 1;
-                    if (lastIndex > 10)
-                    {
-                        Bullet removeBullet = (Bullet) bullets.get(lastIndex);
-                        removeBullet.removeFromParent();
-                        bullets.remove(lastIndex);
-                    }
+                    if (bullets.size() > 10)
+                        removeBullet(bullets.size() - 1);
                 }
             }
         }
     };
 
     public void checkResults() {
-        CollisionResults results = new CollisionResults();
-        //enemy.collideWith(rayGun, results);
-
-        if (results.size() > 0) {
-            fpsText.setText("hit");
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        
+        for (int i = 0; i < bullets.size(); i++)
+        {
+            CollisionResults results = new CollisionResults();
+            
+            Bullet b = (Bullet) bullets.get(i);
+            enemy.model.collideWith(b.getModelBound(), results);
+            
+            if (results.size() > 0) {
+                fpsText.setText("hit");
+            }
         }
+    }
+    
+    public void removeBullet(int index)
+    {
+        Bullet removeBullet = (Bullet) bullets.get(index);
+        removeBullet.removeFromParent();
+        bullets.remove(index);
     }
 
     public void checkGhostCollision() {
-        if (enemy.enemyGhostControl.getOverlappingCount() > 1) {
-            List<PhysicsCollisionObject> objList = enemy.enemyGhostControl.getOverlappingObjects();
+        if (enemy.ghostControl.getOverlappingCount() > 1) {
+            List<PhysicsCollisionObject> objList = enemy.ghostControl.getOverlappingObjects();
             for (PhysicsCollisionObject o : objList) {
                 if (o.getUserObject() == null) {
                     break;
