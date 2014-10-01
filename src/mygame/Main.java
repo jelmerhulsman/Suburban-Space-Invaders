@@ -14,6 +14,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -83,6 +84,8 @@ public class Main extends SimpleApplication {
 
         enemy.rotateAndMove(cam.getLocation());
         checkResults();
+        //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
+        fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
     }
 
     private void initPhysics() {
@@ -114,9 +117,9 @@ public class Main extends SimpleApplication {
     }
 
     private void initLight() {
-        /*AmbientLight al = new AmbientLight();
-         al.setColor(ColorRGBA.White.mult(1.3f));
-         rootNode.addLight(al);*/
+        AmbientLight al = new AmbientLight();
+        al.setColor(ColorRGBA.White.mult(1.3f));
+        rootNode.addLight(al);
 
         sun = new PointLight();
         sun.setColor(ColorRGBA.White);
@@ -285,7 +288,7 @@ public class Main extends SimpleApplication {
                 if (rayGun.shoot())
                 {
                     rayGun.isShooting = true;
-                    bulletList.add(new Bullet())
+                    bulletList.add(new Bullet());
                 }
             }
         }
