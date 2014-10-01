@@ -2,29 +2,25 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.BloomFilter;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.shape.Cylinder;
 
 /**
  *
  * @author Hulsman
  */
-public class Bullet extends Node{
+public class Bullet extends Geometry{
     private AssetManager assetManager;
     private BulletAppState bulletAppState;
-    private ViewPort viewPort;
     
     private Material bullet_mat;
+    public RigidBodyControl control;
     private Vector3f loc;
     private Quaternion rot;
     private Vector3f dir;
@@ -36,7 +32,8 @@ public class Bullet extends Node{
         this.loc = loc;
         this.rot = rot;
         this.dir = dir;
-                
+        
+        this.setName("Bullet");
         initMaterial();
         initGeometry();
         initPhysicsControl();
@@ -50,21 +47,22 @@ public class Bullet extends Node{
 
     private void initGeometry() {
         Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
-        Geometry bullet = new Geometry("Bullet", c);
-        bullet.setMaterial(bullet_mat);
         
-        bullet.setLocalTranslation(loc);
-        bullet.rotate(rot);
-        this.attachChild(bullet);
+        this.setMesh(c);
+        this.setMaterial(bullet_mat);
+        
+        this.setLocalTranslation(loc);
+        this.rotate(rot);
     }
     
     private void initPhysicsControl() {
-        RigidBodyControl bullet_phy = new RigidBodyControl();
-        this.addControl(bullet_phy);
+        SphereCollisionShape scs = new SphereCollisionShape(0.075f);
+        control = new RigidBodyControl(scs);
+        this.addControl(control);
         
-        bullet_phy.setLinearVelocity(dir.mult(250f));
+        control.setLinearVelocity(dir.mult(250f));
 
-        bulletAppState.getPhysicsSpace().add(bullet_phy);
+        bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
 }

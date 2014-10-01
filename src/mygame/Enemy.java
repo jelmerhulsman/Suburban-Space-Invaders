@@ -33,6 +33,9 @@ public class Enemy extends LivingThing {
     Spatial enemyModel;
     
     GhostControl enemyGhostControl;
+    Spatial model;
+    CharacterControl control;
+    GhostControl ghostControl;
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
         
@@ -48,12 +51,13 @@ public class Enemy extends LivingThing {
         
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+        control.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
     private void initModel() {
         // Model bounds -> x:5, y:2.5, z:4.5
-        enemyModel = assetManager.loadModel("Models/Alien/Alien.j3o");
-        this.attachChild(enemyModel);
+        model = assetManager.loadModel("Models/Alien/Alien.j3o");
+        this.attachChild(model);
     }
     
     private void initCollision() {
@@ -63,6 +67,12 @@ public class Enemy extends LivingThing {
         pawnControl.removeCollideWithGroup(1);
         this.addControl(pawnControl);
         pawnControl.setUseViewDirection(false);
+        control = new CharacterControl(cylinder, 0.05f);
+        control.setCollisionGroup(1);
+        control.removeCollideWithGroup(1);
+        this.addControl(control);
+        control.setUseViewDirection(false);
+
         bulletAppState.getPhysicsSpace().add(this);
     }
     
@@ -100,12 +110,12 @@ public class Enemy extends LivingThing {
         sphere = new SphereCollisionShape(1.3f);
         alienCollisionShape.addChildShape(sphere, new Vector3f(0, 3.35f, 2.25f));
         
-        enemyGhostControl = new GhostControl(alienCollisionShape);
-        enemyGhostControl.setCollisionGroup(1);
-        enemyGhostControl.removeCollideWithGroup(1);
-        enemyModel.addControl(enemyGhostControl);
+        ghostControl = new GhostControl(alienCollisionShape);
+        ghostControl.setCollisionGroup(1);
+        ghostControl.removeCollideWithGroup(1);
+        model.addControl(ghostControl);
         
-        bulletAppState.getPhysicsSpace().add(enemyModel);
+        bulletAppState.getPhysicsSpace().add(model);
     }
     
     public void rotateAndMove(Vector3f loc) {
