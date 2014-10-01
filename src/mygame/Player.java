@@ -19,11 +19,11 @@ public class Player extends LivingThing{
     public Player() {
 
         capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
-        pawn = new CharacterControl(capsuleShape, 0.05f);
-        pawn.setJumpSpeed(15f);
-        pawn.setFallSpeed(30f);
-        pawn.setGravity(30f);
-        pawn.setPhysicsLocation(new Vector3f(0, 15f, 0));
+        pawnControl = new CharacterControl(capsuleShape, 0.05f);
+        pawnControl.setJumpSpeed(15f);
+        pawnControl.setFallSpeed(30f);
+        pawnControl.setGravity(30f);
+        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, 0));
 
         health = 100f;
         maxHealth = 100f;

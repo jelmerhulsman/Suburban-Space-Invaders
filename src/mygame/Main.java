@@ -16,6 +16,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.PointLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -24,7 +25,9 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ public class Main extends SimpleApplication {
     Enemy enemy;
     private BoundingBox suburbsBox;
     private PointLight sun;
+    private RigidBodyControl worldboundControl;
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
     
@@ -94,7 +98,7 @@ public class Main extends SimpleApplication {
         enemy.rotateAndMove(cam.getLocation());
         checkResults();
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
-        fpsText.setText(FastMath.floor(enemy.enemyControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.enemyControl.getPhysicsLocation().z));
+        fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
     }
 
     private void initPhysics() {
@@ -116,12 +120,16 @@ public class Main extends SimpleApplication {
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
         suburbsBox = (BoundingBox) suburbs.getWorldBound();
+
     }
 
     private void initCollision() {
         CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
+        CollisionShape worldboundShape = CollisionShapeFactory.createBoxShape(suburbs);
         suburbsControl = new RigidBodyControl(suburbsShape, 0f);
+        worldboundControl = new RigidBodyControl(worldboundShape, 0f);
         suburbs.addControl(suburbsControl);
+        suburbs.addControl(worldboundControl);
         bulletAppState.getPhysicsSpace().add(suburbsControl);
     }
 

@@ -31,11 +31,10 @@ public class Enemy extends LivingThing {
     BulletAppState bulletAppState;
     
     Spatial enemyModel;
-    CharacterControl enemyControl;
+    
     GhostControl enemyGhostControl;
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
-        super();
         
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
@@ -48,7 +47,7 @@ public class Enemy extends LivingThing {
         maxHealth = 10f;
         
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        enemyControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
     private void initModel() {
@@ -59,11 +58,11 @@ public class Enemy extends LivingThing {
     
     private void initCollision() {
         CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
-        enemyControl = new CharacterControl(cylinder, 0.05f);
-        enemyControl.setCollisionGroup(1);
-        enemyControl.removeCollideWithGroup(1);
-        this.addControl(enemyControl);
-        enemyControl.setUseViewDirection(false);
+        pawnControl = new CharacterControl(cylinder, 0.05f);
+        pawnControl.setCollisionGroup(1);
+        pawnControl.removeCollideWithGroup(1);
+        this.addControl(pawnControl);
+        pawnControl.setUseViewDirection(false);
         bulletAppState.getPhysicsSpace().add(this);
     }
     
@@ -136,6 +135,9 @@ public class Enemy extends LivingThing {
         this.lookAt(newloc, new Vector3f(0,1,0));
         else
         this.lookAt(loc, new Vector3f(0,1,0));
+        
+        if(loc != new Vector3f(loc))
+        Move(new Vector3f(loc.x,0,loc.z));
         
     }
     

@@ -16,7 +16,7 @@ import com.jme3.scene.Node;
 public class LivingThing extends Node {
 
     protected float health, maxHealth;
-    protected CharacterControl pawn;
+    protected CharacterControl pawnControl;
     protected CapsuleCollisionShape capsuleShape;
 
     public LivingThing() {
@@ -31,16 +31,21 @@ public class LivingThing extends Node {
     }
 
     public CharacterControl getCharacterControl() {
-        return pawn;
+        return pawnControl;
     }
 
     public void Move(Vector3f walkdirection) {
-        pawn.setWalkDirection(walkdirection);
-        this.setLocalTranslation(pawn.getPhysicsLocation());
+        if(walkdirection != null || walkdirection != new Vector3f(0,0,0) )
+        {
+        pawnControl.setWalkDirection(walkdirection);
+        
+        this.setLocalTranslation(pawnControl.getPhysicsLocation());
+        }
+
     }
 
     public void Jump() {
-        pawn.jump();
+        pawnControl.jump();
     }
 
     public void updatePawn() {
