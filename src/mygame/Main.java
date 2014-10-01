@@ -17,8 +17,11 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -49,7 +52,8 @@ public class Main extends SimpleApplication {
     private PointLight sun;
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
-    ArrayList bulletList = new ArrayList();
+    
+    ArrayList bullets;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -58,20 +62,25 @@ public class Main extends SimpleApplication {
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-
+        
         initPhysics();
         initPhysics(false);
         initScene();
         initCollision();
         initLight();
+        
         if (bEnableShadows) {
             initShadow();
         }
+        
         initPlayer();
         initFog();
+        initFilter();
         initHUD();
-        initKeys();
-
+        initKeys(); 
+        
+        bullets = new ArrayList();
+        
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
     }
@@ -168,9 +177,16 @@ public class Main extends SimpleApplication {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         FogFilter fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogDistance(150f);
-        fog.setFogDensity(2f);
+        fog.setFogDistance(1000f);
+        fog.setFogDensity(1f);
         fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
+    }
+    
+    private void initFilter() {
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
+        fpp.addFilter(bloom);
         viewPort.addProcessor(fpp);
     }
 
@@ -283,12 +299,32 @@ public class Main extends SimpleApplication {
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-                Vector3f bulletLoc = cam.getLocation().add(cam.getDirection().mult(3));
-                 
+                
                 if (rayGun.shoot())
                 {
                     rayGun.isShooting = true;
-                    bulletList.add(new Bullet());
+                    float spread = rayGun.getSpread();
+                    
+                    Vector3f bulletLoc = cam.getLocation().add(cam.getDirection().mult(3));
+                    float locX = bulletLoc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
+                    float locY = bulletLoc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
+                    float locZ = bulletLoc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
+                    bulletLoc = new Vector3f(locX, locY, locZ);
+                    
+                    Quaternion bulletRot = cam.getRotation();
+                    Vector3f bulletDir = cam.getDirection();
+                    
+                    Bullet addBullet = new Bullet(assetManager, bulletAppState, bulletLoc, bulletRot, bulletDir);
+                    rootNode.attachChild(addBullet);
+                    bullets.add(0, addBullet);
+                    
+                    int lastIndex = bullets.size() - 1;
+                    if (lastIndex > 10)
+                    {
+                        Bullet removeBullet = (Bullet) bullets.get(lastIndex);
+                        removeBullet.removeFromParent();
+                        bullets.remove(lastIndex);
+                    }
                 }
             }
         }

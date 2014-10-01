@@ -81,6 +81,11 @@ public class Weapon extends Node {
         empty_snd.setVolume(0.75f);
         this.attachChild(empty_snd);
     }
+
+    public float getSpread() {
+        return spread;
+    }
+    
     
     public void restoreEnergy() {
         if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false)
