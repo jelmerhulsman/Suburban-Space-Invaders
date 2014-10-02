@@ -6,7 +6,6 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.collision.shapes.ConeCollisionShape;
@@ -20,7 +19,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import java.util.List;
 
 /**
  *
@@ -48,6 +46,7 @@ public class Enemy extends LivingThing {
         maxHealth = 10f;
 
         control.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+        ghostControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
     private void initModel() {
@@ -59,11 +58,9 @@ public class Enemy extends LivingThing {
     private void initCollision() {
         CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
         control = new CharacterControl(cylinder, 0.05f);
-        control.setCollisionGroup(1);
-        control.removeCollideWithGroup(1);
         this.addControl(control);
         control.setUseViewDirection(false);
-        bulletAppState.getPhysicsSpace().add(this);
+        bulletAppState.getPhysicsSpace().add(control);
     }
     
     private void initGhostCollision() {
@@ -101,8 +98,6 @@ public class Enemy extends LivingThing {
         alienCollisionShape.addChildShape(sphere, new Vector3f(0, 3.35f, 2.25f));
         
         ghostControl = new GhostControl(alienCollisionShape);
-        ghostControl.setCollisionGroup(1);
-        ghostControl.removeCollideWithGroup(1);
         model.addControl(ghostControl);
         
         bulletAppState.getPhysicsSpace().add(model);

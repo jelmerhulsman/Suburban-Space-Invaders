@@ -7,7 +7,6 @@ import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -85,6 +84,8 @@ public class Main extends SimpleApplication {
         
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
+        
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class Main extends SimpleApplication {
         updateHUD();
 
         enemy.rotateAndMove(cam.getLocation());
-        checkResults();
+        checkGhostCollision();
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
         fpsText.setText(FastMath.floor(enemy.control.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().z));
     }
@@ -137,11 +138,6 @@ public class Main extends SimpleApplication {
         sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2, 300, suburbsBox.getZExtent() / 2));
         sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
         rootNode.addLight(sun);
-
-        /*DirectionalLight dl = new DirectionalLight();
-         dl.setColor(ColorRGBA.White);
-         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-         rootNode.addLight(dl);*/
     }
 
     public void initShadow() {
@@ -326,22 +322,6 @@ public class Main extends SimpleApplication {
             }
         }
     };
-
-    public void checkResults() {
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        
-        for (int i = 0; i < bullets.size(); i++)
-        {
-            CollisionResults results = new CollisionResults();
-            
-            Bullet b = (Bullet) bullets.get(i);
-            enemy.model.collideWith(b.getModelBound(), results);
-            
-            if (results.size() > 0) {
-                fpsText.setText("hit");
-            }
-        }
-    }
     
     public void removeBullet(int index)
     {
@@ -357,10 +337,13 @@ public class Main extends SimpleApplication {
                 if (o.getUserObject() == null) {
                     break;
                 }
-
-                if (o.getUserObject().toString().equals("Bullet (Geometry)")) {
-
-
+                
+                if (o.getUserObject() instanceof  Bullet) {
+                    Bullet b = (Bullet) o.getUserObject();
+                    b.removeControl(b.getControl(0));
+                    b.removeFromParent();
+                    bullets.remove(b);
+                    
                     enemy.health--;
                     
                     enemy.checkHP();

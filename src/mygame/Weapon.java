@@ -4,19 +4,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Cylinder;
 import com.jme3.system.Timer;
 
 /**
@@ -64,7 +54,7 @@ public class Weapon extends Node {
     }
 
     private void initModel() {
-        Spatial model = assetManager.loadModel("Models/GranadeLauncher/GranadeLauncher.j3o");
+        Spatial model = assetManager.loadModel("Models/GrenadeLauncher/GrenadeLauncher.j3o");
         this.attachChild(model);
     }
     

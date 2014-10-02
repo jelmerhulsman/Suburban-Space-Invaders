@@ -57,10 +57,10 @@ public class Bullet extends Geometry{
     
     private void initPhysicsControl() {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
-        control = new RigidBodyControl(scs);
+        control = new RigidBodyControl(scs, 1f);
         this.addControl(control);
         
-        control.setLinearVelocity(dir.mult(250f));
+        control.setLinearVelocity(dir.mult(20f));
 
         bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
