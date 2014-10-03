@@ -38,15 +38,15 @@ public class Enemy extends LivingThing {
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
         
+        this.setName("Enemy");
         initModel();
-        initCollision();
-        initGhostCollision();
+        initCharacterControl();
         
         health = 10f;
         maxHealth = 10f;
-
+        
+        control.setUseViewDirection(false);
         control.setPhysicsLocation(new Vector3f(0, 15f, -5f));
-        ghostControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
     private void initModel() {
@@ -55,11 +55,14 @@ public class Enemy extends LivingThing {
         this.attachChild(model);
     }
     
-    private void initCollision() {
-        CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
-        control = new CharacterControl(cylinder, 0.05f);
+    private void initCharacterControl() {
+        CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
+        control = new CharacterControl(ccs, 0.05f);
+        
+        Vector3f loc = model.center().getWorldTranslation();
+        control.setPhysicsLocation(loc);
+        
         this.addControl(control);
-        control.setUseViewDirection(false);
         bulletAppState.getPhysicsSpace().add(control);
     }
     
@@ -104,37 +107,14 @@ public class Enemy extends LivingThing {
     }
     
     public void rotateAndMove(Vector3f loc) {
-        /*float x = 0;
-        if (loc.x != this.enemyControl.getPhysicsLocation().x) {
-            if (loc.x > this.enemyControl.getPhysicsLocation().x)
-                x = 1f;
-            else
-                x = -1f;
-        }
-        
-        float z = 0;
-        if (loc.z != this.enemyControl.getPhysicsLocation().z) {
-            if (loc.z > this.enemyControl.getPhysicsLocation().z)
-                z = 1f;
-            else
-                z = -1f;
-        }
-        
-        enemyControl.setLinearVelocity(new Vector3f(x, 0, z));*/
-        
         float playerDist = loc.distance(this.getLocalTranslation());
-        
-        Vector3f newloc = new Vector3f(loc.x,-1,loc.z);
-        
-        if(playerDist < 30)
-        this.lookAt(newloc, new Vector3f(0,1,0));
-        else
-        this.lookAt(loc, new Vector3f(0,1,0));
-        
+        this.lookAt(new Vector3f(loc.x, 0, loc.z), new Vector3f(0,1,0));
     }
     
-    public void checkHP() {
-        if (this.health <= 0f)
+    public void gotHit() {
+        this.health--;
+        
+        if (this.health == 0f)
         {
             /* A colored lit cube. Needs light source! */ 
             Box boxMesh = new Box(0.5f, 100f, 0.5f); 
