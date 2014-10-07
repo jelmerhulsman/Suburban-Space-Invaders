@@ -59,7 +59,7 @@ public class Bullet extends Node{
     
     private void initPhysicsControl() {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
-        control = new RigidBodyControl(scs, 1f);
+        control = new RigidBodyControl(scs, 200f);
         //control.setCcdMotionThreshold(0.01f);
         //control.setCcdSweptSphereRadius(0.01f);
         this.addControl(control);

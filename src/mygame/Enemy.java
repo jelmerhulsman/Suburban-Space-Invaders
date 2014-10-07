@@ -43,10 +43,8 @@ public class Enemy extends LivingThing {
         health = 10f;
         maxHealth = 10f;
 
-        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
-
         pawnControl.setUseViewDirection(false);
-        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+        pawnControl.setPhysicsLocation(new Vector3f(-100, 100f, -100f));
     }
 
     private void initModel() {
@@ -58,7 +56,6 @@ public class Enemy extends LivingThing {
     private void initCharacterControl() {
         CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
         pawnControl = new CharacterControl(ccs, 0.05f);
-
         Vector3f loc = model.center().getWorldTranslation();
         pawnControl.setPhysicsLocation(loc);
 
@@ -106,20 +103,6 @@ public class Enemy extends LivingThing {
         bulletAppState.getPhysicsSpace().add(model);
     }
 
-    public void rotateAndMove(Vector3f loc) {
-
-
-        float playerDist = loc.distance(this.getLocalTranslation());
-
-        Vector3f newloc = new Vector3f(loc.x, 1, loc.z);
-
-        if (playerDist < 30) {
-            this.lookAt(newloc, new Vector3f(0, 1, 0));
-        } else {
-            this.lookAt(loc, new Vector3f(0, 1, 0));
-        }
-    }
-
     public void checkHP() {
         if (this.health <= 0f) {
             /* A colored lit cube. Needs light source! */
@@ -129,7 +112,6 @@ public class Enemy extends LivingThing {
 
     public void gotHit() {
         this.health--;
-
         if (this.health == 0f) {
             /* A colored lit cube. Needs light source! */
             Box boxMesh = new Box(0.5f, 100f, 0.5f);

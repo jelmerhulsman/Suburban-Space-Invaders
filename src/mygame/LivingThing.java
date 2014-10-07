@@ -2,8 +2,10 @@ package mygame;
 
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.system.Timer;
 
 /**
  *
@@ -14,6 +16,7 @@ public class LivingThing extends Node {
     protected float health, maxHealth;
     protected CharacterControl pawnControl;
     protected CapsuleCollisionShape capsuleShape;
+    protected Timer timer;
 
     public LivingThing() {
     }
@@ -28,6 +31,11 @@ public class LivingThing extends Node {
 
     public CharacterControl getCharacterControl() {
         return pawnControl;
+    }
+    
+    public void initTimer(Timer timer)
+    {
+        this.timer = timer;
     }
 
     public void Move(Vector3f walkdirection) {
@@ -44,6 +52,11 @@ public class LivingThing extends Node {
         }
 
 
+    }
+    
+    public void Knockback(Vector3f direction)
+    {
+        Move(direction);
     }
 
     public void Jump() {
