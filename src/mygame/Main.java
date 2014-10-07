@@ -8,8 +8,6 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -17,9 +15,7 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -31,6 +27,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
+import com.jme3.system.Timer;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +40,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
     private Player player;
-    private Vector3f walkDirection;
+    private Vector3f playerWalkDirection;
+    private Vector3f enemyWalkDirection;
     private boolean left, right, up, down;
     private boolean bDebugMode;
     private Vector3f camDir;
@@ -53,8 +51,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     Enemy enemy;
     private BoundingBox suburbsBox;
     private PointLight sun;
+    
+    private float playerTimer = 1;
+    private float enemyTimer;
+    
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
+    final float ENEMY_SPEED = 0.2f;
+    
     ArrayList bullets;
 
     public static void main(String[] args) {
@@ -68,7 +72,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initPhysics();
         initScene();
         initSceneCollision();
-        
+
         initLight();
         if (bEnableShadows) {
             initShadow();
@@ -82,28 +86,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         bullets = new ArrayList();
 
+        enemyWalkDirection = new Vector3f();
+        
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
+        
     }
-
-    @Override
-    public void simpleUpdate(float tpf) {
-        updatePlayerWalk();
-        updateWeapon();
-        updateHUD();
-
-        if (bDebugMode) {
-            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        } else {
-            bulletAppState.getPhysicsSpace().disableDebug();
-        }
-
-        enemy.rotateAndMove(cam.getLocation());
-
-        //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
-        //fpsText.setText(FastMath.floor(enemy.control.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().z));
-    }
-
+    
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -142,7 +131,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
-        
+
         PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, ShadowSize);
         dlsr.setLight(sun);
         dlsr.setShadowIntensity(0.5f);
@@ -151,7 +140,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initPlayer() {
-        walkDirection = new Vector3f();
+        playerWalkDirection = new Vector3f();
         left = false;
         right = false;
         up = false;
@@ -172,7 +161,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        
+
         //fpp.setNumSamples(4);
         int numSamples = getContext().getSettings().getSamples();
         if (numSamples > 0) {
@@ -217,26 +206,101 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
     }
+    
+    @Override
+    public void simpleUpdate(float tpf) {
+        playerTimer += tpf;
+        
+        updatePlayerWalk();
+        updateEnemyWalk();
+        updateWeapon();
+        updateHUD();
+        
+        //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
+        fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
+        if (bDebugMode) {
+            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        } else {
+            bulletAppState.getPhysicsSpace().disableDebug();
+        }
+        
+    }
 
     public void updatePlayerWalk() {
-        camDir.set(cam.getDirection()).multLocal(0.5f);
-        camLeft.set(cam.getLeft()).multLocal(0.5f);
-        walkDirection.set(0, 0, 0);
+        if (playerTimer > 1f)
+        {
+            camDir.set(cam.getDirection()).multLocal(0.5f);
+            camLeft.set(cam.getLeft()).multLocal(0.5f);
+            playerWalkDirection.set(0, 0, 0);
 
-        if (left) {
-            walkDirection.addLocal(camLeft);
+            if (left) {
+                playerWalkDirection.addLocal(camLeft);
+            }
+            if (right) {
+                playerWalkDirection.addLocal(camLeft.negate());
+            }
+            if (up) {
+                playerWalkDirection.addLocal(camDir.x, 0, camDir.z);
+            }
+            if (down) {
+                playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
+            }
+            player.Move(playerWalkDirection);
         }
-        if (right) {
-            walkDirection.addLocal(camLeft.negate());
-        }
-        if (up) {
-            walkDirection.addLocal(camDir.x, 0, camDir.z);
-        }
-        if (down) {
-            walkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
-        }
-        player.Move(walkDirection);
         cam.setLocation(player.getCharacterControl().getPhysicsLocation());
+    }
+    
+    public void updateEnemyWalk()
+    {
+        Vector3f enemyLoc = enemy.getWorldTranslation();
+        Vector3f playerLoc = player.getWorldTranslation();
+        enemyWalkDirection.set(0, 0, 0);
+        
+        if (enemyLoc.x < playerLoc.x) {
+            float diffX = playerLoc.x - enemyLoc.x;
+            if (diffX < ENEMY_SPEED)
+                enemyWalkDirection.addLocal(diffX, 0, 0);
+            else
+                enemyWalkDirection.addLocal(ENEMY_SPEED, 0, 0);
+        }
+        if (enemyLoc.x > playerLoc.x) {
+            float diffX = playerLoc.x - enemyLoc.x;
+            if (diffX > -ENEMY_SPEED)
+                enemyWalkDirection.addLocal(diffX, 0, 0);
+            else
+                enemyWalkDirection.addLocal(-ENEMY_SPEED, 0, 0);
+        }
+        if (enemyLoc.z < playerLoc.z) {
+            float diffZ = playerLoc.z - enemyLoc.z;
+            if (diffZ < ENEMY_SPEED)
+                enemyWalkDirection.addLocal(0, 0, diffZ);
+            else
+                enemyWalkDirection.addLocal(0, 0, ENEMY_SPEED);
+        }
+        if (enemyLoc.z > playerLoc.z) {
+            float diffZ = playerLoc.z - enemyLoc.z;
+            if (diffZ > -ENEMY_SPEED)
+                enemyWalkDirection.addLocal(0, 0, diffZ);
+            else
+                enemyWalkDirection.addLocal(0, 0, -ENEMY_SPEED);
+        }
+        
+        
+        if (playerTimer < 1f) {
+                player.Knockback(enemyWalkDirection.mult(1.3f));
+                enemyWalkDirection.set(0,0,0);
+        } else if (enemyLoc.distance(playerLoc) < 8) {
+            player.Jump();
+            playerTimer = 0;
+        }
+        
+        if(enemyLoc.distance(playerLoc) > 5)
+            enemy.Move(enemyWalkDirection);
+        else
+            enemy.move(0, 0, 0);
+        
+        Vector3f newloc = new Vector3f(playerLoc.x, 0, playerLoc.z);
+        enemy.lookAt(newloc, new Vector3f(0, 1, 0));
     }
 
     public void updateWeapon() {
@@ -333,10 +397,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
             Bullet b = (Bullet) event.getNodeB();
-            
+
             fpsText.setText("Hit enemy with bullet!");
-            
-            e.gotHit(cam.getLocation());
+
+
+            e.gotHit();
             removeBullet(b);
         }
     }

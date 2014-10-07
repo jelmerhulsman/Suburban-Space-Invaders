@@ -8,7 +8,8 @@ import com.jme3.math.Vector3f;
  *
  * @author Bralts & Hulsman
  */
-public class Player extends LivingThing{
+public class Player extends LivingThing {
+
     public Player() {
 
         capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
@@ -20,11 +21,7 @@ public class Player extends LivingThing{
 
         health = 100f;
         maxHealth = 100f;
-        
+
         this.setName("Player");
     }
-
-
-
-
 }
