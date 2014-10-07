@@ -333,11 +333,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
             Bullet b = (Bullet) event.getNodeB();
-
+            
             fpsText.setText("Hit enemy with bullet!");
-
-
-            e.gotHit();
+            
+            e.gotHit(cam.getLocation());
             removeBullet(b);
         }
     }

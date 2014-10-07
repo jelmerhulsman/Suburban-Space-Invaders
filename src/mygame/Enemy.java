@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.asset.AssetManager;
@@ -29,8 +25,6 @@ public class Enemy extends LivingThing {
     BulletAppState bulletAppState;
     
     Spatial model;
-    CharacterControl control;
-    GhostControl ghostControl;
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
         super();
@@ -45,8 +39,8 @@ public class Enemy extends LivingThing {
         health = 10f;
         maxHealth = 10f;
         
-        control.setUseViewDirection(false);
-        control.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+        pawnControl.setUseViewDirection(false);
+        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
     
     private void initModel() {
@@ -57,53 +51,13 @@ public class Enemy extends LivingThing {
     
     private void initCharacterControl() {
         CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
-        control = new CharacterControl(ccs, 0.05f);
+        pawnControl = new CharacterControl(ccs, 0.05f);
         
         Vector3f loc = model.center().getWorldTranslation();
-        control.setPhysicsLocation(loc);
+        pawnControl.setPhysicsLocation(loc);
         
-        this.addControl(control);
-        bulletAppState.getPhysicsSpace().add(control);
-    }
-    
-    private void initGhostCollision() {
-        // Alien -> collision shape combined by child collision shapes
-        CompoundCollisionShape alienCollisionShape = new CompoundCollisionShape();
-        
-        // Legs and tail -> collision boxes
-        BoxCollisionShape box = new BoxCollisionShape(new Vector3f(5f, 0.25f, 0.25f));
-        alienCollisionShape.addChildShape(box, new Vector3f(0, 0.125f, 1.2f));
-        alienCollisionShape.addChildShape(box, new Vector3f(0, 0.125f, -1.2f));
-        
-        box = new BoxCollisionShape(new Vector3f(3f, 0.25f, 0.25f));
-        alienCollisionShape.addChildShape(box, new Vector3f(0, 0.125f, 0.7f));
-        alienCollisionShape.addChildShape(box, new Vector3f(0, 0.125f, -0.7f));
-        
-        box = new BoxCollisionShape(new Vector3f(0.9f, 0.25f, 2f));
-        alienCollisionShape.addChildShape(box, new Vector3f(0, 0.125f, -3.6f));
-        
-        // Body -> collision cone
-        ConeCollisionShape cone = new ConeCollisionShape(1.5f, 2.7f, 1);
-        alienCollisionShape.addChildShape(cone, new Vector3f(0, 1.35f, -0.2f));
-        
-        // Neck -> collision cyllinders and sphere
-        CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(0.3f, 0.6f, 0.3f), 1);
-        alienCollisionShape.addChildShape(cylinder, new Vector3f(0, 2.4f, 0.15f));
-        
-        SphereCollisionShape sphere = new SphereCollisionShape(0.25f);
-        alienCollisionShape.addChildShape(sphere, new Vector3f(0, 3f, 0.4f));
-        
-        cylinder = new CylinderCollisionShape(new Vector3f(0.2f, 0.2f, 0.3f), 2);
-        alienCollisionShape.addChildShape(cylinder, new Vector3f(0, 3.3f, 0.8f));
-        
-        // Eye (head) -> collision sphere
-        sphere = new SphereCollisionShape(1.3f);
-        alienCollisionShape.addChildShape(sphere, new Vector3f(0, 3.35f, 2.25f));
-        
-        ghostControl = new GhostControl(alienCollisionShape);
-        model.addControl(ghostControl);
-        
-        bulletAppState.getPhysicsSpace().add(model);
+        this.addControl(pawnControl);
+        bulletAppState.getPhysicsSpace().add(pawnControl);
     }
     
     public void rotateAndMove(Vector3f loc) {
@@ -111,8 +65,11 @@ public class Enemy extends LivingThing {
         this.lookAt(new Vector3f(loc.x, 0, loc.z), new Vector3f(0,1,0));
     }
     
-    public void gotHit() {
+    public void gotHit(Vector3f loc) {
         this.health--;
+        //this.Jump();
+        Vector3f knockBackDirection = new Vector3f(-loc.x, 0, -loc.z).multLocal(0.5f);
+        this.Move(knockBackDirection);
         
         if (this.health == 0f)
         {
