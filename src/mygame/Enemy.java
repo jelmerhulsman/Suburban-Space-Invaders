@@ -36,27 +36,33 @@ public class Enemy extends LivingThing {
 
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
+        this.setName("Enemy");
         initModel();
-        initCollision();
-        initGhostCollision();
-        
+        initCharacterControl();
+
         health = 10f;
         maxHealth = 10f;
 
         pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
-        ghostControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
+
+        pawnControl.setUseViewDirection(false);
+        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, -5f));
     }
+
     private void initModel() {
         // Model bounds -> x:5, y:2.5, z:4.5
         model = assetManager.loadModel("Models/Alien/Alien.j3o");
         this.attachChild(model);
     }
 
-    private void initCollision() {
-        CylinderCollisionShape cylinder = new CylinderCollisionShape(new Vector3f(5f, 0.01f, 4.5f), 1);
-        pawnControl = new CharacterControl(cylinder, 0.05f);
+    private void initCharacterControl() {
+        CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
+        pawnControl = new CharacterControl(ccs, 0.05f);
+
+        Vector3f loc = model.center().getWorldTranslation();
+        pawnControl.setPhysicsLocation(loc);
+
         this.addControl(pawnControl);
-        pawnControl.setUseViewDirection(false);
         bulletAppState.getPhysicsSpace().add(pawnControl);
     }
 
@@ -101,11 +107,11 @@ public class Enemy extends LivingThing {
     }
 
     public void rotateAndMove(Vector3f loc) {
-        
+
 
         float playerDist = loc.distance(this.getLocalTranslation());
 
-        Vector3f newloc = new Vector3f(loc.x, -1, loc.z);
+        Vector3f newloc = new Vector3f(loc.x, 1, loc.z);
 
         if (playerDist < 30) {
             this.lookAt(newloc, new Vector3f(0, 1, 0));
@@ -116,6 +122,15 @@ public class Enemy extends LivingThing {
 
     public void checkHP() {
         if (this.health <= 0f) {
+            /* A colored lit cube. Needs light source! */
+            Box boxMesh = new Box(0.5f, 100f, 0.5f);
+        }
+    }
+
+    public void gotHit() {
+        this.health--;
+
+        if (this.health == 0f) {
             /* A colored lit cube. Needs light source! */
             Box boxMesh = new Box(0.5f, 100f, 0.5f);
             Geometry boxGeo = new Geometry("Colored Box", boxMesh);

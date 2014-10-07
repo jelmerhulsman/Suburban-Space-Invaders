@@ -3,7 +3,8 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
@@ -27,13 +28,12 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Bralts & Hulsman
  */
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
     private BulletAppState bulletAppState;
     private Spatial suburbs;
@@ -51,7 +51,6 @@ public class Main extends SimpleApplication {
     private PointLight sun;
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
-    
     ArrayList bullets;
 
     public static void main(String[] args) {
@@ -61,29 +60,26 @@ public class Main extends SimpleApplication {
 
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        
+
         initPhysics();
-        initPhysics(false);
         initScene();
-        initCollision();
+        initSceneCollision();
+
         initLight();
-        
         if (bEnableShadows) {
             initShadow();
         }
-        
+
         initPlayer();
         initFog();
         initFilter();
         initHUD();
-        initKeys(); 
-        
+        initKeys();
+
         bullets = new ArrayList();
-        
+
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
-        
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     }
 
     @Override
@@ -92,22 +88,27 @@ public class Main extends SimpleApplication {
         updateWeapon();
         updateHUD();
 
-        
-        checkGhostCollision();
+
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
         fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
         enemy.rotateAndMove(cam.getLocation());
+        if (bDebugMode) {
+            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        } else {
+            bulletAppState.getPhysicsSpace().disableDebug();
+        }
+
+        enemy.rotateAndMove(cam.getLocation());
+
+        //fpsText.setText(FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z));
+        //fpsText.setText(FastMath.floor(enemy.control.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.control.getPhysicsLocation().z));
     }
 
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //bulletAppState.getPhysicsSpace().addCollisionListener(this);
-    }
 
-    private void initPhysics(boolean debug) {
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
+        bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
     private void initScene() {
@@ -120,7 +121,7 @@ public class Main extends SimpleApplication {
         suburbsBox = (BoundingBox) suburbs.getWorldBound();
     }
 
-    private void initCollision() {
+    private void initSceneCollision() {
         CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
         suburbsControl = new RigidBodyControl(suburbsShape, 0f);
         suburbs.addControl(suburbsControl);
@@ -133,7 +134,7 @@ public class Main extends SimpleApplication {
         rootNode.addLight(al);
 
         sun = new PointLight();
-        sun.setColor(ColorRGBA.White);
+        sun.setColor(ColorRGBA.White.clone().multLocal(2));
         sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2, 300, suburbsBox.getZExtent() / 2));
         sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
         rootNode.addLight(sun);
@@ -141,7 +142,6 @@ public class Main extends SimpleApplication {
 
     public void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
-
 
         PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, ShadowSize);
         dlsr.setLight(sun);
@@ -172,14 +172,21 @@ public class Main extends SimpleApplication {
 
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+
+        //fpp.setNumSamples(4);
+        int numSamples = getContext().getSettings().getSamples();
+        if (numSamples > 0) {
+            fpp.setNumSamples(numSamples);
+        }
+
         FogFilter fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogDistance(1000f);
+        fog.setFogDistance(155f);
         fog.setFogDensity(1f);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
     }
-    
+
     private void initFilter() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
@@ -296,58 +303,48 @@ public class Main extends SimpleApplication {
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-                
-                if (rayGun.shoot())
-                {
+
+                if (rayGun.shoot()) {
                     rayGun.isShooting = true;
                     float spread = rayGun.getSpread();
-                    
+
                     Vector3f bulletLoc = cam.getLocation().add(cam.getDirection().mult(3));
                     float locX = bulletLoc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     float locY = bulletLoc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     float locZ = bulletLoc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     bulletLoc = new Vector3f(locX, locY, locZ);
-                    
+
                     Quaternion bulletRot = cam.getRotation();
                     Vector3f bulletDir = cam.getDirection();
-                    
+
                     Bullet addBullet = new Bullet(assetManager, bulletAppState, bulletLoc, bulletRot, bulletDir);
                     rootNode.attachChild(addBullet);
                     bullets.add(0, addBullet);
-                    
-                    if (bullets.size() > 10)
-                        removeBullet(bullets.size() - 1);
+
+                    if (bullets.size() > 20) {
+                        removeBullet((Bullet) bullets.get(20));
+                    }
                 }
             }
         }
     };
-    
-    public void removeBullet(int index)
-    {
-        Bullet removeBullet = (Bullet) bullets.get(index);
-        removeBullet.removeFromParent();
-        bullets.remove(index);
+
+    public void collision(PhysicsCollisionEvent event) {
+        if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
+            Enemy e = (Enemy) event.getNodeA();
+            Bullet b = (Bullet) event.getNodeB();
+
+            fpsText.setText("Hit enemy with bullet!");
+
+
+            e.gotHit();
+            removeBullet(b);
+        }
     }
 
-    public void checkGhostCollision() {
-        if (enemy.ghostControl.getOverlappingCount() > 1) {
-            List<PhysicsCollisionObject> objList = enemy.ghostControl.getOverlappingObjects();
-            for (PhysicsCollisionObject o : objList) {
-                if (o.getUserObject() == null) {
-                    break;
-                }
-                
-                if (o.getUserObject() instanceof  Bullet) {
-                    Bullet b = (Bullet) o.getUserObject();
-                    b.removeControl(b.getControl(0));
-                    b.removeFromParent();
-                    bullets.remove(b);
-                    
-                    enemy.health--;
-                    
-                    enemy.checkHP();
-                }
-            }
-        }
+    public void removeBullet(Bullet removeBullet) {
+        removeBullet.control.destroy();
+        removeBullet.removeFromParent();
+        bullets.remove(removeBullet);
     }
 }

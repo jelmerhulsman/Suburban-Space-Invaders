@@ -9,17 +9,19 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Cylinder;
 
 /**
  *
  * @author Hulsman
  */
-public class Bullet extends Geometry{
+public class Bullet extends Node{
     private AssetManager assetManager;
     private BulletAppState bulletAppState;
     
     private Material bullet_mat;
+    private Geometry bullet_geometry;
     public RigidBodyControl control;
     private Vector3f loc;
     private Quaternion rot;
@@ -46,21 +48,25 @@ public class Bullet extends Geometry{
     }
 
     private void initGeometry() {
+        bullet_geometry = new Geometry();
         Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
         
-        this.setMesh(c);
-        this.setMaterial(bullet_mat);
+        bullet_geometry.setMesh(c);
+        bullet_geometry.setMaterial(bullet_mat);
         
-        this.setLocalTranslation(loc);
-        this.rotate(rot);
+        this.attachChild(bullet_geometry);
     }
     
     private void initPhysicsControl() {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         control = new RigidBodyControl(scs, 1f);
+        //control.setCcdMotionThreshold(0.01f);
+        //control.setCcdSweptSphereRadius(0.01f);
         this.addControl(control);
         
-        control.setLinearVelocity(dir.mult(20f));
+        control.setPhysicsLocation(loc);
+        control.setPhysicsRotation(rot);
+        control.setLinearVelocity(dir.mult(250f));
 
         bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);

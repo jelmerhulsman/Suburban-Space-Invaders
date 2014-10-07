@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
@@ -25,5 +21,7 @@ public class Player extends LivingThing {
 
         health = 100f;
         maxHealth = 100f;
+
+        this.setName("Player");
     }
 }
