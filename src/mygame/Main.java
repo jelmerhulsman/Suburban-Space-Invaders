@@ -52,8 +52,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private BoundingBox suburbsBox;
     private PointLight sun;
     
-    private float playerTimer = 1;
-    private float enemyTimer;
+    private float playerKnockBackTimer = 1;
+    private float enemyKnockBakTimer = 1;
     
     final boolean bEnableShadows = false;
     final int ShadowSize = 1024;
@@ -209,11 +209,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
     @Override
     public void simpleUpdate(float tpf) {
-        playerTimer += tpf;
+        playerKnockBackTimer += tpf;
+        enemyKnockBakTimer += tpf;
         
         updatePlayerWalk();
         updateEnemyWalk();
-        updateWeapon();
+        updateWeapon(tpf);
         updateHUD();
         
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
@@ -227,7 +228,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     public void updatePlayerWalk() {
-        if (playerTimer > 1f)
+        if (playerKnockBackTimer > 1f)
         {
             camDir.set(cam.getDirection()).multLocal(0.5f);
             camLeft.set(cam.getLeft()).multLocal(0.5f);
@@ -286,12 +287,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
         
         
-        if (playerTimer < 1f) {
+        if (playerKnockBackTimer < 1f) {
                 player.Knockback(enemyWalkDirection.mult(1.3f));
                 enemyWalkDirection.set(0,0,0);
         } else if (enemyLoc.distance(playerLoc) < 8) {
             player.Jump();
-            playerTimer = 0;
+            playerKnockBackTimer = 0;
         }
         
         if(enemyLoc.distance(playerLoc) > 5)
@@ -303,10 +304,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         enemy.lookAt(newloc, new Vector3f(0, 1, 0));
     }
 
-    public void updateWeapon() {
+    public void updateWeapon(float tpf) {
         Vector3f gunLoc = cam.getLocation().add(cam.getDirection().mult(3));
         rayGun.setLocalTranslation(gunLoc);
         rayGun.setLocalRotation(cam.getRotation());
+        
+        rayGun.increaseTimer(tpf);
         rayGun.restoreEnergy();
         rayGun.isShooting = false;
     }

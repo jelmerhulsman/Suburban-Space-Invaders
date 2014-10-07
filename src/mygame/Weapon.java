@@ -26,8 +26,8 @@ public class Weapon extends Node {
     private float maxEnergy;
     private float rechargeRate;
     private float spread;
-    private Timer fireTimer;
-    private Timer energyTimer;
+    private float fireTimer;
+    private float energyTimer;
     public boolean isShooting;
 
     public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort, Timer timer) {
@@ -35,18 +35,19 @@ public class Weapon extends Node {
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
         this.viewPort = viewPort;
-
-        damage = 5f; // 5 damage per shot
-        fireRate = 1 / 5f; // 5 shots per second
+        
+        energyTimer = 0;
+        fireTimer = 0;
+        
         currentEnergy = 50f; // also know as ammo
         maxEnergy = 50f; // maximum ammo
         rechargeRate = 1 / 2f; // recharge 2 shots per second
+        
+        damage = 5f; // 5 damage per shot
+        fireRate = 1 / 5f; // 5 shots per second
         spread = 0.3f;
-
-        fireTimer = timer;
-        fireTimer.reset();
-        energyTimer = timer;
-        energyTimer.reset();
+        
+        
 
         initModel();
         initAudio();
@@ -70,44 +71,50 @@ public class Weapon extends Node {
         empty_snd.setVolume(0.75f);
         this.attachChild(empty_snd);
     }
-
-    public float getSpread() {
-        return spread;
-    }
-
-    public void restoreEnergy() {
-        if (energyTimer.getTimeInSeconds() >= rechargeRate && currentEnergy < maxEnergy && isShooting == false) {
-            currentEnergy++;
-            energyTimer.reset();
-        }
-    }
-
-    public void recoil() {
-    }
-
-    public boolean shoot() {
-        if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
-            bullet_snd.stop();
-            bullet_snd.play();
-
-            currentEnergy--;
-            fireTimer.reset();
-            recoil();
-
-            return true;
-        } else if (fireTimer.getTimeInSeconds() >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
-            empty_snd.play();
-            fireTimer.reset();
-        }
-
-        return false;
-    }
-
+    
     public float getEnergy() {
         return currentEnergy;
     }
 
     public float getMaxEnergy() {
         return maxEnergy;
+    }
+    
+    public float getSpread() {
+        return spread;
+    }
+    
+    public void increaseTimer(float tpf) {
+        energyTimer += tpf;
+        fireTimer += tpf;
+    }
+
+    public void restoreEnergy() {
+        if (energyTimer >= rechargeRate && currentEnergy < maxEnergy && isShooting == false) {
+            currentEnergy++;
+            energyTimer = 0;
+        }
+    }
+    
+    public boolean shoot() {
+        if (fireTimer >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+            bullet_snd.stop();
+            bullet_snd.play();
+
+            currentEnergy--;
+            recoil();
+            
+            fireTimer = 0;
+            return true;
+        } else if (fireTimer >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+            empty_snd.play();
+            
+            fireTimer = 0;
+        }
+
+        return false;
+    }
+    
+    private void recoil() {
     }
 }
