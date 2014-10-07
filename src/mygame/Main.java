@@ -254,23 +254,37 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     {
         Vector3f enemyLoc = enemy.getWorldTranslation();
         Vector3f playerLoc = player.getWorldTranslation();
-        
         enemyWalkDirection.set(0, 0, 0);
         
-        if(enemyLoc.distance(playerLoc) > 5) {
-            if (enemyLoc.x < playerLoc.x) {
+        if (enemyLoc.x < playerLoc.x) {
+            float diffX = playerLoc.x - enemyLoc.x;
+            if (diffX < ENEMY_SPEED)
+                enemyWalkDirection.addLocal(diffX, 0, 0);
+            else
                 enemyWalkDirection.addLocal(ENEMY_SPEED, 0, 0);
-            }
-            if (enemyLoc.x > playerLoc.x) {
-                enemyWalkDirection.addLocal(-ENEMY_SPEED, 0, 0);
-            }
-            if (enemyLoc.z < playerLoc.z) {
-                enemyWalkDirection.addLocal(0, 0, ENEMY_SPEED);
-            }
-            if (enemyLoc.z > playerLoc.z) {
-                enemyWalkDirection.addLocal(0, 0, -ENEMY_SPEED);
-            }
         }
+        if (enemyLoc.x > playerLoc.x) {
+            float diffX = playerLoc.x - enemyLoc.x;
+            if (diffX > -ENEMY_SPEED)
+                enemyWalkDirection.addLocal(diffX, 0, 0);
+            else
+                enemyWalkDirection.addLocal(-ENEMY_SPEED, 0, 0);
+        }
+        if (enemyLoc.z < playerLoc.z) {
+            float diffZ = playerLoc.z - enemyLoc.z;
+            if (diffZ < ENEMY_SPEED)
+                enemyWalkDirection.addLocal(0, 0, diffZ);
+            else
+                enemyWalkDirection.addLocal(0, 0, ENEMY_SPEED);
+        }
+        if (enemyLoc.z > playerLoc.z) {
+            float diffZ = playerLoc.z - enemyLoc.z;
+            if (diffZ > -ENEMY_SPEED)
+                enemyWalkDirection.addLocal(0, 0, diffZ);
+            else
+                enemyWalkDirection.addLocal(0, 0, -ENEMY_SPEED);
+        }
+        
         
         if (playerTimer < 1f) {
                 player.Knockback(enemyWalkDirection.mult(1.3f));
@@ -280,7 +294,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             playerTimer = 0;
         }
         
-        enemy.Move(enemyWalkDirection);
+        if(enemyLoc.distance(playerLoc) > 5)
+            enemy.Move(enemyWalkDirection);
+        else
+            enemy.move(0, 0, 0);
         
         Vector3f newloc = new Vector3f(playerLoc.x, 0, playerLoc.z);
         enemy.lookAt(newloc, new Vector3f(0, 1, 0));
