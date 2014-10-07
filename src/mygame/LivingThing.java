@@ -35,12 +35,18 @@ public class LivingThing extends Node {
     }
 
     public void Move(Vector3f walkdirection) {
-        if(walkdirection != null || walkdirection != new Vector3f(0,0,0) )
-        {
-        pawnControl.setWalkDirection(walkdirection);
-        
-        this.setLocalTranslation(pawnControl.getPhysicsLocation());
+        if (pawnControl != null || walkdirection != new Vector3f(0, 0, 0)) {
+            try {
+                pawnControl.setWalkDirection(walkdirection);
+
+                this.setLocalTranslation(pawnControl.getPhysicsLocation());
+            } catch (Exception e) {
+                System.out.println("UNABLE TO MOVE! " + e.toString());
+            }
+        } else {
+            return;
         }
+
 
     }
 

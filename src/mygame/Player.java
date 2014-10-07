@@ -12,9 +12,7 @@ import com.jme3.math.Vector3f;
  *
  * @author Bralts & Hulsman
  */
-public class Player extends LivingThing{
-
-    
+public class Player extends LivingThing {
 
     public Player() {
 
@@ -28,8 +26,4 @@ public class Player extends LivingThing{
         health = 100f;
         maxHealth = 100f;
     }
-
-
-
-
 }
