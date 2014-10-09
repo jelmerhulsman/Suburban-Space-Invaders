@@ -7,7 +7,7 @@ import com.jme3.scene.Node;
 
 /**
  *
- * @author Moreno
+ * @author Bralts & Hulsman
  */
 public class LivingThing extends Node {
 
@@ -67,6 +67,7 @@ public class LivingThing extends Node {
             //Explode here
             //Kill counter ++
             pawnControl.setPhysicsLocation(new Vector3f(0, -1000f, 0));
+            this.removeFromParent();
         }
     }
 }

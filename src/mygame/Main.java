@@ -234,8 +234,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateWeapon(tpf);
         updateHUD();
 
-        //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
-        fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
+        fpsText.setText("# Nodes in rootnode: " + rootNode.getChildren().size());
+        //fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
     }
 
     public void updatePlayerWalk() {
@@ -314,7 +314,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 player.knockBackTimer = 0;
             }
 
-            if (enemy.knockBackTimer > KNOCKBACK_TIME) {
+            if (e.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) > 5) {
                     e.movePawn(enemyWalkDirection);
                 } else {
@@ -405,8 +405,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             enemyList.add(enemy);
             rootNode.attachChild(enemy);
         }
-
-
     }
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {

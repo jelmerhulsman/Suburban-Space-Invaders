@@ -80,5 +80,6 @@ public class Bullet extends Node{
     public void removeBullet ()
     {
         this.control.setPhysicsLocation(new Vector3f(0, -1500f, 0));
+        this.removeFromParent();
     }
 }
