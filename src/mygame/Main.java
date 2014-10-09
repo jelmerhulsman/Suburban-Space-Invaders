@@ -159,7 +159,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         bulletAppState.getPhysicsSpace().add(player.getCharacterControl());
 
-        rayGun = new Weapon(assetManager, bulletAppState, viewPort, timer);
+        rayGun = new Weapon(assetManager);
         rootNode.attachChild(rayGun);
     }
 

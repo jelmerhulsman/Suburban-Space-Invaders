@@ -3,21 +3,16 @@ package mygame;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioSource;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.system.Timer;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
 public class Weapon extends Node {
 
     private AssetManager assetManager;
-    private BulletAppState bulletAppState;
-    private ViewPort viewPort;
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
     private float damage;
@@ -30,23 +25,21 @@ public class Weapon extends Node {
     private float energyTimer;
     public boolean isShooting;
 
-    public Weapon(AssetManager assetManager, BulletAppState bulletAppState, ViewPort viewPort, Timer timer) {
+    public Weapon(AssetManager assetManager) {
         super();
         this.assetManager = assetManager;
-        this.bulletAppState = bulletAppState;
-        this.viewPort = viewPort;
-        
+
         energyTimer = 0;
         fireTimer = 0;
-        
+
         currentEnergy = 50f; // also know as ammo
         rechargeRate = 1 / 2f; // recharge 2 shots per second
-        
+
         damage = 5f; // 5 damage per shot
         fireRate = 1 / 5f; // 5 shots per second
         spread = 0.3f;
-        
-        
+
+
 
         initModel();
         initAudio();
@@ -70,15 +63,15 @@ public class Weapon extends Node {
         empty_snd.setVolume(0.75f);
         this.attachChild(empty_snd);
     }
-    
+
     public float getEnergy() {
         return currentEnergy;
     }
-    
+
     public float getSpread() {
         return spread;
     }
-    
+
     public void increaseTimer(float tpf) {
         energyTimer += tpf;
         fireTimer += tpf;
@@ -90,19 +83,19 @@ public class Weapon extends Node {
             energyTimer = 0;
         }
     }
-    
+
     public boolean shoot() {
         if (fireTimer >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             bullet_snd.stop();
             bullet_snd.play();
 
             currentEnergy--;
-            
+
             fireTimer = 0;
             return true;
         } else if (fireTimer >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             empty_snd.play();
-            
+
             fireTimer = 0;
         }
 
