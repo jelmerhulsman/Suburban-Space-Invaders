@@ -22,6 +22,8 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
+import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.post.filters.FXAAFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -48,15 +50,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Weapon rayGun;
     private Vector3f bulletDirection;
     private HUD hud;
-    Enemy enemy;
+    private Enemy enemy;
     private BoundingBox suburbsBox;
     private PointLight sun;
+
     private float playerKnockBackTimer = 1;
     private float enemyKnockBackTimer = 1;
     final private float KNOCKBACK_TIME = 0.2f;
     final boolean enableShadows = false;
+
     final int ShadowSize = 1024;
+    int numberOfMonsters = 20;
     final float ENEMY_SPEED = 0.2f;
+    final boolean enableFog = false;
+    ArrayList<Enemy> enemyList;
     ArrayList bullets;
 
     public static void main(String[] args) {
@@ -77,18 +84,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
 
         initPlayer();
-        initFog();
+        
+        if (enableFog) {
+            initFog();
+        }
         initFilter();
         initHUD();
         initKeys();
 
         bullets = new ArrayList();
-
+        enemyList = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
-
-        enemy = new Enemy(assetManager, bulletAppState);
-        rootNode.attachChild(enemy);
-
+        
+        SpawnEnemies();
     }
 
     private void initPhysics() {
@@ -167,17 +175,30 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
 
         FogFilter fog = new FogFilter();
-        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogDistance(155f);
+        fog.setFogColor(ColorRGBA.Gray);
         fog.setFogDensity(1f);
+        fog.setFogDistance(155f);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
     }
 
     private void initFilter() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
+        
+        FXAAFilter Fxaa = new FXAAFilter();
+        Fxaa.setReduceMul(0.0f);
+        Fxaa.setSubPixelShift(0.0f);
+        
+        CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
+        cartoony.setEdgeWidth(1f);
+        cartoony.setEdgeIntensity(0.5f);
+        
         fpp.addFilter(bloom);
+        fpp.addFilter(Fxaa);
+        fpp.addFilter(cartoony);
+        
         viewPort.addProcessor(fpp);
     }
 
@@ -185,6 +206,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
         hud.initBars();
+        hud.initScore();
     }
 
     private void initKeys() {
@@ -211,10 +233,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         enemyKnockBackTimer += tpf;
 
         updatePlayerWalk();
-        updateEnemyWalk(enemy);
+        updateEnemyWalk();
         updateWeapon(tpf);
         updateHUD();
-
+        
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
         fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
     }
@@ -242,7 +264,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         cam.setLocation(player.getCharacterControl().getPhysicsLocation());
     }
 
-    public void updateEnemyWalk(Enemy e) {
+    public void updateEnemyWalk() {
+        for(Enemy e : enemyList)
+            {
         Vector3f enemyLoc = e.getWorldTranslation();
         Vector3f playerLoc = player.getWorldTranslation();
         enemyWalkDirection.set(0, 0, 0);
@@ -300,6 +324,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         Vector3f newloc = new Vector3f(playerLoc.x, 0, playerLoc.z);
         e.lookAt(newloc, new Vector3f(0, 1, 0));
+            }
     }
 
     public void updateWeapon(float tpf) {
@@ -367,6 +392,23 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
         }
     };
+    
+    public void SpawnEnemies()
+    {
+        for (int i = 0; i < numberOfMonsters; i++)
+        {
+            float locX = FastMath.nextRandomInt(-188, 448);
+            float locY = 100;
+            float locZ = FastMath.nextRandomInt(-465, 95);
+            Vector3f randomLoc = new Vector3f(locX,locY,locZ);
+            enemy = new Enemy(assetManager, bulletAppState,randomLoc);
+            enemyList.add(enemy);
+            rootNode.attachChild(enemy);
+        }
+        
+            
+    }
+    
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {

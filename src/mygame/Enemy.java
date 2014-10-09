@@ -18,13 +18,16 @@ public class Enemy extends LivingThing {
     BulletAppState bulletAppState;
     Spatial model;
     GhostControl ghostControl;
+    Vector3f location;
+    CylinderCollisionShape ccs;
 
-    public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
+    public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f location) {
         super();
 
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
-
+        this.location = location;
+        
         initModel();
         initCharacterControl();
 
@@ -46,7 +49,7 @@ public class Enemy extends LivingThing {
     }
 
     private void initCharacterControl() {
-        CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
+        ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
         pawnControl = new CharacterControl(ccs, 0.05f);
         Vector3f loc = model.center().getWorldTranslation();
         pawnControl.setPhysicsLocation(loc);
