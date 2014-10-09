@@ -26,21 +26,23 @@ public class Enemy extends LivingThing {
     BulletAppState bulletAppState;
     Spatial model;
     GhostControl ghostControl;
+    Vector3f location;
 
-    public Enemy(AssetManager assetManager, BulletAppState bulletAppState) {
+    public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f location) {
         super();
 
         this.assetManager = assetManager;
         this.bulletAppState = bulletAppState;
+        this.location = location;
         this.setName("Enemy");
         initModel();
         initCharacterControl();
 
         health = 10f;
         maxHealth = 10f;
-
+        
         pawnControl.setUseViewDirection(false);
-        pawnControl.setPhysicsLocation(new Vector3f(-100, 100f, -100f));
+        pawnControl.setPhysicsLocation(location);
     }
 
     private void initModel() {
