@@ -27,6 +27,7 @@ public class Enemy extends LivingThing {
     Spatial model;
     GhostControl ghostControl;
     Vector3f location;
+    CylinderCollisionShape ccs;
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f location) {
         super();
@@ -52,7 +53,7 @@ public class Enemy extends LivingThing {
     }
 
     private void initCharacterControl() {
-        CylinderCollisionShape ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
+        ccs = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
         pawnControl = new CharacterControl(ccs, 0.05f);
         Vector3f loc = model.center().getWorldTranslation();
         pawnControl.setPhysicsLocation(loc);
@@ -104,22 +105,17 @@ public class Enemy extends LivingThing {
     public void checkHP() {
         if (this.health <= 0f) {
             /* A colored lit cube. Needs light source! */
-            Box boxMesh = new Box(0.5f, 100f, 0.5f);
+            
         }
     }
 
     public void gotHit() {
         this.health--;
         if (this.health == 0f) {
-            /* A colored lit cube. Needs light source! */
-            Box boxMesh = new Box(0.5f, 100f, 0.5f);
-            Geometry boxGeo = new Geometry("Colored Box", boxMesh);
-            Material boxMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            boxMat.setBoolean("UseMaterialColors", true);
-            boxMat.setColor("Ambient", ColorRGBA.Cyan);
-            boxMat.setColor("Diffuse", ColorRGBA.Cyan);
-            boxGeo.setMaterial(boxMat);
-            this.attachChild(boxGeo);
+         Move(new Vector3f(-1000,0,-1000));
+      this.pawnControl.destroy();
+        this.removeFromParent();
+        
         }
     }
 }
