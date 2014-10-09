@@ -19,14 +19,27 @@ public class HUD {
     BitmapText EnergyText, HealthText;
     BitmapFont GuiFont;
     Picture healthbarInline, energybarInline;
+    BitmapText ScoreText;
+    
     final int posBarsY = 20;
     final int posBarsX = 1;
+    
 
     public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
         this.assetManager = assetManager;
         this.guiNode = guiNode;
         this.settings = settings;
         this.GuiFont = guifont;
+    }
+    
+    public void initScore()
+    {
+        GuiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        ScoreText = new BitmapText(GuiFont, false);
+        ScoreText.setSize(GuiFont.getCharSet().getRenderedSize());
+        ScoreText.setText("Score : 0");
+        ScoreText.setLocalTranslation(300, ScoreText.getLineHeight(), 0);
+        guiNode.attachChild(ScoreText);
     }
 
     public void initBars() {
@@ -71,6 +84,11 @@ public class HUD {
         pic.setPosition(width, height);
 
         guiNode.attachChild(pic);
+    }
+    
+    public void updateScore(int score)
+    {
+        ScoreText.setText("Score : " + score);
     }
 
     public void updateHUD(float RayGunEnergy, float playerHealth) {

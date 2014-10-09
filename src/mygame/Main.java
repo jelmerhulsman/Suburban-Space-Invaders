@@ -191,6 +191,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         hud = new HUD(assetManager, guiNode, settings, guiFont);
         hud.initCrossHair(40);
         hud.initBars();
+        hud.initScore();
     }
 
     private void initKeys() {
