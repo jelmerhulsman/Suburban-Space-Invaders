@@ -27,7 +27,6 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
-import com.jme3.system.Timer;
 import java.util.ArrayList;
 
 /**
@@ -43,22 +42,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Vector3f playerWalkDirection;
     private Vector3f enemyWalkDirection;
     private boolean left, right, up, down;
-    private boolean bDebugMode;
+    private boolean debugMode;
     private Vector3f camDir;
     private Vector3f camLeft;
     private Weapon rayGun;
+    private Vector3f bulletDirection;
     private HUD hud;
     Enemy enemy;
     private BoundingBox suburbsBox;
     private PointLight sun;
-    
     private float playerKnockBackTimer = 1;
-    private float enemyKnockBakTimer = 1;
-    
-    final boolean bEnableShadows = false;
+    private float enemyKnockBackTimer = 1;
+    final private float KNOCKBACK_TIME = 0.2f;
+    final boolean enableShadows = false;
     final int ShadowSize = 1024;
     final float ENEMY_SPEED = 0.2f;
-    
     ArrayList bullets;
 
     public static void main(String[] args) {
@@ -74,7 +72,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initSceneCollision();
 
         initLight();
-        if (bEnableShadows) {
+        if (enableShadows) {
             initShadow();
         }
 
@@ -87,12 +85,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bullets = new ArrayList();
 
         enemyWalkDirection = new Vector3f();
-        
+
         enemy = new Enemy(assetManager, bulletAppState);
         rootNode.attachChild(enemy);
-        
+
     }
-    
+
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -206,30 +204,23 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
     }
-    
+
     @Override
     public void simpleUpdate(float tpf) {
         playerKnockBackTimer += tpf;
-        enemyKnockBakTimer += tpf;
-        
+        enemyKnockBackTimer += tpf;
+
         updatePlayerWalk();
-        updateEnemyWalk();
+        updateEnemyWalk(enemy);
         updateWeapon(tpf);
         updateHUD();
-        
+
         //fpsText.setText(/*FastMath.floor(cam.getLocation().x) + ", " + FastMath.floor(cam.getLocation().y) + ", " + FastMath.floor(cam.getLocation().z)*/"Player distance vs monster : " + playerDist);
         fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
-        if (bDebugMode) {
-            bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        } else {
-            bulletAppState.getPhysicsSpace().disableDebug();
-        }
-        
     }
 
     public void updatePlayerWalk() {
-        if (playerKnockBackTimer > 1f)
-        {
+        if (playerKnockBackTimer > KNOCKBACK_TIME) {
             camDir.set(cam.getDirection()).multLocal(0.5f);
             camLeft.set(cam.getLeft()).multLocal(0.5f);
             playerWalkDirection.set(0, 0, 0);
@@ -246,80 +237,87 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (down) {
                 playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
             }
-            player.Move(playerWalkDirection);
+            player.movePawn(playerWalkDirection);
         }
         cam.setLocation(player.getCharacterControl().getPhysicsLocation());
     }
-    
-    public void updateEnemyWalk()
-    {
-        Vector3f enemyLoc = enemy.getWorldTranslation();
+
+    public void updateEnemyWalk(Enemy e) {
+        Vector3f enemyLoc = e.getWorldTranslation();
         Vector3f playerLoc = player.getWorldTranslation();
         enemyWalkDirection.set(0, 0, 0);
-        
+
         if (enemyLoc.x < playerLoc.x) {
             float diffX = playerLoc.x - enemyLoc.x;
-            if (diffX < ENEMY_SPEED)
+            if (diffX < ENEMY_SPEED) {
                 enemyWalkDirection.addLocal(diffX, 0, 0);
-            else
+            } else {
                 enemyWalkDirection.addLocal(ENEMY_SPEED, 0, 0);
+            }
         }
         if (enemyLoc.x > playerLoc.x) {
             float diffX = playerLoc.x - enemyLoc.x;
-            if (diffX > -ENEMY_SPEED)
+            if (diffX > -ENEMY_SPEED) {
                 enemyWalkDirection.addLocal(diffX, 0, 0);
-            else
+            } else {
                 enemyWalkDirection.addLocal(-ENEMY_SPEED, 0, 0);
+            }
         }
         if (enemyLoc.z < playerLoc.z) {
             float diffZ = playerLoc.z - enemyLoc.z;
-            if (diffZ < ENEMY_SPEED)
+            if (diffZ < ENEMY_SPEED) {
                 enemyWalkDirection.addLocal(0, 0, diffZ);
-            else
+            } else {
                 enemyWalkDirection.addLocal(0, 0, ENEMY_SPEED);
+            }
         }
         if (enemyLoc.z > playerLoc.z) {
             float diffZ = playerLoc.z - enemyLoc.z;
-            if (diffZ > -ENEMY_SPEED)
+            if (diffZ > -ENEMY_SPEED) {
                 enemyWalkDirection.addLocal(0, 0, diffZ);
-            else
+            } else {
                 enemyWalkDirection.addLocal(0, 0, -ENEMY_SPEED);
+            }
         }
         
-        
-        if (playerKnockBackTimer < 1f) {
-                player.Knockback(enemyWalkDirection.mult(1.3f));
-                enemyWalkDirection.set(0,0,0);
+        if (playerKnockBackTimer < KNOCKBACK_TIME) {
+            player.knockBack(enemyWalkDirection);
+            enemyWalkDirection.set(0, 0, 0);
         } else if (enemyLoc.distance(playerLoc) < 8) {
-            player.Jump();
+            player.gotHit();
             playerKnockBackTimer = 0;
         }
         
-        if(enemyLoc.distance(playerLoc) > 5)
-            enemy.Move(enemyWalkDirection);
-        else
-            enemy.move(0, 0, 0);
-        
+        if (enemyKnockBackTimer > KNOCKBACK_TIME) {
+            if (enemyLoc.distance(playerLoc) > 5) {
+                e.movePawn(enemyWalkDirection);
+            } else {
+                e.move(0, 0, 0);
+            }
+        } else {
+            e.knockBack(bulletDirection);
+        }
+
         Vector3f newloc = new Vector3f(playerLoc.x, 0, playerLoc.z);
-        enemy.lookAt(newloc, new Vector3f(0, 1, 0));
+        e.lookAt(newloc, new Vector3f(0, 1, 0));
     }
 
     public void updateWeapon(float tpf) {
         Vector3f gunLoc = cam.getLocation().add(cam.getDirection().mult(3));
         rayGun.setLocalTranslation(gunLoc);
         rayGun.setLocalRotation(cam.getRotation());
-        
+
         rayGun.increaseTimer(tpf);
         rayGun.restoreEnergy();
         rayGun.isShooting = false;
     }
 
     public void updateHUD() {
-        float percentageEnergy = ((rayGun.getEnergy() / rayGun.getMaxEnergy()));
-        float percentageHealth = ((player.getHealth() / player.getMaxHealth()));
+        float percentageEnergy = ((rayGun.getEnergy() / 50f));
+        float percentageHealth = ((player.getHealth() / 100f));
         hud.updateHUD(percentageEnergy, percentageHealth);
 
-        if (bDebugMode) {
+        if (debugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
         } else {
@@ -354,14 +352,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     down = false;
                 }
             } else if (binding.equals("Jump")) {
-                player.Jump();
+                player.jump();
             }
             if (binding.equals("Debug")) {
                 if (keyPressed) {
-                    if (bDebugMode) {
-                        bDebugMode = false;
+                    if (debugMode) {
+                        debugMode = false;
+                        bulletAppState.getPhysicsSpace().disableDebug();
                     } else {
-                        bDebugMode = true;
+                        debugMode = true;
+                        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
                     }
                 }
             }
@@ -389,7 +389,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     bullets.add(0, addBullet);
 
                     if (bullets.size() > 20) {
-                        removeBullet((Bullet) bullets.get(20));
+                        ((Bullet) bullets.get(20)).removeBullet();
                     }
                 }
             }
@@ -399,19 +399,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
-            Bullet b = (Bullet) event.getNodeB();
-
-            fpsText.setText("Hit enemy with bullet!");
-
-
             e.gotHit();
-            removeBullet(b);
+            enemyKnockBackTimer = 0;
+            
+            Bullet b = (Bullet) event.getNodeB();
+            bulletDirection = b.getDirection();
+            b.removeBullet();
         }
-    }
-
-    public void removeBullet(Bullet removeBullet) {
-        removeBullet.control.destroy();
-        removeBullet.removeFromParent();
-        bullets.remove(removeBullet);
     }
 }

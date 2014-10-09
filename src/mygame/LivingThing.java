@@ -2,10 +2,8 @@ package mygame;
 
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.system.Timer;
 
 /**
  *
@@ -13,32 +11,23 @@ import com.jme3.system.Timer;
  */
 public class LivingThing extends Node {
 
-    protected float health, maxHealth;
+    protected float health, knockBackJumpSpeed, knockBackWeakness;
     protected CharacterControl pawnControl;
     protected CapsuleCollisionShape capsuleShape;
-    protected Timer timer;
 
     public LivingThing() {
+        
     }
 
     public float getHealth() {
         return health;
     }
 
-    public float getMaxHealth() {
-        return maxHealth;
-    }
-
     public CharacterControl getCharacterControl() {
         return pawnControl;
     }
-    
-    public void initTimer(Timer timer)
-    {
-        this.timer = timer;
-    }
 
-    public void Move(Vector3f walkdirection) {
+    public void movePawn(Vector3f walkdirection) {
         if (pawnControl != null || walkdirection != new Vector3f(0, 0, 0)) {
             try {
                 pawnControl.setWalkDirection(walkdirection);
@@ -47,22 +36,34 @@ public class LivingThing extends Node {
             } catch (Exception e) {
                 System.out.println("UNABLE TO MOVE! " + e.toString());
             }
-        } else {
-            return;
         }
-
-
     }
     
-    public void Knockback(Vector3f direction)
+    public void knockBack(Vector3f direction)
     {
-        Move(direction);
+        Vector3f knockDirection = direction;
+        knockDirection.multLocal(knockBackWeakness);
+        movePawn(knockDirection);
     }
-
-    public void Jump() {
+    
+    public void knockBackJump() {
+        float jumpSpeed = pawnControl.getJumpSpeed();
+        pawnControl.setJumpSpeed(knockBackJumpSpeed);
         pawnControl.jump();
+        pawnControl.setJumpSpeed(jumpSpeed);
+    }
+    
+    public void jump() {
+        if (pawnControl.onGround())
+            pawnControl.jump();
     }
 
-    public void updatePawn() {
+    public void gotHit() {
+        health--;
+        knockBackJump();
+        
+        if (health < 0.1f) {
+            
+        }
     }
 }

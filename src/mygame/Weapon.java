@@ -40,7 +40,6 @@ public class Weapon extends Node {
         fireTimer = 0;
         
         currentEnergy = 50f; // also know as ammo
-        maxEnergy = 50f; // maximum ammo
         rechargeRate = 1 / 2f; // recharge 2 shots per second
         
         damage = 5f; // 5 damage per shot
@@ -75,10 +74,6 @@ public class Weapon extends Node {
     public float getEnergy() {
         return currentEnergy;
     }
-
-    public float getMaxEnergy() {
-        return maxEnergy;
-    }
     
     public float getSpread() {
         return spread;
@@ -90,7 +85,7 @@ public class Weapon extends Node {
     }
 
     public void restoreEnergy() {
-        if (energyTimer >= rechargeRate && currentEnergy < maxEnergy && isShooting == false) {
+        if (energyTimer >= rechargeRate && currentEnergy < 50f && isShooting == false) {
             currentEnergy++;
             energyTimer = 0;
         }
@@ -102,7 +97,6 @@ public class Weapon extends Node {
             bullet_snd.play();
 
             currentEnergy--;
-            recoil();
             
             fireTimer = 0;
             return true;
@@ -113,8 +107,5 @@ public class Weapon extends Node {
         }
 
         return false;
-    }
-    
-    private void recoil() {
     }
 }

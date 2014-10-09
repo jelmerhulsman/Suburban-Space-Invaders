@@ -20,7 +20,8 @@ public class Player extends LivingThing {
         pawnControl.setPhysicsLocation(new Vector3f(0, 15f, 0));
 
         health = 100f;
-        maxHealth = 100f;
+        knockBackJumpSpeed = 10f;
+        knockBackWeakness = 3f;
 
         this.setName("Player");
     }

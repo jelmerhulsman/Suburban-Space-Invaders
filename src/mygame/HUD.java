@@ -73,11 +73,11 @@ public class HUD {
         guiNode.attachChild(pic);
     }
 
-    public void updateHUD(float RayGunEnergy, float playerHealth) {
-        energybarInline.setWidth(120 * RayGunEnergy);
-        energybarInline.setPosition(10 + ((1 - RayGunEnergy * 10)), posBarsY);
+    public void updateHUD(float percentageEnergy, float percentageHealth) {
+        energybarInline.setWidth(120 * percentageEnergy);
+        energybarInline.setPosition(10 + ((1 - percentageEnergy * 10)), posBarsY);
 
-        healthbarInline.setWidth(120 * playerHealth);
-        healthbarInline.setPosition(10 + ((1 - playerHealth * 10)), posBarsY + 30);
+        healthbarInline.setWidth(120 * percentageHealth);
+        healthbarInline.setPosition(10 + ((1 - percentageHealth * 10)), posBarsY + 30);
     }
 }

@@ -71,4 +71,15 @@ public class Bullet extends Node{
         bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
+    
+    public Vector3f getDirection()
+    {
+        return this.dir;
+    }
+    
+    public void removeBullet ()
+    {
+        this.control.setCollisionGroup(2);
+        this.removeFromParent();
+    }
 }
