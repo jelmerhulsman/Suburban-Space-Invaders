@@ -79,7 +79,6 @@ public class Bullet extends Node{
     
     public void removeBullet ()
     {
-        this.control.setCollisionGroup(2);
-        this.removeFromParent();
+        this.control.setPhysicsLocation(new Vector3f(0, -1500f, 0));
     }
 }

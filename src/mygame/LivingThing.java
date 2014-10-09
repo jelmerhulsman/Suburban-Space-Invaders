@@ -14,6 +14,7 @@ public class LivingThing extends Node {
     protected float health, knockBackJumpSpeed, knockBackWeakness;
     protected CharacterControl pawnControl;
     protected CapsuleCollisionShape capsuleShape;
+    public float knockBackTimer = 1;
 
     public LivingThing() {
         
@@ -63,7 +64,9 @@ public class LivingThing extends Node {
         knockBackJump();
         
         if (health < 0.1f) {
-            
+            //Explode here
+            //Kill counter ++
+            pawnControl.setPhysicsLocation(new Vector3f(0, -1000f, 0));
         }
     }
 }

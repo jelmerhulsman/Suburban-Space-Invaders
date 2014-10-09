@@ -39,7 +39,6 @@ public class Enemy extends LivingThing {
         pawnControl.setPhysicsLocation(new Vector3f(-100, 100f, -100f));
 
         this.setName("Enemy");
-        pawnControl.setCollideWithGroups(1);
     }
 
     private void initModel() {
