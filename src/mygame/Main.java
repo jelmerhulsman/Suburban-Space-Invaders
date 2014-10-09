@@ -23,6 +23,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.post.filters.FXAAFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -178,12 +179,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     private void initFilter() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
-        fpp.addFilter(bloom);
+        
+        FXAAFilter Fxaa = new FXAAFilter();
+        Fxaa.setReduceMul(0.0f);
+        Fxaa.setSubPixelShift(0.0f);
+        
         CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
+        
+        fpp.addFilter(bloom);
+        fpp.addFilter(Fxaa);
         fpp.addFilter(cartoony);
+        
         viewPort.addProcessor(fpp);
     }
 
