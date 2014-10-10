@@ -36,7 +36,7 @@ public class Enemy extends LivingThing {
         knockBackWeakness = 1f;
 
         pawnControl.setUseViewDirection(false);
-        pawnControl.setPhysicsLocation(new Vector3f(-100, 100f, -100f));
+        pawnControl.setPhysicsLocation(location);
 
         this.setName("Enemy");
     }

@@ -14,7 +14,7 @@ import com.jme3.scene.shape.Cylinder;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
 public class Bullet extends Node{
     private AssetManager assetManager;
@@ -49,7 +49,7 @@ public class Bullet extends Node{
 
     private void initGeometry() {
         bullet_geometry = new Geometry();
-        Cylinder c = new Cylinder(100, 100, 0.075f, 1f, true);
+        Cylinder c = new Cylinder(25, 25, 0.075f, 1f, true);
         
         bullet_geometry.setMesh(c);
         bullet_geometry.setMaterial(bullet_mat);

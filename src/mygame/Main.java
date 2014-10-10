@@ -58,8 +58,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     final private float KNOCKBACK_TIME = 0.2f;
     final boolean enableShadows = false;
     final int ShadowSize = 1024;
-    int numberOfMonsters = 20;
+    int startNumberOfMonsters = 20;
     final float ENEMY_SPEED = 0.2f;
+    final int ENEMY_DAMAGE = 10;
     final boolean enableFog = false;
     ArrayList<Enemy> enemyList;
     ArrayList bullets;
@@ -94,7 +95,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         enemyList = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
 
-        SpawnEnemies();
+        SpawnEnemies(startNumberOfMonsters);
     }
 
     private void initPhysics() {
@@ -310,7 +311,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 enemyWalkDirection.set(0, 0, 0);
             } else if (enemyLoc.distance(playerLoc) < 8) {
                 knockDirection = enemyWalkDirection;
-                player.gotHit();
+                player.gotHit(ENEMY_DAMAGE);
                 player.knockBackTimer = 0;
             }
 
@@ -395,8 +396,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
     };
 
-    public void SpawnEnemies() {
-        for (int i = 0; i < numberOfMonsters; i++) {
+    public void SpawnEnemies(int numberOfEnemies) {
+        for (int i = 0; i < numberOfEnemies; i++) {
             float locX = FastMath.nextRandomInt(-188, 448);
             float locY = 100;
             float locZ = FastMath.nextRandomInt(-465, 95);
@@ -440,7 +441,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
-            e.gotHit();
+            e.gotHit(rayGun.getDamage());
+            if(e.health < 0.1f)
+                SpawnEnemies(2);
             e.knockBackTimer = 0;
 
             Bullet b = (Bullet) event.getNodeB();

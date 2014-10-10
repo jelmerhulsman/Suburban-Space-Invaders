@@ -15,7 +15,7 @@ public class Weapon extends Node {
     private AssetManager assetManager;
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
-    private float damage;
+    private int damage;
     private float fireRate;
     private float currentEnergy;
     private float maxEnergy;
@@ -35,7 +35,7 @@ public class Weapon extends Node {
         currentEnergy = 50f; // also know as ammo
         rechargeRate = 1 / 2f; // recharge 2 shots per second
 
-        damage = 5f; // 5 damage per shot
+        damage = 2; // 5 damage per shot
         fireRate = 1 / 5f; // 5 shots per second
         spread = 0.3f;
 
@@ -70,6 +70,11 @@ public class Weapon extends Node {
 
     public float getSpread() {
         return spread;
+    }
+    
+    public int getDamage()
+    {
+        return damage;
     }
 
     public void increaseTimer(float tpf) {

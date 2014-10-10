@@ -59,8 +59,8 @@ public class LivingThing extends Node {
             pawnControl.jump();
     }
 
-    public void gotHit() {
-        health--;
+    public void gotHit(int damage) {
+        health = health - damage;
         knockBackJump();
         
         if (health < 0.1f) {
