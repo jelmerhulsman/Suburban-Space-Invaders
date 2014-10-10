@@ -9,6 +9,8 @@ import com.jme3.math.Vector3f;
  * @author Bralts & Hulsman
  */
 public class Player extends LivingThing {
+    
+    public int Score;
 
     public Player() {
 

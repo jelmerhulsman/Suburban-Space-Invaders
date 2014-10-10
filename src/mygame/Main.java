@@ -61,6 +61,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     int startNumberOfMonsters = 20;
     final float ENEMY_SPEED = 0.2f;
     final int ENEMY_DAMAGE = 10;
+    final int SCORE_PER_KILL = 5;
     final boolean enableFog = false;
     ArrayList<Enemy> enemyList;
     ArrayList bullets;
@@ -344,7 +345,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
         hud.updateHUD(percentageEnergy, percentageHealth);
-
+        hud.updateScore(player.Score);
         if (debugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
@@ -442,8 +443,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
             e.gotHit(rayGun.getDamage());
+            
             if(e.health < 0.1f)
+            {
                 SpawnEnemies(2);
+                player.Score += SCORE_PER_KILL;
+            }
+                
             e.knockBackTimer = 0;
 
             Bullet b = (Bullet) event.getNodeB();
