@@ -34,7 +34,8 @@ public class Enemy extends LivingThing {
         health = 10f;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 1f;
-
+        
+        pawnControl.setJumpSpeed(2.5f);
         pawnControl.setUseViewDirection(false);
         pawnControl.setPhysicsLocation(location);
 

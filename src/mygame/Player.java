@@ -10,7 +10,8 @@ import com.jme3.math.Vector3f;
  */
 public class Player extends LivingThing {
     
-    public int Score;
+    public int killCounter;
+    public int waveCounter;
 
     public Player() {
 
@@ -24,6 +25,9 @@ public class Player extends LivingThing {
         health = 100f;
         knockBackJumpSpeed = 10f;
         knockBackWeakness = 3f;
+        
+        killCounter = 0;
+        waveCounter = 0;
 
         this.setName("Player");
     }

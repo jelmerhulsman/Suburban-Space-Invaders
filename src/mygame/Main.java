@@ -58,7 +58,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     final private float KNOCKBACK_TIME = 0.2f;
     final boolean enableShadows = false;
     final int ShadowSize = 1024;
-    int startNumberOfMonsters = 20;
+    int enemiesPerWave = 1;
+    int killCounterPerWave = 0;
     final float ENEMY_SPEED = 0.2f;
     final int ENEMY_DAMAGE = 10;
     final int SCORE_PER_KILL = 5;
@@ -96,7 +97,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         enemyList = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
 
-        SpawnEnemies(startNumberOfMonsters);
+        spawnEnemyWave();
     }
 
     private void initPhysics() {
@@ -187,16 +188,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
 
-        FXAAFilter Fxaa = new FXAAFilter();
-        Fxaa.setReduceMul(0.0f);
-        Fxaa.setSubPixelShift(0.0f);
+        FXAAFilter fxaa = new FXAAFilter();
+        fxaa.setReduceMul(0.0f);
+        fxaa.setSubPixelShift(0.0f);
 
         CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
 
         fpp.addFilter(bloom);
-        fpp.addFilter(Fxaa);
+        fpp.addFilter(fxaa);
         fpp.addFilter(cartoony);
 
         viewPort.addProcessor(fpp);
@@ -235,6 +236,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateEnemyWalk();
         updateWeapon(tpf);
         updateHUD();
+        
+        if (killCounterPerWave == enemiesPerWave){
+            enemiesPerWave *= 2;
+            spawnEnemyWave();
+            
+            player.waveCounter++;
+            killCounterPerWave = 0;
+        }
 
         fpsText.setText("# Nodes in rootnode: " + rootNode.getChildren().size());
         //fpsText.setText(FastMath.floor(enemy.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(enemy.pawnControl.getPhysicsLocation().z));
@@ -269,10 +278,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     public void updateEnemyWalk() {
+        Vector3f playerLoc = player.getWorldTranslation();
+
         for (Enemy e : enemyList) {
             e.knockBackTimer += tpf;
             Vector3f enemyLoc = e.getWorldTranslation();
-            Vector3f playerLoc = player.getWorldTranslation();
+
             enemyWalkDirection.set(0, 0, 0);
 
             if (enemyLoc.x < playerLoc.x) {
@@ -312,12 +323,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 enemyWalkDirection.set(0, 0, 0);
             } else if (enemyLoc.distance(playerLoc) < 8) {
                 knockDirection = enemyWalkDirection;
-                player.gotHit(ENEMY_DAMAGE);
-                player.knockBackTimer = 0;
+                player.gotKilled(ENEMY_DAMAGE);
             }
 
             if (e.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) > 5) {
+                    e.jump();
                     e.movePawn(enemyWalkDirection);
                 } else {
                     e.move(0, 0, 0);
@@ -326,8 +337,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 e.knockBack(bulletDirection);
             }
 
-            Vector3f newloc = new Vector3f(playerLoc.x, 0, playerLoc.z);
-            e.lookAt(newloc, new Vector3f(0, 1, 0));
+            e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
 
@@ -345,7 +355,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
         hud.updateHUD(percentageEnergy, percentageHealth);
-        hud.updateScore(player.Score);
+        hud.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
@@ -397,8 +407,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
     };
 
-    public void SpawnEnemies(int numberOfEnemies) {
-        for (int i = 0; i < numberOfEnemies; i++) {
+    public void spawnEnemyWave() {
+        for (int i = 0; i < enemiesPerWave; i++) {
             float locX = FastMath.nextRandomInt(-188, 448);
             float locY = 100;
             float locZ = FastMath.nextRandomInt(-465, 95);
@@ -442,15 +452,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
-            e.gotHit(rayGun.getDamage());
             
-            if(e.health < 0.1f)
+            float damage = rayGun.getDamage();
+            if (e.gotKilled(damage))
             {
-                SpawnEnemies(2);
-                player.Score += SCORE_PER_KILL;
+                player.killCounter++;
+                killCounterPerWave++;
             }
-                
-            e.knockBackTimer = 0;
 
             Bullet b = (Bullet) event.getNodeB();
             bulletDirection = b.getDirection();

@@ -16,10 +16,9 @@ public class HUD {
     AssetManager assetManager;
     Node guiNode;
     AppSettings settings;
-    BitmapText EnergyText, HealthText;
-    BitmapFont GuiFont;
+    BitmapText energyText, healthText, scoreText, waveText;
+    BitmapFont guiFont;
     Picture healthbarInline, energybarInline;
-    BitmapText ScoreText;
     
     final int posBarsY = 20;
     final int posBarsX = 1;
@@ -29,17 +28,24 @@ public class HUD {
         this.assetManager = assetManager;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.GuiFont = guifont;
+        this.guiFont = guifont;
+        
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
     }
     
     public void initScore()
     {
-        GuiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        ScoreText = new BitmapText(GuiFont, false);
-        ScoreText.setSize(GuiFont.getCharSet().getRenderedSize());
-        ScoreText.setText("Score : 0");
-        ScoreText.setLocalTranslation(300, ScoreText.getLineHeight(), 0);
-        guiNode.attachChild(ScoreText);
+        scoreText = new BitmapText(guiFont, false);
+        scoreText.setSize(guiFont.getCharSet().getRenderedSize());
+        scoreText.setText("Score : 0");
+        scoreText.setLocalTranslation(300, scoreText.getLineHeight(), 0);
+        guiNode.attachChild(scoreText);
+        
+        waveText = new BitmapText(guiFont, false);
+        waveText.setSize(guiFont.getCharSet().getRenderedSize());
+        waveText.setText("Waves survived : 0");
+        waveText.setLocalTranslation(settings.getWidth() - 300, waveText.getLineHeight(), 0);
+        guiNode.attachChild(waveText);
     }
 
     public void initBars() {
@@ -86,9 +92,10 @@ public class HUD {
         guiNode.attachChild(pic);
     }
     
-    public void updateScore(int score)
+    public void updateScore(int score, int waves)
     {
-        ScoreText.setText("Score : " + score);
+        scoreText.setText("Score : " + score);
+        waveText.setText("Waves survived : " + waves);
     }
 
     public void updateHUD(float percentageEnergy, float percentageHealth) {
