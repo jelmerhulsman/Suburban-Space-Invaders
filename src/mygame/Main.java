@@ -336,7 +336,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             } else {
                 e.knockBack(bulletDirection);
             }
-
+            
+            e.jump(10f);
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
