@@ -12,13 +12,11 @@ import com.jme3.scene.Spatial;
  */
 public class Weapon extends Node {
 
-    private AssetManager assetManager;
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
     private int damage;
     private float fireRate;
     private float currentEnergy;
-    private float maxEnergy;
     private float rechargeRate;
     private float spread;
     private float fireTimer;
@@ -27,7 +25,6 @@ public class Weapon extends Node {
 
     public Weapon(AssetManager assetManager) {
         super();
-        this.assetManager = assetManager;
 
         energyTimer = 0;
         fireTimer = 0;
@@ -39,18 +36,16 @@ public class Weapon extends Node {
         fireRate = 1 / 5f; // 5 shots per second
         spread = 0.3f;
 
-
-
-        initModel();
-        initAudio();
+        initModel(assetManager);
+        initAudio(assetManager);
     }
 
-    private void initModel() {
+    private void initModel(AssetManager assetManager) {
         Spatial model = assetManager.loadModel("Models/GrenadeLauncher/GrenadeLauncher.j3o");
         this.attachChild(model);
     }
 
-    private void initAudio() {
+    private void initAudio(AssetManager assetManager) {
         bullet_snd = new AudioNode(assetManager, "Sounds/space_gun.wav", false);
         bullet_snd.setPositional(false);
         bullet_snd.setLooping(false);

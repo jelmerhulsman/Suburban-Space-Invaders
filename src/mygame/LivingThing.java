@@ -52,18 +52,13 @@ public class LivingThing extends Node {
         this.pawnControl.setJumpSpeed(jumpSpeed);
     }
 
-    public void jump() {
+    public boolean jump() {
         if (this.pawnControl.onGround()) {
             this.pawnControl.jump();
+            return true;
         }
-    }
-    
-    public void jump(float jumpSpeed) {
-        float jumpSpeedOrg = pawnControl.getJumpSpeed();
-        pawnControl.setJumpSpeed(jumpSpeed);
-        if (pawnControl.onGround())
-        pawnControl.jump();
-        pawnControl.setJumpSpeed(jumpSpeedOrg);
+        
+        return false;
     }
 
     public boolean gotKilled(float damage) {

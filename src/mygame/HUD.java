@@ -13,42 +13,20 @@ import com.jme3.ui.Picture;
  */
 public class HUD {
 
-    AssetManager assetManager;
-    Node guiNode;
-    AppSettings settings;
     BitmapText energyText, healthText, scoreText, waveText;
-    BitmapFont guiFont;
     Picture healthbarInline, energybarInline;
     
     final int posBarsY = 20;
     final int posBarsX = 1;
     
 
-    public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guifont) {
-        this.assetManager = assetManager;
-        this.guiNode = guiNode;
-        this.settings = settings;
-        this.guiFont = guifont;
-        
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+    public HUD(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guiFont, int crossHairSize) {
+        initBars(assetManager, guiNode);
+        initScore(assetManager, guiNode, settings, guiFont);
+        initCrossHair(assetManager, guiNode, settings, crossHairSize);
     }
     
-    public void initScore()
-    {
-        scoreText = new BitmapText(guiFont, false);
-        scoreText.setSize(guiFont.getCharSet().getRenderedSize());
-        scoreText.setText("Score : 0");
-        scoreText.setLocalTranslation(300, scoreText.getLineHeight(), 0);
-        guiNode.attachChild(scoreText);
-        
-        waveText = new BitmapText(guiFont, false);
-        waveText.setSize(guiFont.getCharSet().getRenderedSize());
-        waveText.setText("Waves survived : 0");
-        waveText.setLocalTranslation(settings.getWidth() - 300, waveText.getLineHeight(), 0);
-        guiNode.attachChild(waveText);
-    }
-
-    public void initBars() {
+    private void initBars(AssetManager assetManager, Node guiNode) {
         Picture healthbarOutline = new Picture("HUD bar_outline");
         healthbarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
         healthbarInline = new Picture("HUD bar_inline");
@@ -77,8 +55,25 @@ public class HUD {
         guiNode.attachChild(energybarOutline);
         guiNode.attachChild(energybarInline);
     }
+    
+    private void initScore(AssetManager assetManager, Node guiNode, AppSettings settings, BitmapFont guiFont)
+    {
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        
+        scoreText = new BitmapText(guiFont, false);
+        scoreText.setSize(guiFont.getCharSet().getRenderedSize());
+        scoreText.setText("Score : 0");
+        scoreText.setLocalTranslation(300, scoreText.getLineHeight(), 0);
+        guiNode.attachChild(scoreText);
+        
+        waveText = new BitmapText(guiFont, false);
+        waveText.setSize(guiFont.getCharSet().getRenderedSize());
+        waveText.setText("Waves survived : 0");
+        waveText.setLocalTranslation(settings.getWidth() - 300, waveText.getLineHeight(), 0);
+        guiNode.attachChild(waveText);
+    }
 
-    void initCrossHair(int size) {
+    public void initCrossHair(AssetManager assetManager, Node guiNode, AppSettings settings, int size) {
         Picture pic = new Picture("HUD Picture");
         pic.setImage(assetManager, "Textures/neon_crosshair.png", true);
 

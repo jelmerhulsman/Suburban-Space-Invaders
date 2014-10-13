@@ -158,7 +158,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
 
-        player = new Player();
+        player = new Player(assetManager);
 
         bulletAppState.getPhysicsSpace().add(player.getCharacterControl());
 
@@ -204,11 +204,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initHUD() {
-        hud = new HUD(assetManager, guiNode, settings, guiFont);
-        hud.initCrossHair(40);
-        hud.initBars();
-        hud.initScore();
+        int crossHairSize = 40;
+        hud = new HUD(assetManager, guiNode, settings, guiFont, crossHairSize);
     }
+        
 
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
@@ -337,7 +336,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 e.knockBack(bulletDirection);
             }
             
-            e.jump(10f);
+            e.jump();
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
@@ -392,7 +391,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     down = false;
                 }
             } else if (binding.equals("Jump")) {
-                player.jump();
+                if (player.jump())
+                    player.groan();
             }
             if (binding.equals("Debug")) {
                 if (keyPressed) {

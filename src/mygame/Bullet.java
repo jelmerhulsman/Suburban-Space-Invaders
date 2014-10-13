@@ -17,9 +17,6 @@ import com.jme3.scene.shape.Cylinder;
  * @author Bralts & Hulsman
  */
 public class Bullet extends Node{
-    private AssetManager assetManager;
-    private BulletAppState bulletAppState;
-    
     private Material bullet_mat;
     private Geometry bullet_geometry;
     public RigidBodyControl control;
@@ -28,20 +25,17 @@ public class Bullet extends Node{
     private Vector3f dir;
     
     public Bullet(AssetManager assetManager, BulletAppState bulletAppState, Vector3f loc, Quaternion rot, Vector3f dir) {
-        this.assetManager = assetManager;
-        this.bulletAppState = bulletAppState;
-        
         this.loc = loc;
         this.rot = rot;
         this.dir = dir;
         
         this.setName("Bullet");
-        initMaterial();
+        initMaterial(assetManager);
         initGeometry();
-        initPhysicsControl();
+        initPhysicsControl(bulletAppState);
     }
 
-    private void initMaterial() {
+    private void initMaterial(AssetManager assetManager) {
         bullet_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         bullet_mat.setColor("Color", ColorRGBA.Yellow);
         bullet_mat.setColor("GlowColor", ColorRGBA.Yellow);
@@ -57,7 +51,7 @@ public class Bullet extends Node{
         this.attachChild(bullet_geometry);
     }
     
-    private void initPhysicsControl() {
+    private void initPhysicsControl(BulletAppState bulletAppState) {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         control = new RigidBodyControl(scs, 200f);
         //control.setCcdMotionThreshold(0.01f);
@@ -74,7 +68,7 @@ public class Bullet extends Node{
     
     public Vector3f getDirection()
     {
-        return this.dir;
+        return dir;
     }
     
     public void removeBullet ()
