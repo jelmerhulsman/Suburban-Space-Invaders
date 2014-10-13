@@ -70,8 +70,8 @@ public class Weapon extends Node {
         fireTimer += tpf;
     }
 
-    public void restoreEnergy() {
-        if (energyTimer >= rechargeRate && currentEnergy < 50f && isShooting == false) {
+    public void restoreEnergy(boolean isMoving) {
+        if (energyTimer >= rechargeRate && currentEnergy < 50f && isMoving) {
             currentEnergy++;
             energyTimer = 0;
         }

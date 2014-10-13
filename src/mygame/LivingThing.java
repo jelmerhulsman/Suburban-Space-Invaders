@@ -20,19 +20,18 @@ public class LivingThing extends Node {
     }
 
     public float getHealth() {
-        return this.health;
+        return health;
     }
 
     public CharacterControl getCharacterControl() {
-        return this.pawnControl;
+        return pawnControl;
     }
 
     public void movePawn(Vector3f walkdirection) {
-        if (this.pawnControl != null || walkdirection != new Vector3f(0, 0, 0)) {
+        if (pawnControl != null || walkdirection != new Vector3f(0, 0, 0)) {
             try {
-                this.pawnControl.setWalkDirection(walkdirection);
-
-                this.setLocalTranslation(this.pawnControl.getPhysicsLocation());
+                pawnControl.setWalkDirection(walkdirection);
+                this.setLocalTranslation(pawnControl.getPhysicsLocation());
             } catch (Exception e) {
                 System.out.println("UNABLE TO MOVE! " + e.toString());
             }
@@ -41,20 +40,20 @@ public class LivingThing extends Node {
 
     public void knockBack(Vector3f direction) {
         Vector3f knockDirection = direction;
-        knockDirection.multLocal(this.knockBackWeakness);
-        this.movePawn(knockDirection);
+        knockDirection.multLocal(knockBackWeakness);
+        movePawn(knockDirection);
     }
 
     public void knockBackJump() {
-        float jumpSpeed = this.pawnControl.getJumpSpeed();
-        this.pawnControl.setJumpSpeed(knockBackJumpSpeed);
-        this.pawnControl.jump();
-        this.pawnControl.setJumpSpeed(jumpSpeed);
+        float jumpSpeed = pawnControl.getJumpSpeed();
+        pawnControl.setJumpSpeed(knockBackJumpSpeed);
+        pawnControl.jump();
+        pawnControl.setJumpSpeed(jumpSpeed);
     }
 
     public boolean jump() {
-        if (this.pawnControl.onGround()) {
-            this.pawnControl.jump();
+        if (pawnControl.onGround()) {
+            pawnControl.jump();
             return true;
         }
         
@@ -62,14 +61,14 @@ public class LivingThing extends Node {
     }
 
     public boolean gotKilled(float damage) {
-        if (this.health >= 0.1f) {
-            this.knockBackTimer = 0;
-            this.knockBackJump();
+        if (health >= 0.1f) {
+            knockBackTimer = 0;
+            knockBackJump();
 
-            this.health -= damage;
-            if (this.health < 0.1f) {
-                //Explode here
-                this.pawnControl.setPhysicsLocation(new Vector3f(0, -10000f, 0));
+            health -= damage;
+            if (health < 0.1f) {
+                killEffect();
+                pawnControl.setPhysicsLocation(new Vector3f(0, -10000f, 0));
                 this.removeFromParent();
 
                 return true;
@@ -77,5 +76,9 @@ public class LivingThing extends Node {
         }
 
         return false;
+    }
+    
+    private void killEffect() {
+        
     }
 }

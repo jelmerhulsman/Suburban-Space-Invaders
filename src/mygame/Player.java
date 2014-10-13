@@ -15,6 +15,7 @@ public class Player extends LivingThing {
     public int killCounter;
     public int waveCounter;
     public AudioNode jump_snd;
+    public boolean isMoving;
 
     public Player(AssetManager assetManager) {
         super();
@@ -32,7 +33,9 @@ public class Player extends LivingThing {
         
         killCounter = 0;
         waveCounter = 0;
-
+        
+        isMoving = false;
+        
         this.setName("Player");
         initAudio(assetManager);
     }
