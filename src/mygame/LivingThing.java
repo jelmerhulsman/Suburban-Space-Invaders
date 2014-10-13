@@ -58,6 +58,14 @@ public class LivingThing extends Node {
         if (pawnControl.onGround())
             pawnControl.jump();
     }
+    
+    public void jump(float jumpSpeed) {
+        float jumpSpeedOrg = pawnControl.getJumpSpeed();
+        pawnControl.setJumpSpeed(jumpSpeed);
+        if (pawnControl.onGround())
+        pawnControl.jump();
+        pawnControl.setJumpSpeed(jumpSpeedOrg);
+    }
 
     public void gotHit(int damage) {
         health = health - damage;
