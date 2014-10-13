@@ -57,12 +57,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private float tpf = 0;
     final private float KNOCKBACK_TIME = 0.2f;
     final boolean enableShadows = false;
-    final int ShadowSize = 1024;
+    final int SHADOW_SIZE = 1024;
     int enemiesPerWave = 1;
     int killCounterPerWave = 0;
-    final float ENEMY_SPEED = 0.2f;
+    final float ENEMY_SPEED = 0.3f;
     final int ENEMY_DAMAGE = 10;
     final int SCORE_PER_KILL = 5;
+    final float PLAYER_SPEED = 0.5f;
+    final float WEAPON_DAMAGE = 20;
     final boolean enableFog = false;
     ArrayList<Enemy> enemyList;
     ArrayList bullets;
@@ -139,7 +141,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
 
-        PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, ShadowSize);
+        PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, SHADOW_SIZE);
         dlsr.setLight(sun);
         dlsr.setShadowIntensity(0.5f);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
@@ -207,7 +209,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         int crossHairSize = 40;
         hud = new HUD(assetManager, guiNode, settings, guiFont, crossHairSize);
     }
-        
 
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
@@ -235,11 +236,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateEnemyWalk();
         updateWeapon(tpf);
         updateHUD();
-        
-        if (killCounterPerWave == enemiesPerWave){
+
+        if (killCounterPerWave == enemiesPerWave) {
             enemiesPerWave *= 2;
             spawnEnemyWave();
-            
+
             player.waveCounter++;
             killCounterPerWave = 0;
         }
@@ -252,22 +253,30 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         player.knockBackTimer += tpf;
 
         if (player.knockBackTimer > KNOCKBACK_TIME) {
-            camDir.set(cam.getDirection()).multLocal(0.5f);
-            camLeft.set(cam.getLeft()).multLocal(0.5f);
+            camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
+            camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
             playerWalkDirection.set(0, 0, 0);
 
-            if (left) {
-                playerWalkDirection.addLocal(camLeft);
+            if (!(left && right)) {
+                if (left) {
+                    playerWalkDirection.addLocal(camLeft.x, 0, camLeft.z);
+                }
+                else if (right) {
+                    playerWalkDirection.addLocal(camLeft.x * -1, 0, camLeft.z * -1);
+                }
             }
-            if (right) {
-                playerWalkDirection.addLocal(camLeft.negate());
+            if (!(up && down)) {
+                if (up) {
+                    playerWalkDirection.addLocal(camDir.x, 0, camDir.z);
+                }
+                else if (down) {
+                    playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
+                }
             }
-            if (up) {
-                playerWalkDirection.addLocal(camDir.x, 0, camDir.z);
-            }
-            if (down) {
-                playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
-            }
+
+            if ((up && left) || (up && right) || (down && left) || (down && right))
+                playerWalkDirection = playerWalkDirection.multLocal(FastMath.sqrt(PLAYER_SPEED));
+
             player.movePawn(playerWalkDirection);
         } else {
             player.knockBack(knockDirection);
@@ -285,38 +294,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             enemyWalkDirection.set(0, 0, 0);
 
-            if (enemyLoc.x < playerLoc.x) {
-                float diffX = playerLoc.x - enemyLoc.x;
-                if (diffX < ENEMY_SPEED) {
-                    enemyWalkDirection.addLocal(diffX, 0, 0);
-                } else {
-                    enemyWalkDirection.addLocal(ENEMY_SPEED, 0, 0);
-                }
+            float diffX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
+            float diffZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
+
+            float diffTotal = FastMath.abs(diffX) + FastMath.abs(diffZ);
+            if (diffTotal < ENEMY_SPEED) {
+                diffTotal = ENEMY_SPEED;
             }
-            if (enemyLoc.x > playerLoc.x) {
-                float diffX = playerLoc.x - enemyLoc.x;
-                if (diffX > -ENEMY_SPEED) {
-                    enemyWalkDirection.addLocal(diffX, 0, 0);
-                } else {
-                    enemyWalkDirection.addLocal(-ENEMY_SPEED, 0, 0);
-                }
-            }
-            if (enemyLoc.z < playerLoc.z) {
-                float diffZ = playerLoc.z - enemyLoc.z;
-                if (diffZ < ENEMY_SPEED) {
-                    enemyWalkDirection.addLocal(0, 0, diffZ);
-                } else {
-                    enemyWalkDirection.addLocal(0, 0, ENEMY_SPEED);
-                }
-            }
-            if (enemyLoc.z > playerLoc.z) {
-                float diffZ = playerLoc.z - enemyLoc.z;
-                if (diffZ > -ENEMY_SPEED) {
-                    enemyWalkDirection.addLocal(0, 0, diffZ);
-                } else {
-                    enemyWalkDirection.addLocal(0, 0, -ENEMY_SPEED);
-                }
-            }
+
+            diffX = (diffX / diffTotal) * ENEMY_SPEED;
+            diffZ = (diffZ / diffTotal) * ENEMY_SPEED;
+
+            enemyWalkDirection.set(diffX, 0, diffZ);
 
             if (player.knockBackTimer < KNOCKBACK_TIME) {
                 enemyWalkDirection.set(0, 0, 0);
@@ -335,7 +324,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             } else {
                 e.knockBack(bulletDirection);
             }
-            
+
             e.jump();
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
@@ -391,8 +380,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     down = false;
                 }
             } else if (binding.equals("Jump")) {
-                if (player.jump())
+                if (player.jump()) {
                     player.groan();
+                }
             }
             if (binding.equals("Debug")) {
                 if (keyPressed) {
@@ -453,10 +443,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
-            
-            float damage = rayGun.getDamage();
-            if (e.gotKilled(damage))
-            {
+
+            if (e.gotKilled(WEAPON_DAMAGE)) {
                 player.killCounter++;
                 killCounterPerWave++;
             }

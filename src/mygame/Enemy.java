@@ -23,11 +23,11 @@ public class Enemy extends LivingThing {
         initModel(assetManager);
         initCharacterControl(bulletAppState);
         
-        health = 10f;
+        health = 100f;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 1f;
         
-        pawnControl.setJumpSpeed(10f);
+        pawnControl.setJumpSpeed(7.5f);
         pawnControl.setUseViewDirection(false);
         pawnControl.setPhysicsLocation(location);
     }
