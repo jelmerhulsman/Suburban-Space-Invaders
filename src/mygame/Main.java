@@ -94,8 +94,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initHUD();
         initKeys();
         initAudio();
-
-        bullets = new ArrayList();
         
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
