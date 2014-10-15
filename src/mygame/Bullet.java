@@ -54,8 +54,6 @@ public class Bullet extends Node{
     private void initPhysicsControl(BulletAppState bulletAppState) {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         control = new RigidBodyControl(scs, 200f);
-        //control.setCcdMotionThreshold(0.01f);
-        //control.setCcdSweptSphereRadius(0.01f);
         this.addControl(control);
         
         control.setPhysicsLocation(loc);
@@ -73,7 +71,7 @@ public class Bullet extends Node{
     
     public void removeBullet ()
     {
-        Vector3f farAway = new Vector3f(0, -2000f, 0);
+        Vector3f farAway = new Vector3f(0, -20000f, 0);
         this.control.setPhysicsLocation(farAway);
         this.removeControl(control);
         this.setLocalTranslation(farAway);

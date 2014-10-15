@@ -4,7 +4,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.bullet.control.GhostControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
@@ -15,18 +14,18 @@ import com.jme3.scene.Spatial;
 public class Enemy extends LivingThing {
 
     Spatial model;
-    
+
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f location) {
-        super();
-        
+        super(assetManager);
+
         this.setName("Enemy");
         initModel(assetManager);
         initCharacterControl(bulletAppState);
-        
+
         health = 100f;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 1f;
-        
+
         pawnControl.setJumpSpeed(7.5f);
         pawnControl.setUseViewDirection(false);
         pawnControl.setPhysicsLocation(location);

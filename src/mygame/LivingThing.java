@@ -1,9 +1,17 @@
 package mygame;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Sphere;
 
 /**
  *
@@ -13,10 +21,36 @@ public class LivingThing extends Node {
 
     protected float health, knockBackJumpSpeed, knockBackWeakness;
     protected CharacterControl pawnControl;
+    protected RigidBodyControl deathControl;
+    protected Material beam_mat;
+    protected Geometry beam_geometry;
     protected CapsuleCollisionShape capsuleShape;
-    public float knockBackTimer = 1;
+    protected float knockBackTimer = 1;
 
-    public LivingThing() {
+    public LivingThing(AssetManager assetManager) {
+        initMaterial(assetManager);
+        initGeometry();
+        initPhysicsControl();
+
+    }
+
+    private void initMaterial(AssetManager assetManager) {
+        beam_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        beam_mat.setColor("Color", ColorRGBA.Cyan);
+        beam_mat.setColor("GlowColor", ColorRGBA.Cyan);
+    }
+
+    private void initGeometry() {
+        beam_geometry = new Geometry();
+        Sphere s = new Sphere(25, 8, 8f);
+
+        beam_geometry.setMesh(s);
+        beam_geometry.setMaterial(beam_mat);
+    }
+
+    private void initPhysicsControl() {
+        SphereCollisionShape scs = new SphereCollisionShape(0.075f);
+        deathControl = new RigidBodyControl(scs, 200f);
     }
 
     public float getHealth() {
@@ -56,7 +90,7 @@ public class LivingThing extends Node {
             pawnControl.jump();
             return true;
         }
-        
+
         return false;
     }
 
@@ -67,18 +101,24 @@ public class LivingThing extends Node {
 
             health -= damage;
             if (health < 0.1f) {
-                killEffect();
-                pawnControl.setPhysicsLocation(new Vector3f(0, -10000f, 0));
-                this.removeFromParent();
-
                 return true;
             }
         }
 
         return false;
     }
-    
-    private void killEffect() {
-        
+
+    public void killEffect(BulletAppState bulletAppState) {
+        this.scale(0.5f);
+        this.removeControl(pawnControl);
+
+        this.attachChild(beam_geometry);
+        this.addControl(deathControl);
+
+        deathControl.setPhysicsLocation(this.getWorldTranslation());
+        deathControl.setLinearVelocity(new Vector3f(0, 250f, 0));
+
+        bulletAppState.getPhysicsSpace().add(deathControl);
+        bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
 }
