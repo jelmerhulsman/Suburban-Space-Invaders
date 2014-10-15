@@ -2,6 +2,7 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
@@ -14,30 +15,35 @@ public class Player extends LivingThing {
 
     public int killCounter;
     public int waveCounter;
-    public AudioNode jump_snd;
     public boolean isMoving;
+    public AudioNode jump_snd;
 
-    public Player(AssetManager assetManager) {
-        super(assetManager);
+    public Player(AssetManager assetManager, BulletAppState bulletAppState, Vector3f spawnLocation) {
+        super();
 
-        capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
-        pawnControl = new CharacterControl(capsuleShape, 0.05f);
-        pawnControl.setJumpSpeed(15f);
-        pawnControl.setFallSpeed(30f);
-        pawnControl.setGravity(30f);
-        pawnControl.setPhysicsLocation(new Vector3f(0, 15f, 0));
+        this.setName("Player");
+        initCharacterControl(bulletAppState, spawnLocation);
+        initAudio(assetManager);
 
         health = 100f;
         knockBackJumpSpeed = 10f;
-        knockBackWeakness = 3f;
+        knockBackWeakness = 10f;
 
         killCounter = 0;
         waveCounter = 0;
 
         isMoving = false;
+    }
 
-        this.setName("Player");
-        initAudio(assetManager);
+    private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
+        capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
+        pawnControl = new CharacterControl(capsuleShape, 0.05f);
+        pawnControl.setJumpSpeed(15f);
+
+        this.addControl(pawnControl);
+        bulletAppState.getPhysicsSpace().add(pawnControl);
+
+        pawnControl.setPhysicsLocation(spawnLocation);
     }
 
     private void initAudio(AssetManager assetManager) {

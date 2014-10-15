@@ -21,36 +21,11 @@ public class LivingThing extends Node {
 
     protected float health, knockBackJumpSpeed, knockBackWeakness;
     protected CharacterControl pawnControl;
-    protected RigidBodyControl deathControl;
-    protected Material beam_mat;
-    protected Geometry beam_geometry;
     protected CapsuleCollisionShape capsuleShape;
     protected float knockBackTimer = 1;
 
-    public LivingThing(AssetManager assetManager) {
-        initMaterial(assetManager);
-        initGeometry();
-        initPhysicsControl();
-
-    }
-
-    private void initMaterial(AssetManager assetManager) {
-        beam_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        beam_mat.setColor("Color", ColorRGBA.Cyan);
-        beam_mat.setColor("GlowColor", ColorRGBA.Cyan);
-    }
-
-    private void initGeometry() {
-        beam_geometry = new Geometry();
-        Sphere s = new Sphere(25, 8, 8f);
-
-        beam_geometry.setMesh(s);
-        beam_geometry.setMaterial(beam_mat);
-    }
-
-    private void initPhysicsControl() {
-        SphereCollisionShape scs = new SphereCollisionShape(0.075f);
-        deathControl = new RigidBodyControl(scs, 200f);
+    public LivingThing() {
+        
     }
 
     public float getHealth() {
@@ -61,10 +36,10 @@ public class LivingThing extends Node {
         return pawnControl;
     }
 
-    public void movePawn(Vector3f walkdirection) {
-        if (pawnControl != null || walkdirection != new Vector3f(0, 0, 0)) {
+    public void movePawn(Vector3f direction) {
+        if (pawnControl != null || direction != new Vector3f(0, 0, 0)) {
             try {
-                pawnControl.setWalkDirection(walkdirection);
+                pawnControl.setWalkDirection(direction);
                 this.setLocalTranslation(pawnControl.getPhysicsLocation());
             } catch (Exception e) {
                 System.out.println("UNABLE TO MOVE! " + e.toString());
@@ -73,8 +48,8 @@ public class LivingThing extends Node {
     }
 
     public void knockBack(Vector3f direction) {
-        Vector3f knockDirection = direction;
-        knockDirection.multLocal(knockBackWeakness);
+        Vector3f knockDirection = new Vector3f(direction);
+        knockDirection = knockDirection.multLocal(knockBackWeakness);
         movePawn(knockDirection);
     }
 
@@ -106,21 +81,5 @@ public class LivingThing extends Node {
         }
 
         return false;
-    }
-
-    public void killEffect(BulletAppState bulletAppState) {
-        this.scale(0.5f);
-        this.attachChild(beam_geometry);
-        this.addControl(deathControl);
-
-        deathControl.setPhysicsLocation(this.getWorldTranslation());
-        deathControl.setLinearVelocity(new Vector3f(0, 250f, 0));
-
-        bulletAppState.getPhysicsSpace().add(deathControl);
-        bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
-        
-        pawnControl.setEnabled(false);
-        pawnControl.destroy();
-        this.removeControl(pawnControl);
     }
 }

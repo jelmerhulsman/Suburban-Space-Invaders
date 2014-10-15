@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author Bralts & Hulsman
  */
 public class Game extends SimpleApplication implements PhysicsCollisionListener {
-    
+
     private BulletAppState bulletAppState;
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
@@ -52,56 +52,57 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     private Weapon rayGun;
     private Vector3f knockDirection;
     private Vector3f bulletDirection;
-    private HUD hud;
-    private BoundingBox suburbsBox;
+    private GameHUD gameHUD;
     private PointLight sun;
     private float tpf = 0;
-    final private float KNOCKBACK_TIME = 0.2f;
-    final boolean enableShadows = false;
-    final int SHADOW_SIZE = 1024;
     int enemiesPerWave = 1;
+    private ArrayList<Enemy> enemies;
+    //finals
+    final float KNOCKBACK_TIME = 0.2f;
+    final boolean ENABLE_SHADOWS = false;
+    final int SHADOW_SIZE = 1024;
     final float ENEMY_SPEED = 0.3f;
     final int ENEMY_DAMAGE = 10;
+    final int CROSSHAIR_SIZE = 40;
     final int SCORE_PER_KILL = 5;
     final float PLAYER_SPEED = 0.5f;
     final int WEAPON_DAMAGE = 10;
-    final boolean enableFog = false;
-    private ArrayList<Enemy> enemies;
-    
+    final boolean ENABLE_FOG = false;
+
     public void simpleInitApp() {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        
+
         initPhysics();
         initScene();
-        initSceneCollision();
-        
+        initSceneController();
+
         initLight();
-        if (enableShadows) {
+        if (ENABLE_SHADOWS) {
             initShadow();
         }
-        
+
         initPlayer();
-        
-        if (enableFog) {
+
+        if (ENABLE_FOG) {
             initFog();
         }
         initFilter();
-        initHUD();
+        initGameHUD();
         initKeys();
         initAudio();
-        
+
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
         spawnEnemyWave();
     }
-    
+
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        
+
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
-    
+
     private void initScene() {
         //assetManager.registerLocator("town.zip", ZipLocator.class);
         //town = assetManager.loadModel("main.scene");
@@ -109,38 +110,39 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
-        suburbsBox = (BoundingBox) suburbs.getWorldBound();
     }
-    
-    private void initSceneCollision() {
+
+    private void initSceneController() {
         CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
         suburbsControl = new RigidBodyControl(suburbsShape, 0f);
         suburbs.addControl(suburbsControl);
         bulletAppState.getPhysicsSpace().add(suburbsControl);
     }
-    
+
     private void initLight() {
+        BoundingBox suburbsBox = (BoundingBox) suburbs.getWorldBound();
+        
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
-        
+
         sun = new PointLight();
         sun.setColor(ColorRGBA.White.clone().multLocal(2));
         sun.setPosition(new Vector3f(suburbsBox.getXExtent() / 2, 300, suburbsBox.getZExtent() / 2));
         sun.setRadius(suburbsBox.getXExtent() * suburbsBox.getZExtent());
         rootNode.addLight(sun);
     }
-    
+
     public void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
-        
+
         PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, SHADOW_SIZE);
         dlsr.setLight(sun);
         dlsr.setShadowIntensity(0.5f);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
         viewPort.addProcessor(dlsr);
     }
-    
+
     private void initPlayer() {
         playerWalkDirection = new Vector3f();
         left = false;
@@ -149,18 +151,17 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         down = false;
         camDir = new Vector3f();
         camLeft = new Vector3f();
-        
+
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
-        
-        player = new Player(assetManager);
-        
-        bulletAppState.getPhysicsSpace().add(player.getCharacterControl());
-        
+
+        player = new Player(assetManager, bulletAppState, new Vector3f(0, 100f, 0));
+        rootNode.attachChild(player);
+
         rayGun = new Weapon(assetManager);
         rootNode.attachChild(rayGun);
     }
-    
+
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 
@@ -169,7 +170,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         if (numSamples > 0) {
             fpp.setNumSamples(numSamples);
         }
-        
+
         FogFilter fog = new FogFilter();
         fog.setFogColor(ColorRGBA.Gray);
         fog.setFogDensity(1f);
@@ -177,32 +178,31 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
     }
-    
+
     private void initFilter() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        
+
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
-        
+
         FXAAFilter fxaa = new FXAAFilter();
         fxaa.setReduceMul(0.0f);
         fxaa.setSubPixelShift(0.0f);
-        
+
         CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
-        
+
         fpp.addFilter(bloom);
         fpp.addFilter(fxaa);
         fpp.addFilter(cartoony);
-        
+
         viewPort.addProcessor(fpp);
     }
-    
-    private void initHUD() {
-        int crossHairSize = 40;
-        hud = new HUD(assetManager, guiNode, settings, guiFont, crossHairSize);
+
+    private void initGameHUD() {
+        gameHUD = new GameHUD(assetManager, guiNode, settings, guiFont, CROSSHAIR_SIZE);
     }
-    
+
     private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -216,13 +216,12 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addListener(actionListener, "Down");
         inputManager.addListener(actionListener, "Jump");
         inputManager.addListener(actionListener, "Debug");
-        
+
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
     }
-    
-    public void initAudio()
-    {
+
+    public void initAudio() {
         wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
         wave_snd.setPositional(false);
         wave_snd.setLooping(false);
@@ -233,31 +232,28 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     @Override
     public void simpleUpdate(float tpf) {
         this.tpf = tpf;
-        
+
         updatePlayerWalk();
         updateEnemyWalk();
         updateWeapon(tpf);
         updateHUD();
-        
+
         if (enemies.isEmpty()) {
-            enemiesPerWave = (int)((enemiesPerWave + 1f) * 1.5f);
+            enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
             wave_snd.play();
             player.waveCounter++;
         }
-
-        //fpsText.setText("# Nodes in rootnode: " + rootNode.getChildren().size());
-        //fpsText.setText(FastMath.floor(player.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().z));
     }
-    
+
     public void updatePlayerWalk() {
         player.knockBackTimer += tpf;
-        
+
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
             camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
             playerWalkDirection.set(0, 0, 0);
-            
+
             if (!(left && right)) {
                 if (left) {
                     playerWalkDirection.addLocal(camLeft.x, 0, camLeft.z);
@@ -272,56 +268,57 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
                     playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
                 }
             }
-            
+
             if ((up && left) || (up && right) || (down && left) || (down && right)) {
                 playerWalkDirection = playerWalkDirection.multLocal(FastMath.sqrt(PLAYER_SPEED));
             }
-            
+
             player.movePawn(playerWalkDirection);
         } else {
             player.knockBack(knockDirection);
         }
         
-        
         Vector3f playerLoc = player.getWorldTranslation();
         if (cam.getLocation().distance(playerLoc) > 0.1f) {
             player.isMoving = true;
-            
         } else {
             player.isMoving = false;
         }
-        
+
         cam.setLocation(playerLoc);
     }
-    
+
     public void updateEnemyWalk() {
         Vector3f playerLoc = player.getWorldTranslation();
-        
+
         for (Enemy e : enemies) {
             e.knockBackTimer += tpf;
             Vector3f enemyLoc = e.getWorldTranslation();
-            
+
             enemyWalkDirection.set(0, 0, 0);
-            
+
             float diffX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
             float diffZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
-            
+
             float diffTotal = FastMath.abs(diffX) + FastMath.abs(diffZ);
             if (diffTotal < ENEMY_SPEED) {
                 diffTotal = ENEMY_SPEED;
             }
-            
+
             diffX = (diffX / diffTotal) * ENEMY_SPEED;
             diffZ = (diffZ / diffTotal) * ENEMY_SPEED;
             enemyWalkDirection.set(diffX, 0, diffZ);
-            
+
             if (player.knockBackTimer < KNOCKBACK_TIME) {
                 enemyWalkDirection.set(0, 0, 0);
             } else if (enemyLoc.distance(playerLoc) < 8) {
                 knockDirection = enemyWalkDirection;
-                player.gotKilled(ENEMY_DAMAGE);
+                if (player.gotKilled(ENEMY_DAMAGE))
+                {
+                    //Death screen
+                }
             }
-            
+
             if (e.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) > 5) {
                     e.jump();
@@ -332,26 +329,26 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
             } else {
                 e.knockBack(bulletDirection);
             }
-            
+
             e.jump();
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
-    
+
     public void updateWeapon(float tpf) {
         Vector3f gunLoc = cam.getLocation().add(cam.getDirection().mult(3));
         rayGun.setLocalTranslation(gunLoc);
         rayGun.setLocalRotation(cam.getRotation());
-        
+
         rayGun.increaseTimer(tpf);
         rayGun.restoreEnergy(player.isMoving);
     }
-    
+
     public void updateHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
-        hud.updateHUD(percentageEnergy, percentageHealth);
-        hud.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
+        gameHUD.updateHUD(percentageEnergy, percentageHealth);
+        gameHUD.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
             setDisplayStatView(true);
             setDisplayFps(true);
@@ -404,20 +401,19 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
             }
         }
     };
-    
+
     public void spawnEnemyWave() {
         for (int i = 0; i < enemiesPerWave; i++) {
             Vector3f randomLoc;
             Vector3f playerLoc = player.getWorldTranslation();
-            
+
             do {
                 float locX = FastMath.nextRandomInt(-190, 490);
                 float locY = 150f;
-                float locZ = FastMath.nextRandomInt(-465, 95);
+                float locZ = FastMath.nextRandomInt(-305, 95);
                 randomLoc = new Vector3f(locX, locY, locZ);
-                System.out.println(i + " -> " + randomLoc.toString());
             } while (randomLoc.distance(playerLoc) < 210f);
-            
+
             Enemy e = new Enemy(assetManager, bulletAppState, randomLoc);
             enemies.add(e);
             rootNode.attachChild(e);
@@ -426,36 +422,36 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-                
+
                 if (rayGun.shoot()) {
                     float spread = rayGun.getSpread();
-                    
+
                     Vector3f bulletLoc = cam.getLocation().add(cam.getDirection().mult(3));
                     float locX = bulletLoc.x + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     float locY = bulletLoc.y + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     float locZ = bulletLoc.z + ((FastMath.rand.nextFloat() - FastMath.rand.nextFloat()) * spread);
                     bulletLoc = new Vector3f(locX, locY, locZ);
-                    
+
                     Quaternion bulletRot = cam.getRotation();
                     Vector3f bulletDir = cam.getDirection();
-                    
+
                     Bullet addBullet = new Bullet(assetManager, bulletAppState, bulletLoc, bulletRot, bulletDir);
                     rootNode.attachChild(addBullet);
                 }
             }
         }
     };
-    
+
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
-            
+
             if (e.gotKilled(WEAPON_DAMAGE)) {
                 e.killEffect(bulletAppState);
                 enemies.remove(e);
                 player.killCounter++;
             }
-            
+
             Bullet b = (Bullet) event.getNodeB();
             bulletDirection = b.getDirection();
             b.removeBullet();

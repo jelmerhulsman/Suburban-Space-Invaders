@@ -14,28 +14,24 @@ public class Weapon extends Node {
 
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
-    private float fireRate;
     private float currentEnergy;
-    private float rechargeRate;
-    private float spread;
     private float fireTimer;
     private float energyTimer;
-    public boolean isShooting;
+    //finals
+    final float FIRE_RATE = 0.2f;
+    final float RECHARGE_RATE = 0.6f;
+    final float SPREAD = 0.3f;
 
     public Weapon(AssetManager assetManager) {
         super();
-
-        energyTimer = 0;
-        fireTimer = 0;
-
-        currentEnergy = 50f; // also know as ammo
-        rechargeRate = 1 / 2f; // recharge 2 shots per second
         
-        fireRate = 1 / 5f; // 5 shots per second
-        spread = 0.3f;
-
+        this.setName("Weapon");
         initModel(assetManager);
         initAudio(assetManager);
+        
+        energyTimer = 0;
+        fireTimer = 0;
+        currentEnergy = 50f;
     }
 
     private void initModel(AssetManager assetManager) {
@@ -62,7 +58,7 @@ public class Weapon extends Node {
     }
 
     public float getSpread() {
-        return spread;
+        return SPREAD;
     }
 
     public void increaseTimer(float tpf) {
@@ -71,14 +67,18 @@ public class Weapon extends Node {
     }
 
     public void restoreEnergy(boolean isMoving) {
-        if (energyTimer >= rechargeRate && currentEnergy < 50f && isMoving) {
-            currentEnergy++;
+        if (energyTimer >= RECHARGE_RATE && currentEnergy < 50) {
+            if (isMoving) {
+                currentEnergy++;
+            } else {
+                currentEnergy += 0.5f;
+            }
             energyTimer = 0;
         }
     }
 
     public boolean shoot() {
-        if (fireTimer >= fireRate && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+        if (fireTimer >= FIRE_RATE && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             bullet_snd.stop();
             bullet_snd.play();
 
@@ -86,7 +86,7 @@ public class Weapon extends Node {
 
             fireTimer = 0;
             return true;
-        } else if (fireTimer >= fireRate && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+        } else if (fireTimer >= FIRE_RATE && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             empty_snd.play();
 
             fireTimer = 0;
