@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -41,6 +42,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
     private Player player;
+    private AudioNode wave_snd;
     private Vector3f playerWalkDirection;
     private Vector3f enemyWalkDirection;
     private boolean left, right, up, down;
@@ -91,6 +93,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initFilter();
         initHUD();
         initKeys();
+        initAudio();
         
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
@@ -223,6 +226,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addListener(analogListener, "Shoot");
     }
     
+    public void initAudio()
+    {
+        wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
+        wave_snd.setPositional(false);
+        wave_snd.setLooping(false);
+        wave_snd.setVolume(0.75f);
+        rootNode.attachChild(wave_snd);
+    }
+
     @Override
     public void simpleUpdate(float tpf) {
         this.tpf = tpf;
@@ -235,7 +247,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (enemies.isEmpty()) {
             enemiesPerWave = (int)((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
-            
+            wave_snd.play();
             player.waveCounter++;
         }
 

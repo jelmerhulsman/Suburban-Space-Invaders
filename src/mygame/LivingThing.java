@@ -110,8 +110,6 @@ public class LivingThing extends Node {
 
     public void killEffect(BulletAppState bulletAppState) {
         this.scale(0.5f);
-        this.removeControl(pawnControl);
-
         this.attachChild(beam_geometry);
         this.addControl(deathControl);
 
@@ -120,5 +118,9 @@ public class LivingThing extends Node {
 
         bulletAppState.getPhysicsSpace().add(deathControl);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
+        
+        pawnControl.setEnabled(false);
+        pawnControl.destroy();
+        this.removeControl(pawnControl);
     }
 }
