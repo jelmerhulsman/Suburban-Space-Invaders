@@ -233,14 +233,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         updateHUD();
         
         if (enemies.isEmpty()) {
-            enemiesPerWave *= 2;
+            enemiesPerWave = (int)((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
             
             player.waveCounter++;
         }
 
         //fpsText.setText("# Nodes in rootnode: " + rootNode.getChildren().size());
-        fpsText.setText(FastMath.floor(player.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().z));
+        //fpsText.setText(FastMath.floor(player.pawnControl.getPhysicsLocation().x) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().y) + ", " + FastMath.floor(player.pawnControl.getPhysicsLocation().z));
     }
     
     public void updatePlayerWalk() {
