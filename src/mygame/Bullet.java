@@ -73,6 +73,7 @@ public class Bullet extends Node{
     {
         Vector3f farAway = new Vector3f(0, -20000f, 0);
         this.control.setPhysicsLocation(farAway);
+        this.control.setEnabled(false);
         this.removeControl(control);
         this.setLocalTranslation(farAway);
         this.removeFromParent();
