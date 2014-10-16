@@ -1,6 +1,11 @@
 package mygame;
 
+import com.jme3.app.Application;
+import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
@@ -9,6 +14,8 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.input.FlyByCamera;
+import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -26,7 +33,10 @@ import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
 import com.jme3.post.filters.FXAAFilter;
 import com.jme3.post.filters.FogFilter;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
@@ -36,7 +46,7 @@ import java.util.ArrayList;
  *
  * @author Bralts & Hulsman
  */
-public class Game extends SimpleApplication implements PhysicsCollisionListener {
+public class Game extends AbstractAppState implements PhysicsCollisionListener {
 
     private BulletAppState bulletAppState;
     private Spatial suburbs;
@@ -68,8 +78,28 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     final float PLAYER_SPEED = 0.5f;
     final int WEAPON_DAMAGE = 10;
     final boolean ENABLE_FOG = false;
+    private SimpleApplication app;
+    private Node rootNode;
+    private AssetManager assetManager;
+    private AppStateManager stateManager;
+    private BulletAppState physics;
+    private ViewPort viewPort;
+    private Camera cam;
+    private FlyByCamera flyCam;
+    private InputManager inputManager;
 
-    public void simpleInitApp() {
+    @Override
+    public void initialize(AppStateManager stateManager, Application app) {
+        super.initialize(stateManager, app);
+        this.app = (SimpleApplication) app; // can cast Application to something more specific
+        this.rootNode = this.app.getRootNode();
+        this.assetManager = this.app.getAssetManager();
+        this.stateManager = this.app.getStateManager();
+        this.physics = this.stateManager.getState(BulletAppState.class);
+        this.viewPort = this.app.getViewPort();
+        this.cam = this.app.getCamera();
+        this.flyCam = this.stateManager.getState(FlyCamAppState.class).getCamera();
+        this.inputManager = this.app.getInputManager();
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
         initPhysics();
@@ -165,12 +195,6 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 
-        //fpp.setNumSamples(4);
-        int numSamples = getContext().getSettings().getSamples();
-        if (numSamples > 0) {
-            fpp.setNumSamples(numSamples);
-        }
-
         FogFilter fog = new FogFilter();
         fog.setFogColor(ColorRGBA.Gray);
         fog.setFogDensity(1f);
@@ -200,7 +224,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initGameHUD() {
-        gameHUD = new GameHUD(assetManager, guiNode, settings, guiFont, CROSSHAIR_SIZE);
+        gameHUD = new GameHUD(assetManager, app.getGuiNode(), CROSSHAIR_SIZE);
     }
 
     private void initKeys() {
@@ -230,7 +254,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     @Override
-    public void simpleUpdate(float tpf) {
+    public void update(float tpf) {
         this.tpf = tpf;
 
         updatePlayerWalk();
@@ -293,7 +317,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         for (Enemy e : enemies) {
             Vector3f enemyLoc = e.getWorldTranslation();
             enemyWalkDirection.set(0, 0, 0);
-            fpsText.setText(Math.floor(enemyLoc.x) +", "+ Math.floor(enemyLoc.y) +", "+ Math.floor(enemyLoc.z));
+            //app.fpsText.setText(Math.floor(enemyLoc.x) +", "+ Math.floor(enemyLoc.y) +", "+ Math.floor(enemyLoc.z));
 
             float moveX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
             float moveZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
@@ -343,11 +367,11 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         gameHUD.updateHUD(percentageEnergy, percentageHealth);
         gameHUD.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
-            setDisplayStatView(true);
-            setDisplayFps(true);
+            app.setDisplayStatView(true);
+            app.setDisplayFps(true);
         } else {
-            setDisplayStatView(false);
-            setDisplayFps(false);
+            app.setDisplayStatView(false);
+            app.setDisplayFps(false);
         }
     }
     private ActionListener actionListener = new ActionListener() {
@@ -405,7 +429,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
                 float locZ = FastMath.nextRandomInt(-305, 95);
                 randomLoc = new Vector3f(locX, 150f, locZ);
             } while (randomLoc.distance(playerLoc) < 210f);
-            
+
             Enemy e = new Enemy(assetManager, bulletAppState, randomLoc);
             enemies.add(e);
             rootNode.attachChild(e);
