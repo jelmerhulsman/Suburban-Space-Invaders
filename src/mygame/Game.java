@@ -72,7 +72,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
     final boolean ENABLE_SHADOWS = false;
     final int SHADOW_SIZE = 1024;
     final float ENEMY_SPEED = 0.3f;
-    final int ENEMY_DAMAGE = 10;
+    final int ENEMY_DAMAGE = 5;
     final int CROSSHAIR_SIZE = 40;
     final int SCORE_PER_KILL = 5;
     final float PLAYER_SPEED = 0.5f;
@@ -257,20 +257,23 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
     public void update(float tpf) {
         this.tpf = tpf;
 
-        updatePlayerWalk();
-        updateEnemyWalk();
+        updatePlayer();
+        updateEnemy();
         updateWeapon(tpf);
-        updateHUD();
+        updateGameHUD();
 
         if (enemies.isEmpty()) {
+            player.restoreHealth();
+            
             enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
+            
             wave_snd.play();
             player.waveCounter++;
         }
     }
 
-    public void updatePlayerWalk() {
+    public void updatePlayer() {
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
             camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
@@ -311,7 +314,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
         cam.setLocation(playerLoc);
     }
 
-    public void updateEnemyWalk() {
+    public void updateEnemy() {
         Vector3f playerLoc = player.getWorldTranslation();
 
         for (Enemy e : enemies) {
@@ -331,7 +334,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
                 if (enemyLoc.distance(playerLoc) <= 5) {
                     knockDirection = new Vector3f(enemyWalkDirection);
                     if (player.gotKilled(ENEMY_DAMAGE)) {
-                        //Death screen
+                        //this.stop();
                     }
                 }
             } else {
@@ -361,10 +364,10 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
         rayGun.restoreEnergy(player.isMoving);
     }
 
-    public void updateHUD() {
+    public void updateGameHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
-        gameHUD.updateHUD(percentageEnergy, percentageHealth);
+        gameHUD.updateBars(percentageEnergy, percentageHealth);
         gameHUD.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
             app.setDisplayStatView(true);
