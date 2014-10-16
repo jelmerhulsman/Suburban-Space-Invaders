@@ -1,17 +1,9 @@
 package mygame;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.shape.Sphere;
 
 /**
  *
@@ -25,7 +17,6 @@ public class LivingThing extends Node {
     protected float knockBackTimer = 1;
 
     public LivingThing() {
-        
     }
 
     public float getHealth() {
@@ -37,19 +28,17 @@ public class LivingThing extends Node {
     }
 
     public void movePawn(Vector3f direction) {
-        if (pawnControl != null || direction != new Vector3f(0, 0, 0)) {
-            try {
-                pawnControl.setWalkDirection(direction);
-                this.setLocalTranslation(pawnControl.getPhysicsLocation());
-            } catch (Exception e) {
-                System.out.println("UNABLE TO MOVE! " + e.toString());
-            }
+        try {
+            pawnControl.setWalkDirection(direction);
+            this.setLocalTranslation(pawnControl.getPhysicsLocation());
+        } catch (Exception e) {
+            System.out.println("UNABLE TO MOVE! " + e.toString());
         }
     }
 
     public void knockBack(Vector3f direction) {
         Vector3f knockDirection = new Vector3f(direction);
-        knockDirection = knockDirection.multLocal(knockBackWeakness);
+        knockDirection = knockDirection.mult(knockBackWeakness);
         movePawn(knockDirection);
     }
 

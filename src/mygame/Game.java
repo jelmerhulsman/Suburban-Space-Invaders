@@ -121,7 +121,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
 
     private void initLight() {
         BoundingBox suburbsBox = (BoundingBox) suburbs.getWorldBound();
-        
+
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
@@ -155,7 +155,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
 
-        player = new Player(assetManager, bulletAppState, new Vector3f(0, 100f, 0));
+        player = new Player(assetManager, bulletAppState, new Vector3f(0, 20f, 0));
         rootNode.attachChild(player);
 
         rayGun = new Weapon(assetManager);
@@ -247,8 +247,6 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     public void updatePlayerWalk() {
-        player.knockBackTimer += tpf;
-
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
             camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
@@ -275,9 +273,10 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
 
             player.movePawn(playerWalkDirection);
         } else {
+            player.knockBackTimer += tpf;
             player.knockBack(knockDirection);
         }
-        
+
         Vector3f playerLoc = player.getWorldTranslation();
         if (cam.getLocation().distance(playerLoc) > 0.1f) {
             player.isMoving = true;
@@ -292,45 +291,39 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f playerLoc = player.getWorldTranslation();
 
         for (Enemy e : enemies) {
-            e.knockBackTimer += tpf;
             Vector3f enemyLoc = e.getWorldTranslation();
-
             enemyWalkDirection.set(0, 0, 0);
+            fpsText.setText(Math.floor(enemyLoc.x) +", "+ Math.floor(enemyLoc.y) +", "+ Math.floor(enemyLoc.z));
 
-            float diffX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
-            float diffZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
+            float moveX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
+            float moveZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
+            float moveTotal = FastMath.abs(moveX) + FastMath.abs(moveZ);
 
-            float diffTotal = FastMath.abs(diffX) + FastMath.abs(diffZ);
-            if (diffTotal < ENEMY_SPEED) {
-                diffTotal = ENEMY_SPEED;
-            }
+            moveX = (moveX / moveTotal) * ENEMY_SPEED;
+            moveZ = (moveZ / moveTotal) * ENEMY_SPEED;
+            enemyWalkDirection.set(moveX, 0, moveZ);
 
-            diffX = (diffX / diffTotal) * ENEMY_SPEED;
-            diffZ = (diffZ / diffTotal) * ENEMY_SPEED;
-            enemyWalkDirection.set(diffX, 0, diffZ);
-
-            if (player.knockBackTimer < KNOCKBACK_TIME) {
-                enemyWalkDirection.set(0, 0, 0);
-            } else if (enemyLoc.distance(playerLoc) < 8) {
-                knockDirection = enemyWalkDirection;
-                if (player.gotKilled(ENEMY_DAMAGE))
-                {
-                    //Death screen
+            if (player.knockBackTimer > KNOCKBACK_TIME) {
+                if (enemyLoc.distance(playerLoc) <= 5) {
+                    knockDirection = new Vector3f(enemyWalkDirection);
+                    if (player.gotKilled(ENEMY_DAMAGE)) {
+                        //Death screen
+                    }
                 }
+            } else {
+                enemyWalkDirection.set(0, 0, 0);
             }
 
             if (e.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) > 5) {
                     e.jump();
                     e.movePawn(enemyWalkDirection);
-                } else {
-                    e.move(0, 0, 0);
                 }
             } else {
+                e.knockBackTimer += tpf;
                 e.knockBack(bulletDirection);
             }
 
-            e.jump();
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
@@ -409,11 +402,10 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
 
             do {
                 float locX = FastMath.nextRandomInt(-190, 490);
-                float locY = 150f;
                 float locZ = FastMath.nextRandomInt(-305, 95);
-                randomLoc = new Vector3f(locX, locY, locZ);
+                randomLoc = new Vector3f(locX, 150f, locZ);
             } while (randomLoc.distance(playerLoc) < 210f);
-
+            
             Enemy e = new Enemy(assetManager, bulletAppState, randomLoc);
             enemies.add(e);
             rootNode.attachChild(e);

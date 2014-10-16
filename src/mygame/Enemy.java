@@ -26,7 +26,9 @@ public class Enemy extends LivingThing {
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f spawnLocation) {
         super();
-
+        
+        this.setLocalTranslation(spawnLocation);
+        
         this.setName("Enemy");
         initModel(assetManager);
         initCharacterControl(bulletAppState, spawnLocation);
@@ -55,8 +57,6 @@ public class Enemy extends LivingThing {
 
         this.addControl(pawnControl);
         bulletAppState.getPhysicsSpace().add(pawnControl);
-
-        pawnControl.setPhysicsLocation(spawnLocation);
     }
 
     private void initMaterial(AssetManager assetManager) {

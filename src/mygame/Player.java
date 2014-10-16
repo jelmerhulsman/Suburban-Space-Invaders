@@ -26,8 +26,8 @@ public class Player extends LivingThing {
         initAudio(assetManager);
 
         health = 100f;
-        knockBackJumpSpeed = 10f;
-        knockBackWeakness = 10f;
+        knockBackJumpSpeed = 5f;
+        knockBackWeakness = 3f;
 
         killCounter = 0;
         waveCounter = 0;
