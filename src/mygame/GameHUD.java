@@ -63,7 +63,7 @@ public class GameHUD {
         scoreText = new BitmapText(guiFont, false);
         scoreText.setSize(guiFont.getCharSet().getRenderedSize());
         scoreText.setText("Score : 0");
-        scoreText.setLocalTranslation(300, scoreText.getLineHeight(), 0);
+        scoreText.setLocalTranslation(Display.getWidth() - 150 , scoreText.getLineHeight(), 0);
         guiNode.attachChild(scoreText);
         
         waveText = new BitmapText(guiFont, false);
