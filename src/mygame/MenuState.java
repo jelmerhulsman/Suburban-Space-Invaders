@@ -6,7 +6,6 @@ package mygame;
 
 import com.jme3.app.Application;
 import com.jme3.app.FlyCamAppState;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
@@ -26,11 +25,11 @@ import de.lessvoid.nifty.screen.ScreenController;
  *
  * @author Bralts & Hulsman
  */
-public class GameGUI extends AbstractAppState implements ScreenController{
+public class MenuState extends AbstractAppState implements ScreenController {
 
     public Node rootNode;
     public Main app;
-    public GameGUI GUI;
+    public MenuState GUI;
     public AssetManager assetManager;
     private AppStateManager stateManager;
     private BulletAppState physics;
@@ -38,19 +37,15 @@ public class GameGUI extends AbstractAppState implements ScreenController{
     private InputManager inputManager;
     private AudioRenderer audioRenderer;
     private ViewPort viewPort;
-    private boolean firstTime;
     private Nifty nifty;
     public Screen screen;
     public Window startMenu;
-    
-    
-    
-    public GameGUI(Main app)
-    {
+
+    public MenuState(Main app) {
         this.app = app;
         this.stateManager = this.app.getStateManager();
     }
-    
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -63,18 +58,12 @@ public class GameGUI extends AbstractAppState implements ScreenController{
         this.viewPort = this.app.getViewPort();
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
-        firstTime = true;
         startMenu();
-        
-        
-        
     }
 
     public void startGame() {
-        stateManager.attach(new Game());
+        stateManager.attach(new GameRunningState());
         System.out.print("Booting up game!");
-        
-        System.out.print("Game is running!");
         nifty.exit();
     }
 
@@ -82,8 +71,8 @@ public class GameGUI extends AbstractAppState implements ScreenController{
         flyCam.setEnabled(false);
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort);
         nifty = niftyDisplay.getNifty();
-        GameGUI ggs = new GameGUI(app);
-        nifty.fromXml("Interface/MenuNifty.xml", "start",ggs);
+        MenuState ggs = new MenuState(app);
+        nifty.fromXml("Interface/MenuNifty.xml", "start", ggs);
         nifty.gotoScreen("start");
         viewPort.addProcessor(niftyDisplay);
     }
@@ -93,10 +82,8 @@ public class GameGUI extends AbstractAppState implements ScreenController{
     }
 
     public void onStartScreen() {
-        
     }
 
     public void onEndScreen() {
-        
     }
 }

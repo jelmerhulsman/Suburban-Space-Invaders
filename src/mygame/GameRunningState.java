@@ -46,7 +46,7 @@ import java.util.ArrayList;
  *
  * @author Bralts & Hulsman
  */
-public class Game extends AbstractAppState implements PhysicsCollisionListener {
+public class GameRunningState extends AbstractAppState implements PhysicsCollisionListener {
 
     private BulletAppState bulletAppState;
     private Spatial suburbs;
