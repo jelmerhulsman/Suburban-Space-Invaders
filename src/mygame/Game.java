@@ -62,7 +62,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     final boolean ENABLE_SHADOWS = false;
     final int SHADOW_SIZE = 1024;
     final float ENEMY_SPEED = 0.3f;
-    final int ENEMY_DAMAGE = 10;
+    final int ENEMY_DAMAGE = 5;
     final int CROSSHAIR_SIZE = 40;
     final int SCORE_PER_KILL = 5;
     final float PLAYER_SPEED = 0.5f;
@@ -239,8 +239,11 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         updateGameHUD();
 
         if (enemies.isEmpty()) {
+            player.restoreHealth();
+            
             enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
+            
             wave_snd.play();
             player.waveCounter++;
         }

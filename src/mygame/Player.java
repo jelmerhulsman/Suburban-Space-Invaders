@@ -53,7 +53,11 @@ public class Player extends LivingThing {
         jump_snd.setVolume(0.75f);
         this.attachChild(jump_snd);
     }
-
+    
+    public void restoreHealth() {
+        health = 100f;
+    }
+    
     public void groan() {
         jump_snd.stop();
         jump_snd.play();
