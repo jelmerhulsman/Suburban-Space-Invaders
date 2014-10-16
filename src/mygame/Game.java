@@ -91,6 +91,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
+        
         this.app = (SimpleApplication) app; // can cast Application to something more specific
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
@@ -124,6 +125,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
         spawnEnemyWave();
+        flyCam.setEnabled(true);
     }
 
     private void initPhysics() {
@@ -228,6 +230,7 @@ public class Game extends AbstractAppState implements PhysicsCollisionListener {
     }
 
     private void initKeys() {
+        inputManager.setCursorVisible(false);
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));

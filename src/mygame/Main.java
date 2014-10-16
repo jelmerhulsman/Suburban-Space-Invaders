@@ -17,6 +17,6 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        stateManager.attach(new GameGUI());
+        stateManager.attach(new GameGUI(this));
     }
 }
