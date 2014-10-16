@@ -233,10 +233,10 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
     public void simpleUpdate(float tpf) {
         this.tpf = tpf;
 
-        updatePlayerWalk();
-        updateEnemyWalk();
+        updatePlayer();
+        updateEnemy();
         updateWeapon(tpf);
-        updateHUD();
+        updateGameHUD();
 
         if (enemies.isEmpty()) {
             enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
@@ -246,7 +246,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         }
     }
 
-    public void updatePlayerWalk() {
+    public void updatePlayer() {
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
             camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
@@ -287,7 +287,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         cam.setLocation(playerLoc);
     }
 
-    public void updateEnemyWalk() {
+    public void updateEnemy() {
         Vector3f playerLoc = player.getWorldTranslation();
 
         for (Enemy e : enemies) {
@@ -307,7 +307,7 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
                 if (enemyLoc.distance(playerLoc) <= 5) {
                     knockDirection = new Vector3f(enemyWalkDirection);
                     if (player.gotKilled(ENEMY_DAMAGE)) {
-                        //Death screen
+                        this.stop();
                     }
                 }
             } else {
@@ -337,10 +337,10 @@ public class Game extends SimpleApplication implements PhysicsCollisionListener 
         rayGun.restoreEnergy(player.isMoving);
     }
 
-    public void updateHUD() {
+    public void updateGameHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
-        gameHUD.updateHUD(percentageEnergy, percentageHealth);
+        gameHUD.updateBars(percentageEnergy, percentageHealth);
         gameHUD.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
             setDisplayStatView(true);

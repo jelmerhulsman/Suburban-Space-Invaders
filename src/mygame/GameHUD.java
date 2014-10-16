@@ -86,18 +86,18 @@ public class GameHUD {
 
         guiNode.attachChild(pic);
     }
-    
-    public void updateScore(int score, int waves)
-    {
-        scoreText.setText("Score : " + score);
-        waveText.setText("Waves survived : " + waves);
-    }
 
-    public void updateHUD(float percentageEnergy, float percentageHealth) {
+    public void updateBars(float percentageEnergy, float percentageHealth) {
         energybarInline.setWidth(120 * percentageEnergy);
         energybarInline.setPosition(10 + ((1 - percentageEnergy * 10)), posBarsY);
 
         healthbarInline.setWidth(120 * percentageHealth);
         healthbarInline.setPosition(10 + ((1 - percentageHealth * 10)), posBarsY + 30);
+    }
+    
+    public void updateScore(int score, int waves)
+    {
+        scoreText.setText("Score : " + score);
+        waveText.setText("Waves survived : " + waves);
     }
 }
