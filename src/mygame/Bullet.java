@@ -16,19 +16,20 @@ import com.jme3.scene.shape.Cylinder;
  *
  * @author Bralts & Hulsman
  */
-public class Bullet extends Node{
+public class Bullet extends Node {
+
     private Material bullet_mat;
     private Geometry bullet_geometry;
-    public RigidBodyControl control;
+    private RigidBodyControl control;
     private Vector3f loc;
     private Quaternion rot;
     private Vector3f dir;
-    
+
     public Bullet(AssetManager assetManager, BulletAppState bulletAppState, Vector3f loc, Quaternion rot, Vector3f dir) {
         this.loc = loc;
         this.rot = rot;
         this.dir = dir;
-        
+
         this.setName("Bullet");
         initMaterial(assetManager);
         initGeometry();
@@ -44,18 +45,18 @@ public class Bullet extends Node{
     private void initGeometry() {
         bullet_geometry = new Geometry();
         Cylinder c = new Cylinder(25, 25, 0.075f, 1f, true);
-        
+
         bullet_geometry.setMesh(c);
         bullet_geometry.setMaterial(bullet_mat);
-        
+
         this.attachChild(bullet_geometry);
     }
-    
+
     private void initPhysicsControl(BulletAppState bulletAppState) {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         control = new RigidBodyControl(scs, 200f);
         this.addControl(control);
-        
+
         control.setPhysicsLocation(loc);
         control.setPhysicsRotation(rot);
         control.setLinearVelocity(dir.mult(250f));
@@ -63,14 +64,12 @@ public class Bullet extends Node{
         bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
-    
-    public Vector3f getDirection()
-    {
+
+    public Vector3f getDirection() {
         return dir;
     }
-    
-    public void removeBullet ()
-    {
+
+    public void removeBullet() {
         Vector3f farAway = new Vector3f(0, -20000f, 0);
         this.control.setPhysicsLocation(farAway);
         this.control.setEnabled(false);

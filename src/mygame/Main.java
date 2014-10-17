@@ -4,7 +4,7 @@ import com.jme3.app.SimpleApplication;
 
 /**
  *
- * @author Hulsman
+ * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication {
 

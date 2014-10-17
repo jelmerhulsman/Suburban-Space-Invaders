@@ -48,48 +48,49 @@ import java.util.ArrayList;
  * @author Bralts & Hulsman
  */
 public class GameRunningState extends AbstractAppState implements PhysicsCollisionListener {
+    //app basic variables
 
-    private BulletAppState bulletAppState;
-    private Spatial suburbs;
-    private RigidBodyControl suburbsControl;
-    private Player player;
-    private AudioNode wave_snd;
-    private Vector3f playerWalkDirection;
-    private Vector3f enemyWalkDirection;
-    private boolean left, right, up, down;
-    private boolean debugMode;
-    private Vector3f camDir;
-    private Vector3f camLeft;
-    private Weapon rayGun;
-    private Vector3f knockDirection;
-    private Vector3f bulletDirection;
-    private GameHUD gameHUD;
-    private PointLight sun;
-    private float tpf = 0;
-    private float hitTimer = 0;
-    int enemiesPerWave = 1;
-    private ArrayList<Enemy> enemies;
-    //finals
-    final float KNOCKBACK_TIME = 0.2f;
-    final boolean ENABLE_SHADOWS = false;
-    final int SHADOW_SIZE = 1024;
-    final float ENEMY_SPEED = 0.3f;
-    final int ENEMY_DAMAGE = 5;
-    final int CROSSHAIR_SIZE = 40;
-    final int SCORE_PER_KILL = 5;
-    final float PLAYER_SPEED = 0.5f;
-    final int WEAPON_DAMAGE = 10;
-    final boolean ENABLE_FOG = false;
     private SimpleApplication app;
     private Node rootNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
-    private BulletAppState physics;
+    private BulletAppState bulletAppState;
     private ViewPort viewPort;
     private Camera cam;
     private FlyByCamera flyCam;
     private InputManager inputManager;
-    private ColorOverlayFilter cof;
+    // app final variables
+    final private int PLAYER_HEALTH = 100;
+    final private float PLAYER_SPEED = 0.5f;
+    final private int WEAPON_DAMAGE = 10;
+    final private int WEAPON_ENERGY = 50;
+    final private int ENEMY_HEALTH = 100;
+    final private float ENEMY_SPEED = 0.3f;
+    final private int ENEMY_DAMAGE = 5;
+    final private int ENEMY_RANGE = 5;
+    final private int CROSSHAIR_SIZE = 40;
+    final private int SCORE_PER_KILL = 5;
+    final private float KNOCKBACK_TIME = 0.2f;
+    final private int SHADOW_SIZE = 1024;
+    final private boolean ENABLE_SHADOWS = false;
+    final private boolean ENABLE_FOG = false;
+    //app variables
+    private Spatial suburbs;
+    private RigidBodyControl suburbsControl;
+    private PointLight sun;
+    private Vector3f playerWalkDirection, enemyWalkDirection;
+    private boolean left, right, up, down;
+    private Vector3f camDir, camLeft;
+    private Vector3f knockDirection, bulletDirection;
+    private Player player;
+    private ArrayList<Enemy> enemies;
+    private Weapon rayGun;
+    private GameHUD gameHUD;
+    private AudioNode wave_snd;
+    private boolean debugMode;
+    private float tpf;
+    private int enemiesPerWave;
+    private ColorOverlayFilter bloodOverlay;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -99,11 +100,12 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
-        this.physics = this.stateManager.getState(BulletAppState.class);
+        this.bulletAppState = this.stateManager.getState(BulletAppState.class);
         this.viewPort = this.app.getViewPort();
         this.cam = this.app.getCamera();
         this.flyCam = this.stateManager.getState(FlyCamAppState.class).getCamera();
         this.inputManager = this.app.getInputManager();
+
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
         initPhysics();
@@ -127,8 +129,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
+
+        tpf = 0;
+        enemiesPerWave = 1;
         spawnEnemyWave();
-        flyCam.setEnabled(true);
     }
 
     private void initPhysics() {
@@ -165,7 +169,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rootNode.addLight(sun);
     }
 
-    public void initShadow() {
+    private void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
 
         PointLightShadowRenderer dlsr = new PointLightShadowRenderer(assetManager, SHADOW_SIZE);
@@ -184,13 +188,14 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         camDir = new Vector3f();
         camLeft = new Vector3f();
 
+        flyCam.setEnabled(true);
         flyCam.setMoveSpeed(0);
         flyCam.setZoomSpeed(0);
 
-        player = new Player(assetManager, bulletAppState, new Vector3f(0, 20f, 0));
+        player = new Player(assetManager, bulletAppState, PLAYER_HEALTH, new Vector3f(0, 20f, 0));
         rootNode.attachChild(player);
 
-        rayGun = new Weapon(assetManager);
+        rayGun = new Weapon(assetManager, WEAPON_ENERGY);
         rootNode.attachChild(rayGun);
     }
 
@@ -216,10 +221,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
 
-        cof = new ColorOverlayFilter();
-        cof.setColor(ColorRGBA.Red);
+        bloodOverlay = new ColorOverlayFilter();
+        bloodOverlay.setColor(ColorRGBA.Red);
 
-        fpp.addFilter(cof);
+        fpp.addFilter(bloodOverlay);
         fpp.addFilter(bloom);
         fpp.addFilter(fxaa);
         fpp.addFilter(cartoony);
@@ -248,19 +253,17 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(analogListener, "Shoot");
+
+        inputManager.addMapping("Exit", new KeyTrigger(KeyInput.KEY_ESCAPE));
+        inputManager.addListener(analogListener, "Exit");
     }
 
-    public void initAudio() {
+    private void initAudio() {
         wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
         wave_snd.setPositional(false);
         wave_snd.setLooping(false);
         wave_snd.setVolume(0.75f);
         rootNode.attachChild(wave_snd);
-    }
-
-    public void gotHitEffect() {
-        hitTimer = 0;
-        cof.setEnabled(true);
     }
 
     @Override
@@ -274,22 +277,18 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
         if (enemies.isEmpty()) {
             player.restoreHealth();
-
-            enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
-            spawnEnemyWave();
+            player.addSurvivedWave();
+            gameHUD.updateScore(player.getKills() * SCORE_PER_KILL, player.getSurvivedWaves());
 
             wave_snd.play();
-            player.waveCounter++;
-        }
-
-        hitTimer += tpf;
-        if (hitTimer > 0.1f) {
-            cof.setEnabled(false);
+            enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
+            spawnEnemyWave();
         }
     }
 
-    public void updatePlayer() {
+    private void updatePlayer() {
         if (player.knockBackTimer > KNOCKBACK_TIME) {
+            bloodOverlay.setEnabled(false);
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
             camLeft.set(cam.getLeft()).multLocal(PLAYER_SPEED);
             playerWalkDirection.set(0, 0, 0);
@@ -315,21 +314,22 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
             player.movePawn(playerWalkDirection);
         } else {
+            bloodOverlay.setEnabled(true);
             player.knockBackTimer += tpf;
-            player.knockBack(knockDirection);
+            player.knockPawnBack(knockDirection);
         }
 
         Vector3f playerLoc = player.getWorldTranslation();
         if (cam.getLocation().distance(playerLoc) > 0.1f) {
-            player.isMoving = true;
+            player.isMoving(true);
         } else {
-            player.isMoving = false;
+            player.isMoving(false);
         }
 
         cam.setLocation(playerLoc);
     }
 
-    public void updateEnemy() {
+    private void updateEnemy() {
         Vector3f playerLoc = player.getWorldTranslation();
 
         for (Enemy e : enemies) {
@@ -346,9 +346,8 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             enemyWalkDirection.set(moveX, 0, moveZ);
 
             if (player.knockBackTimer > KNOCKBACK_TIME) {
-                if (enemyLoc.distance(playerLoc) <= 5) {
+                if (enemyLoc.distance(playerLoc) <= ENEMY_RANGE) {
                     knockDirection = new Vector3f(enemyWalkDirection);
-                    gotHitEffect();
                     if (player.gotKilled(ENEMY_DAMAGE)) {
                         //this.stop();
                     }
@@ -358,42 +357,55 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             }
 
             if (e.knockBackTimer > KNOCKBACK_TIME) {
-                if (enemyLoc.distance(playerLoc) > 5) {
+                if (enemyLoc.distance(playerLoc) > ENEMY_RANGE) {
                     e.jump();
                     e.movePawn(enemyWalkDirection);
                 }
             } else {
                 e.knockBackTimer += tpf;
-                e.knockBack(bulletDirection);
+                e.knockPawnBack(bulletDirection);
             }
 
             e.lookAt(new Vector3f(playerLoc.x, 0, playerLoc.z), new Vector3f(0, 1, 0));
         }
     }
 
-    public void updateWeapon(float tpf) {
+    private void updateWeapon(float tpf) {
         Vector3f gunLoc = cam.getLocation().add(cam.getDirection().mult(3));
         rayGun.setLocalTranslation(gunLoc);
         rayGun.setLocalRotation(cam.getRotation());
 
-        rayGun.increaseTimer(tpf);
-        if (player.isShootingTimer > 1) {
-            rayGun.restoreEnergy(player.isMoving);
-        }
-        player.isShootingTimer += tpf;
+        rayGun.increaseTimers(tpf);
+        rayGun.restoreEnergy(player.isMoving());
     }
 
-    public void updateGameHUD() {
+    private void updateGameHUD() {
         float percentageEnergy = ((rayGun.getEnergy() / 50f));
         float percentageHealth = ((player.getHealth() / 100f));
         gameHUD.updateBars(percentageEnergy, percentageHealth);
-        gameHUD.updateScore(player.killCounter * SCORE_PER_KILL, player.waveCounter);
         if (debugMode) {
             app.setDisplayStatView(true);
             app.setDisplayFps(true);
         } else {
             app.setDisplayStatView(false);
             app.setDisplayFps(false);
+        }
+    }
+
+    private void spawnEnemyWave() {
+        for (int i = 0; i < enemiesPerWave; i++) {
+            Vector3f randomLoc;
+            Vector3f playerLoc = player.getWorldTranslation();
+
+            do {
+                float locX = FastMath.nextRandomInt(-190, 490);
+                float locZ = FastMath.nextRandomInt(-305, 95);
+                randomLoc = new Vector3f(locX, 150f, locZ);
+            } while (randomLoc.distance(playerLoc) < 210f);
+
+            Enemy e = new Enemy(assetManager, bulletAppState, ENEMY_HEALTH, randomLoc);
+            enemies.add(e);
+            rootNode.attachChild(e);
         }
     }
     private ActionListener actionListener = new ActionListener() {
@@ -440,27 +452,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             }
         }
     };
-
-    public void spawnEnemyWave() {
-        for (int i = 0; i < enemiesPerWave; i++) {
-            Vector3f randomLoc;
-            Vector3f playerLoc = player.getWorldTranslation();
-
-            do {
-                float locX = FastMath.nextRandomInt(-190, 490);
-                float locZ = FastMath.nextRandomInt(-305, 95);
-                randomLoc = new Vector3f(locX, 150f, locZ);
-            } while (randomLoc.distance(playerLoc) < 210f);
-
-            Enemy e = new Enemy(assetManager, bulletAppState, randomLoc);
-            enemies.add(e);
-            rootNode.attachChild(e);
-        }
-    }
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-                player.isShootingTimer = 0;
                 if (rayGun.shoot()) {
                     float spread = rayGun.getSpread();
 
@@ -477,6 +471,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
                     rootNode.attachChild(addBullet);
                 }
             }
+
+            if (binding.equals("Exit")) {
+                exit(false);
+            }
         }
     };
 
@@ -487,12 +485,21 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             if (e.gotKilled(WEAPON_DAMAGE)) {
                 e.killEffect(bulletAppState);
                 enemies.remove(e);
-                player.killCounter++;
+                player.addKill();
+                gameHUD.updateScore(player.getKills() * SCORE_PER_KILL, player.getSurvivedWaves());
             }
 
             Bullet b = (Bullet) event.getNodeB();
             bulletDirection = b.getDirection();
             b.removeBullet();
+        }
+    }
+
+    private void exit(boolean dead) {
+        if (dead) {
+            //show score and go back to menu
+        } else {
+            //go back to menu
         }
     }
 }

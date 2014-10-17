@@ -13,27 +13,27 @@ import com.jme3.math.Vector3f;
  */
 public class Player extends LivingThing {
 
-    public int killCounter;
-    public int waveCounter;
-    public boolean isMoving;
-    public AudioNode jump_snd;
-    public float isShootingTimer;
+    private int maxHealth;
+    private int killCounter;
+    private int waveCounter;
+    private boolean moving;
+    private AudioNode jump_snd;
 
-    public Player(AssetManager assetManager, BulletAppState bulletAppState, Vector3f spawnLocation) {
+    public Player(AssetManager assetManager, BulletAppState bulletAppState, int maxHealth, Vector3f spawnLocation) {
         super();
 
         this.setName("Player");
         initCharacterControl(bulletAppState, spawnLocation);
         initAudio(assetManager);
 
-        health = 100f;
+        this.maxHealth = maxHealth;
+        health = maxHealth;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 3f;
-        isShootingTimer = 0;
+
         killCounter = 0;
         waveCounter = 0;
-
-        isMoving = false;
+        moving = false;
     }
 
     private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
@@ -54,13 +54,37 @@ public class Player extends LivingThing {
         jump_snd.setVolume(0.75f);
         this.attachChild(jump_snd);
     }
-    
+
     public void restoreHealth() {
-        health = 100f;
+        health = maxHealth;
     }
-    
+
     public void groan() {
         jump_snd.stop();
         jump_snd.play();
+    }
+
+    public int getKills() {
+        return killCounter;
+    }
+
+    public void addKill() {
+        killCounter++;
+    }
+
+    public int getSurvivedWaves() {
+        return waveCounter;
+    }
+
+    public void addSurvivedWave() {
+        waveCounter++;
+    }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void isMoving(boolean isMoving) {
+        moving = isMoving;
     }
 }

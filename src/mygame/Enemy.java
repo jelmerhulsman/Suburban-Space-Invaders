@@ -24,11 +24,11 @@ public class Enemy extends LivingThing {
     private Material beam_mat;
     private Geometry beam_geometry;
 
-    public Enemy(AssetManager assetManager, BulletAppState bulletAppState, Vector3f spawnLocation) {
+    public Enemy(AssetManager assetManager, BulletAppState bulletAppState, int maxHealth, Vector3f spawnLocation) {
         super();
-        
+
         this.setLocalTranslation(spawnLocation);
-        
+
         this.setName("Enemy");
         initModel(assetManager);
         initCharacterControl(bulletAppState, spawnLocation);
@@ -37,7 +37,7 @@ public class Enemy extends LivingThing {
         initGeometry();
         initPhysicsControl();
 
-        health = 100f;
+        health = maxHealth;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 1f;
     }
@@ -80,7 +80,7 @@ public class Enemy extends LivingThing {
 
     public void killEffect(BulletAppState bulletAppState) {
         model.removeFromParent();
-        
+
         pawnControl.setEnabled(false);
         pawnControl.destroy();
         this.removeControl(pawnControl);

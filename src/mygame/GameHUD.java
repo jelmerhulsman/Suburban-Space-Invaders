@@ -15,17 +15,15 @@ public class GameHUD {
 
     BitmapText energyText, healthText, scoreText, waveText;
     Picture healthbarInline, energybarInline;
-    
     final int posBarsY = 20;
     final int posBarsX = 1;
-    
 
     public GameHUD(AssetManager assetManager, Node guiNode, int crossHairSize) {
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
         initCrossHair(assetManager, guiNode, crossHairSize);
     }
-    
+
     private void initBars(AssetManager assetManager, Node guiNode) {
         Picture healthbarOutline = new Picture("HUD bar_outline");
         healthbarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
@@ -55,17 +53,16 @@ public class GameHUD {
         guiNode.attachChild(energybarOutline);
         guiNode.attachChild(energybarInline);
     }
-    
-    private void initScore(AssetManager assetManager, Node guiNode)
-    {
+
+    private void initScore(AssetManager assetManager, Node guiNode) {
         BitmapFont guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        
+
         scoreText = new BitmapText(guiFont, false);
         scoreText.setSize(guiFont.getCharSet().getRenderedSize());
         scoreText.setText("Score : 0");
-        scoreText.setLocalTranslation(Display.getWidth() - 150 , scoreText.getLineHeight(), 0);
+        scoreText.setLocalTranslation(Display.getWidth() - 150, scoreText.getLineHeight(), 0);
         guiNode.attachChild(scoreText);
-        
+
         waveText = new BitmapText(guiFont, false);
         waveText.setSize(guiFont.getCharSet().getRenderedSize());
         waveText.setText("Waves survived : 0");
@@ -94,9 +91,8 @@ public class GameHUD {
         healthbarInline.setWidth(120 * percentageHealth);
         healthbarInline.setPosition(10 + ((1 - percentageHealth * 10)), posBarsY + 30);
     }
-    
-    public void updateScore(int score, int waves)
-    {
+
+    public void updateScore(int score, int waves) {
         scoreText.setText("Score : " + score);
         waveText.setText("Waves survived : " + waves);
     }

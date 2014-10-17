@@ -12,26 +12,32 @@ import com.jme3.scene.Spatial;
  */
 public class Weapon extends Node {
 
+    //final variables
+    final private float FIRE_RATE = 0.2f;
+    final private int MAX_ENERGY = 50;
+    final private float RECHARGE_RATE = 0.6f;
+    final private float SPREAD = 0.3f;
+    //variables
     private AudioNode bullet_snd;
     private AudioNode empty_snd;
-    private float currentEnergy;
-    private float fireTimer;
+    private boolean isShooting;
+    private int maxEnergy;
+    private int energy;
     private float energyTimer;
-    //finals
-    final float FIRE_RATE = 0.2f;
-    final float RECHARGE_RATE = 0.6f;
-    final float SPREAD = 0.3f;
+    private float firingTimer;
 
-    public Weapon(AssetManager assetManager) {
+    public Weapon(AssetManager assetManager, int maxEnergy) {
         super();
-        
+
         this.setName("Weapon");
         initModel(assetManager);
         initAudio(assetManager);
-        
+
+        isShooting = false;
+        this.maxEnergy = maxEnergy;
+        energy = maxEnergy;
         energyTimer = 0;
-        fireTimer = 0;
-        currentEnergy = 50f;
+        firingTimer = 0;
     }
 
     private void initModel(AssetManager assetManager) {
@@ -54,44 +60,45 @@ public class Weapon extends Node {
     }
 
     public float getEnergy() {
-        return currentEnergy;
+        return energy;
     }
 
     public float getSpread() {
         return SPREAD;
     }
 
-    public void increaseTimer(float tpf) {
+    public void increaseTimers(float tpf) {
         energyTimer += tpf;
-        fireTimer += tpf;
+        firingTimer += tpf;
     }
 
     public void restoreEnergy(boolean isMoving) {
-        if (energyTimer >= RECHARGE_RATE && currentEnergy < 50) {
+        if (energyTimer >= RECHARGE_RATE && energy < maxEnergy && !isShooting) {
             if (isMoving) {
-                currentEnergy++;
-            } else {
-                currentEnergy += 0.5f;
+                energy++;
             }
+            energy++;
             energyTimer = 0;
         }
     }
 
     public boolean shoot() {
-        if (fireTimer >= FIRE_RATE && currentEnergy > 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+        if (firingTimer >= FIRE_RATE && energy > 0 && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             bullet_snd.stop();
             bullet_snd.play();
 
-            currentEnergy--;
+            energy--;
+            firingTimer = 0;
 
-            fireTimer = 0;
+            isShooting = true;
             return true;
-        } else if (fireTimer >= FIRE_RATE && currentEnergy == 0f && empty_snd.getStatus() == AudioSource.Status.Stopped) {
+        } else if (firingTimer >= FIRE_RATE && energy == 0 && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             empty_snd.play();
 
-            fireTimer = 0;
+            firingTimer = 0;
         }
 
+        isShooting = false;
         return false;
     }
 }

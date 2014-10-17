@@ -11,7 +11,8 @@ import com.jme3.scene.Node;
  */
 public class LivingThing extends Node {
 
-    protected float health, knockBackJumpSpeed, knockBackWeakness;
+    protected int health;
+    protected float knockBackJumpSpeed, knockBackWeakness;
     protected CharacterControl pawnControl;
     protected CapsuleCollisionShape capsuleShape;
     protected float knockBackTimer = 1;
@@ -23,10 +24,6 @@ public class LivingThing extends Node {
         return health;
     }
 
-    public CharacterControl getCharacterControl() {
-        return pawnControl;
-    }
-
     public void movePawn(Vector3f direction) {
         try {
             pawnControl.setWalkDirection(direction);
@@ -36,7 +33,7 @@ public class LivingThing extends Node {
         }
     }
 
-    public void knockBack(Vector3f direction) {
+    public void knockPawnBack(Vector3f direction) {
         Vector3f knockDirection = new Vector3f(direction);
         knockDirection = knockDirection.mult(knockBackWeakness);
         movePawn(knockDirection);
