@@ -31,6 +31,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.post.filters.ColorOverlayFilter;
 import com.jme3.post.filters.FXAAFilter;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.Camera;
@@ -65,9 +66,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private GameHUD gameHUD;
     private PointLight sun;
     private float tpf = 0;
+    private float hitTimer = 0;
     int enemiesPerWave = 1;
     private ArrayList<Enemy> enemies;
-    private float isShootingTimer;
     //finals
     final float KNOCKBACK_TIME = 0.2f;
     final boolean ENABLE_SHADOWS = false;
@@ -88,11 +89,12 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private Camera cam;
     private FlyByCamera flyCam;
     private InputManager inputManager;
+    private ColorOverlayFilter cof;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        
+
         this.app = (SimpleApplication) app; // can cast Application to something more specific
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
@@ -137,9 +139,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     }
 
     private void initScene() {
-        //assetManager.registerLocator("town.zip", ZipLocator.class);
-        //town = assetManager.loadModel("main.scene");
-
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
@@ -212,13 +211,15 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
 
         FXAAFilter fxaa = new FXAAFilter();
-        fxaa.setReduceMul(0.0f);
-        fxaa.setSubPixelShift(0.0f);
 
         CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
 
+        cof = new ColorOverlayFilter();
+        cof.setColor(ColorRGBA.Red);
+
+        fpp.addFilter(cof);
         fpp.addFilter(bloom);
         fpp.addFilter(fxaa);
         fpp.addFilter(cartoony);
@@ -257,6 +258,11 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rootNode.attachChild(wave_snd);
     }
 
+    public void gotHitEffect() {
+        hitTimer = 0;
+        cof.setEnabled(true);
+    }
+
     @Override
     public void update(float tpf) {
         this.tpf = tpf;
@@ -268,12 +274,17 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
         if (enemies.isEmpty()) {
             player.restoreHealth();
-            
+
             enemiesPerWave = (int) ((enemiesPerWave + 1f) * 1.5f);
             spawnEnemyWave();
-            
+
             wave_snd.play();
             player.waveCounter++;
+        }
+
+        hitTimer += tpf;
+        if (hitTimer > 0.1f) {
+            cof.setEnabled(false);
         }
     }
 
@@ -337,6 +348,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             if (player.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) <= 5) {
                     knockDirection = new Vector3f(enemyWalkDirection);
+                    gotHitEffect();
                     if (player.gotKilled(ENEMY_DAMAGE)) {
                         //this.stop();
                     }
@@ -365,9 +377,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rayGun.setLocalRotation(cam.getRotation());
 
         rayGun.increaseTimer(tpf);
-        if(isShootingTimer > 1)
-        rayGun.restoreEnergy(player.isMoving);
-        isShootingTimer += tpf;
+        if (player.isShootingTimer > 1) {
+            rayGun.restoreEnergy(player.isMoving);
+        }
+        player.isShootingTimer += tpf;
     }
 
     public void updateGameHUD() {
@@ -447,7 +460,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-                isShootingTimer = 0;
+                player.isShootingTimer = 0;
                 if (rayGun.shoot()) {
                     float spread = rayGun.getSpread();
 

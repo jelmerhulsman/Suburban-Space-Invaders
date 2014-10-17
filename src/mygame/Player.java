@@ -17,6 +17,7 @@ public class Player extends LivingThing {
     public int waveCounter;
     public boolean isMoving;
     public AudioNode jump_snd;
+    public float isShootingTimer;
 
     public Player(AssetManager assetManager, BulletAppState bulletAppState, Vector3f spawnLocation) {
         super();
@@ -28,7 +29,7 @@ public class Player extends LivingThing {
         health = 100f;
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 3f;
-
+        isShootingTimer = 0;
         killCounter = 0;
         waveCounter = 0;
 
