@@ -67,6 +67,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private float tpf = 0;
     int enemiesPerWave = 1;
     private ArrayList<Enemy> enemies;
+    private float isShootingTimer;
     //finals
     final float KNOCKBACK_TIME = 0.2f;
     final boolean ENABLE_SHADOWS = false;
@@ -364,7 +365,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rayGun.setLocalRotation(cam.getRotation());
 
         rayGun.increaseTimer(tpf);
+        if(isShootingTimer > 1)
         rayGun.restoreEnergy(player.isMoving);
+        isShootingTimer += tpf;
     }
 
     public void updateGameHUD() {
@@ -444,7 +447,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
-
+                isShootingTimer = 0;
                 if (rayGun.shoot()) {
                     float spread = rayGun.getSpread();
 
