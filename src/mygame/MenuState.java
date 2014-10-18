@@ -5,6 +5,7 @@ import com.jme3.app.FlyCamAppState;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.input.FlyByCamera;
@@ -36,6 +37,7 @@ public class MenuState extends AbstractAppState implements ScreenController {
     private Nifty nifty;
     public Screen screen;
     public Window startMenu;
+    public AudioNode menuMusic;
 
     public MenuState(Main app) {
         this.app = app;
@@ -55,6 +57,7 @@ public class MenuState extends AbstractAppState implements ScreenController {
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
         startMenu();
+        //startMenuMusic();
     }
 
     public void startGame() {
@@ -71,6 +74,16 @@ public class MenuState extends AbstractAppState implements ScreenController {
         nifty.fromXml("Interface/MenuNifty.xml", "start", ggs);
         nifty.gotoScreen("start");
         viewPort.addProcessor(niftyDisplay);
+    }
+    
+    public void startMenuMusic()
+    {
+        menuMusic = new AudioNode(assetManager, "Sounds/Menu_FX.wav", false);
+        menuMusic.setPositional(false);
+        menuMusic.setLooping(true);
+        menuMusic.setVolume(0.5f);
+        rootNode.attachChild(menuMusic);
+        menuMusic.play();
     }
 
     public void bind(Nifty nifty, Screen screen) {

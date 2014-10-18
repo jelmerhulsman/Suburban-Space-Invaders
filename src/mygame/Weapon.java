@@ -46,13 +46,13 @@ public class Weapon extends Node {
     }
 
     private void initAudio(AssetManager assetManager) {
-        bullet_snd = new AudioNode(assetManager, "Sounds/space_gun.wav", false);
+        bullet_snd = new AudioNode(assetManager, "Sounds/Weapon/space_gun.wav", false);
         bullet_snd.setPositional(false);
         bullet_snd.setLooping(false);
         bullet_snd.setVolume(0.75f);
         this.attachChild(bullet_snd);
 
-        empty_snd = new AudioNode(assetManager, "Sounds/no_energy.wav", false);
+        empty_snd = new AudioNode(assetManager, "Sounds/Weapon/no_energy.wav", false);
         empty_snd.setPositional(false);
         empty_snd.setLooping(false);
         empty_snd.setVolume(0.75f);

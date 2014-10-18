@@ -19,4 +19,11 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         stateManager.attach(new MenuState(this));
     }
+    
+    
+    @Override
+    public void simpleUpdate(float tpf){
+        listener.setLocation(cam.getLocation());
+        listener.setRotation(cam.getRotation());
+    }
 }

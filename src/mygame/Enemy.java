@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
@@ -8,6 +9,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -23,6 +25,10 @@ public class Enemy extends LivingThing {
     private RigidBodyControl deathControl;
     private Material beam_mat;
     private Geometry beam_geometry;
+    private AudioNode hit1_snd, hit2_snd;
+    private AudioNode aliendeath_snd;
+    private AudioNode alienjump_snd;
+    
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState, int maxHealth, Vector3f spawnLocation) {
         super();
@@ -33,6 +39,7 @@ public class Enemy extends LivingThing {
         initModel(assetManager);
         initCharacterControl(bulletAppState, spawnLocation);
 
+        initAudio(assetManager);
         initMaterial(assetManager);
         initGeometry();
         initPhysicsControl();
@@ -46,6 +53,44 @@ public class Enemy extends LivingThing {
         // Model extents -> x:5, y:2.5, z:4.5
         model = assetManager.loadModel("Models/Alien/Alien.j3o");
         this.attachChild(model);
+    }
+
+    public void initAudio(AssetManager assetManager) {
+        hit1_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Hit1.wav", false);
+        hit1_snd.setPositional(true);
+        hit1_snd.setLooping(false);
+        hit1_snd.setReverbEnabled(false);
+        hit1_snd.setRefDistance(30f);
+        hit1_snd.setMaxDistance(1000f);
+        hit1_snd.setVolume(4f);
+        this.attachChild(hit1_snd);
+
+        hit2_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Hit2.wav", false);
+        hit2_snd.setPositional(true);
+        hit2_snd.setLooping(false);
+        hit2_snd.setReverbEnabled(false);
+        hit2_snd.setRefDistance(30f);
+        hit2_snd.setMaxDistance(1000f);
+        hit2_snd.setVolume(4f);
+        this.attachChild(hit2_snd);
+
+        aliendeath_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Dead.wav", false);
+        aliendeath_snd.setPositional(true);
+        aliendeath_snd.setLooping(false);
+        aliendeath_snd.setReverbEnabled(false);
+        aliendeath_snd.setRefDistance(30f);
+        aliendeath_snd.setMaxDistance(1000f);
+        aliendeath_snd.setVolume(8f);
+        this.attachChild(aliendeath_snd);
+
+        alienjump_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Spring.wav", false);
+        alienjump_snd.setPositional(true);
+        alienjump_snd.setLooping(false);
+        alienjump_snd.setReverbEnabled(false);
+        alienjump_snd.setRefDistance(30f);
+        alienjump_snd.setMaxDistance(1000f);
+        alienjump_snd.setVolume(0.6f);
+        this.attachChild(alienjump_snd);
     }
 
     private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
@@ -79,6 +124,9 @@ public class Enemy extends LivingThing {
     }
 
     public void killEffect(BulletAppState bulletAppState) {
+        aliendeath_snd.setLocalTranslation(this.getLocalTranslation());
+        aliendeath_snd.play();
+
         model.removeFromParent();
 
         pawnControl.setEnabled(false);
@@ -93,5 +141,24 @@ public class Enemy extends LivingThing {
 
         bulletAppState.getPhysicsSpace().add(deathControl);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
+    }
+
+    @Override
+    public boolean gotKilled(float damage) {
+        float randomSound = FastMath.rand.nextFloat();
+        if (randomSound < 0.5) {
+            hit1_snd.setLocalTranslation(this.getLocalTranslation());
+            hit1_snd.play();
+        } else {
+            hit2_snd.setLocalTranslation(this.getLocalTranslation());
+            hit2_snd.play();
+        }
+        return super.gotKilled(damage);
+    }
+
+    @Override
+    public boolean jump() {
+        alienjump_snd.play();
+        return super.jump();
     }
 }

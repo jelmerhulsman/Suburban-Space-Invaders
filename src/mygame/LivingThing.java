@@ -65,7 +65,6 @@ public class LivingThing extends Node {
                 return true;
             }
         }
-
         return false;
     }
 }

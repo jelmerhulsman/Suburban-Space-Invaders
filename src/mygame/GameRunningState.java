@@ -91,6 +91,8 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     private float tpf;
     private int enemiesPerWave;
     private ColorOverlayFilter bloodOverlay;
+    private AudioNode attack1_snd, attack2_snd, attack3_snd, attack4_snd, attack5_snd;
+    private AudioNode themeSong;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -133,6 +135,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         tpf = 0;
         enemiesPerWave = 1;
         spawnEnemyWave();
+        themeSong.play();
     }
 
     private void initPhysics() {
@@ -259,11 +262,64 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     }
 
     private void initAudio() {
+        
+        themeSong = new AudioNode(assetManager, "Sounds/Main_Theme_Loop.wav", false);
+        themeSong.setPositional(false);
+        themeSong.setLooping(true);
+        themeSong.setVolume(0.5f);
+        rootNode.attachChild(themeSong);
+        
         wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
         wave_snd.setPositional(false);
         wave_snd.setLooping(false);
-        wave_snd.setVolume(0.75f);
+        wave_snd.setVolume(0.5f);
         rootNode.attachChild(wave_snd);
+        
+        attack1_snd = new AudioNode(assetManager, "Sounds/Alien/Attack1.wav", false);
+        attack1_snd.setPositional(true);
+        attack1_snd.setLooping(false);
+        attack1_snd.setReverbEnabled(false);
+        attack1_snd.setRefDistance(30f);
+        attack1_snd.setMaxDistance(1000f);
+        attack1_snd.setVolume(1.5f);
+        rootNode.attachChild(attack1_snd);
+
+        attack2_snd = new AudioNode(assetManager, "Sounds/Alien/Attack2.wav", false);
+        attack2_snd.setPositional(true);
+        attack2_snd.setLooping(false);
+        attack2_snd.setReverbEnabled(false);
+        attack2_snd.setRefDistance(30f);
+        attack2_snd.setMaxDistance(1000f);
+        attack2_snd.setVolume(1.5f);
+        rootNode.attachChild(attack2_snd);
+        
+        attack3_snd = new AudioNode(assetManager, "Sounds/Alien/Attack3.wav", false);
+        attack3_snd.setPositional(true);
+        attack3_snd.setLooping(false);
+        attack3_snd.setReverbEnabled(false);
+        attack3_snd.setRefDistance(30f);
+        attack3_snd.setMaxDistance(1000f);
+        attack3_snd.setVolume(1.5f);
+        rootNode.attachChild(attack3_snd);
+        
+        attack4_snd = new AudioNode(assetManager, "Sounds/Alien/Attack4.wav", false);
+        attack4_snd.setPositional(true);
+        attack4_snd.setLooping(false);
+        attack4_snd.setReverbEnabled(false);
+        attack4_snd.setRefDistance(30f);
+        attack4_snd.setMaxDistance(1000f);
+        attack4_snd.setVolume(1.5f);
+        rootNode.attachChild(attack4_snd);
+        
+        attack5_snd = new AudioNode(assetManager, "Sounds/Alien/Attack5.wav", false);
+        attack5_snd.setPositional(true);
+        attack5_snd.setLooping(false);
+        attack5_snd.setReverbEnabled(false);
+        attack5_snd.setRefDistance(30f);
+        attack5_snd.setMaxDistance(1000f);
+        attack5_snd.setVolume(1.5f);
+        rootNode.attachChild(attack5_snd);
+        
     }
 
     @Override
@@ -296,20 +352,25 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             if (!(left && right)) {
                 if (left) {
                     playerWalkDirection.addLocal(camLeft.x, 0, camLeft.z);
+                    player.playWalkSound();
                 } else if (right) {
                     playerWalkDirection.addLocal(camLeft.x * -1, 0, camLeft.z * -1);
+                    player.playWalkSound();
                 }
             }
             if (!(up && down)) {
                 if (up) {
                     playerWalkDirection.addLocal(camDir.x, 0, camDir.z);
+                    player.playWalkSound();
                 } else if (down) {
                     playerWalkDirection.addLocal(camDir.x * -1, 0, camDir.z * -1);
+                    player.playWalkSound();
                 }
             }
 
             if ((up && left) || (up && right) || (down && left) || (down && right)) {
                 playerWalkDirection = playerWalkDirection.multLocal(FastMath.sqrt(PLAYER_SPEED));
+                player.playWalkSound();
             }
 
             player.movePawn(playerWalkDirection);
@@ -325,8 +386,40 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         } else {
             player.isMoving(false);
         }
-
         cam.setLocation(playerLoc);
+        app.getListener().setLocation(cam.getLocation());
+        app.getListener().setRotation(cam.getRotation());
+    }
+    
+    public void playAttackSound(Vector3f location)
+    {
+        float randomSound = FastMath.rand.nextFloat();
+        
+        if(randomSound < 0.2f)
+        {
+            attack1_snd.setLocalTranslation(location);
+            attack1_snd.play();
+        }
+        else if(randomSound < 0.4f)
+        {
+            attack2_snd.setLocalTranslation(location);
+            attack2_snd.play();
+        }
+        else if(randomSound < 0.6f)
+        {
+            attack3_snd.setLocalTranslation(location);
+            attack3_snd.play();
+        }
+        else if(randomSound < 0.8f)
+        {
+            attack4_snd.setLocalTranslation(location);
+            attack4_snd.play();
+        }
+        else
+        {
+            attack5_snd.setLocalTranslation(location);
+            attack5_snd.play();
+        }
     }
 
     private void updateEnemy() {
@@ -347,6 +440,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
 
             if (player.knockBackTimer > KNOCKBACK_TIME) {
                 if (enemyLoc.distance(playerLoc) <= ENEMY_RANGE) {
+                    playAttackSound(enemyLoc);
                     knockDirection = new Vector3f(enemyWalkDirection);
                     if (player.gotKilled(ENEMY_DAMAGE)) {
                         //this.stop();
