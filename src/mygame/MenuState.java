@@ -62,7 +62,7 @@ public class MenuState extends AbstractAppState implements ScreenController {
 
     public void startGame() {
         stateManager.attach(new GameRunningState());
-        System.out.print("Booting up game!");
+        System.out.println("Booting up game!");
         nifty.exit();
     }
 

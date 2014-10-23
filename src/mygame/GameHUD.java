@@ -14,9 +14,13 @@ import org.lwjgl.opengl.Display;
 public class GameHUD {
 
     BitmapText energyText, healthText, scoreText, waveText;
-    Picture healthbarInline, energybarInline;
-    final int posBarsY = 20;
-    final int posBarsX = 1;
+    Picture inlineHealthBar, inlineEnergyBar;
+    final int HEALTH_BAR_WIDTH = 300;
+    final int HEALTH_BAR_X = 10 + 3;
+    final int HEALTH_BAR_Y = (Display.getHeight() - 10) - 27;
+    final int ENERGY_BAR_WIDTH = 200;
+    final int ENERGY_BAR_X = 10 + 29;
+    final int ENERGY_BAR_Y = (Display.getHeight() - 10) - 40;
 
     public GameHUD(AssetManager assetManager, Node guiNode, int crossHairSize) {
         initBars(assetManager, guiNode);
@@ -25,33 +29,29 @@ public class GameHUD {
     }
 
     private void initBars(AssetManager assetManager, Node guiNode) {
-        Picture healthbarOutline = new Picture("HUD bar_outline");
-        healthbarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
-        healthbarInline = new Picture("HUD bar_inline");
-        healthbarInline.setImage(assetManager, "Textures/healthbar_inline.png", true);
-        Picture energybarOutline = new Picture("HUD bar_outline");
-        energybarOutline.setImage(assetManager, "Textures/bar_outline.png", true);
-        energybarInline = new Picture("HUD bar_inline");
-        energybarInline.setImage(assetManager, "Textures/energybar_inline.png", true);
 
-        healthbarOutline.setWidth(120);
-        healthbarOutline.setHeight(20);
-        healthbarInline.setWidth(120);
-        healthbarInline.setHeight(20);
-        energybarOutline.setWidth(120);
-        energybarOutline.setHeight(20);
-        energybarInline.setWidth(120);
-        energybarInline.setHeight(20);
+        inlineHealthBar = new Picture("Bar");
+        inlineHealthBar.setImage(assetManager, "Textures/bar_health.png", true);
+        inlineHealthBar.setWidth(HEALTH_BAR_WIDTH);
+        inlineHealthBar.setHeight(24);
+        inlineHealthBar.setPosition(HEALTH_BAR_X, HEALTH_BAR_Y);
+        guiNode.attachChild(inlineHealthBar);
 
-        healthbarOutline.setPosition(posBarsX, posBarsY + 30);
-        healthbarInline.setPosition(posBarsX, posBarsY + 30);
-        energybarOutline.setPosition(posBarsX, posBarsY);
-        energybarInline.setPosition(posBarsX, posBarsY);
+        inlineEnergyBar = new Picture("Bar");
+        inlineEnergyBar.setImage(assetManager, "Textures/bar_energy.png", true);
+        inlineEnergyBar.setWidth(ENERGY_BAR_WIDTH);
+        inlineEnergyBar.setHeight(10);
+        inlineEnergyBar.setPosition(ENERGY_BAR_X, ENERGY_BAR_Y);
+        guiNode.attachChild(inlineEnergyBar);
 
-        guiNode.attachChild(healthbarOutline);
-        guiNode.attachChild(healthbarInline);
-        guiNode.attachChild(energybarOutline);
-        guiNode.attachChild(energybarInline);
+        Picture outlineBar = new Picture("Bar");
+        outlineBar.setImage(assetManager, "Textures/bar.png", true);
+        outlineBar.setWidth(308);
+        outlineBar.setHeight(43);
+        float barX = 10;
+        float barY = (Display.getHeight() - 10) - 43;
+        outlineBar.setPosition(barX, barY);
+        guiNode.attachChild(outlineBar);
     }
 
     private void initScore(AssetManager assetManager, Node guiNode) {
@@ -60,40 +60,37 @@ public class GameHUD {
         scoreText = new BitmapText(guiFont, false);
         scoreText.setSize(guiFont.getCharSet().getRenderedSize());
         scoreText.setText("Score : 0");
-        scoreText.setLocalTranslation(Display.getWidth() - 150, scoreText.getLineHeight(), 0);
+        scoreText.setLocalTranslation(10, 100, 0);
         guiNode.attachChild(scoreText);
 
         waveText = new BitmapText(guiFont, false);
         waveText.setSize(guiFont.getCharSet().getRenderedSize());
         waveText.setText("Waves survived : 0");
-        waveText.setLocalTranslation(Display.getWidth() - 300, waveText.getLineHeight(), 0);
+        waveText.setLocalTranslation(10, 80, 0);
         guiNode.attachChild(waveText);
     }
 
     public void initCrossHair(AssetManager assetManager, Node guiNode, int size) {
-        Picture pic = new Picture("HUD Picture");
-        pic.setImage(assetManager, "Textures/neon_crosshair.png", true);
+        Picture crosshair = new Picture("HUD Picture");
+        crosshair.setImage(assetManager, "Textures/neon_crosshair.png", true);
 
-        pic.setWidth(size);
-        pic.setHeight(size);
+        crosshair.setWidth(size);
+        crosshair.setHeight(size);
 
         float width = Display.getWidth() / 2 - size / 2;
         float height = Display.getHeight() / 2 - size / 2;
-        pic.setPosition(width, height);
+        crosshair.setPosition(width, height);
 
-        guiNode.attachChild(pic);
+        guiNode.attachChild(crosshair);
     }
 
-    public void updateBars(float percentageEnergy, float percentageHealth) {
-        energybarInline.setWidth(120 * percentageEnergy);
-        energybarInline.setPosition(10 + ((1 - percentageEnergy * 10)), posBarsY);
-
-        healthbarInline.setWidth(120 * percentageHealth);
-        healthbarInline.setPosition(10 + ((1 - percentageHealth * 10)), posBarsY + 30);
+    public void updateBars(float percentageHealth, float percentageEnergy) {
+        inlineHealthBar.setWidth(HEALTH_BAR_WIDTH * percentageHealth);
+        inlineEnergyBar.setWidth(ENERGY_BAR_WIDTH * percentageEnergy);
     }
 
-    public void updateScore(int score, int waves) {
-        scoreText.setText("Score : " + score);
-        waveText.setText("Waves survived : " + waves);
+    public void updateScore(int kills, int waves) {
+        scoreText.setText("KILLS : " + kills);
+        waveText.setText("WAVES SURVIVED : " + waves);
     }
 }

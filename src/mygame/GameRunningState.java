@@ -224,8 +224,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
 
-        bloodOverlay = new ColorOverlayFilter();
-        bloodOverlay.setColor(ColorRGBA.Red);
+        bloodOverlay = new ColorOverlayFilter(ColorRGBA.Red);
 
         fpp.addFilter(bloodOverlay);
         fpp.addFilter(bloom);
@@ -474,9 +473,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     }
 
     private void updateGameHUD() {
-        float percentageEnergy = ((rayGun.getEnergy() / 50f));
-        float percentageHealth = ((player.getHealth() / 100f));
-        gameHUD.updateBars(percentageEnergy, percentageHealth);
+        float percentageHealth = player.getHealth() / PLAYER_HEALTH;
+        float percentageEnergy = rayGun.getEnergy() / WEAPON_ENERGY;
+        gameHUD.updateBars(percentageHealth, percentageEnergy);
+        gameHUD.updateScore(player.getKills(), player.getSurvivedWaves());
         if (debugMode) {
             app.setDisplayStatView(true);
             app.setDisplayFps(true);
@@ -580,7 +580,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
                 e.killEffect(bulletAppState);
                 enemies.remove(e);
                 player.addKill();
-                gameHUD.updateScore(player.getKills() * SCORE_PER_KILL, player.getSurvivedWaves());
             }
 
             Bullet b = (Bullet) event.getNodeB();
