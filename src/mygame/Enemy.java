@@ -37,7 +37,7 @@ public class Enemy extends LivingThing {
 
         this.setName("Enemy");
         initModel(assetManager);
-        initCharacterControl(bulletAppState, spawnLocation);
+        initCharacterControl(bulletAppState);
 
         initAudio(assetManager);
         initMaterial(assetManager);
@@ -96,7 +96,7 @@ public class Enemy extends LivingThing {
     }
 
     //Initializes character control for the class
-    private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
+    private void initCharacterControl(BulletAppState bulletAppState) {
         CylinderCollisionShape collisionShape = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
         pawnControl = new CharacterControl(collisionShape, 0.05f);
         pawnControl.setJumpSpeed(7.5f);
@@ -141,8 +141,9 @@ public class Enemy extends LivingThing {
         model.removeFromParent();
 
         pawnControl.setEnabled(false);
-        pawnControl.destroy();
         this.removeControl(pawnControl);
+        pawnControl.destroy();
+
 
         this.attachChild(beam_geometry);
         this.addControl(deathControl);

@@ -106,7 +106,8 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         this.cam = this.app.getCamera();
         this.flyCam = this.stateManager.getState(FlyCamAppState.class).getCamera();
         this.inputManager = this.app.getInputManager();
-
+        this.app.getStateManager().getState(MenuState.class).menuMusic.stop();
+        this.app.getStateManager().getState(MenuState.class).cleanup();
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
         initPhysics();
@@ -232,8 +233,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         bloodOverlay = new ColorOverlayFilter(ColorRGBA.Red);
         fpp.addFilter(bloodOverlay);
         fpp.addFilter(bloom);
-        fpp.addFilter(fxaa);
         fpp.addFilter(cartoony);
+        fpp.addFilter(fxaa);
+
 
         viewPort.addProcessor(fpp);
     }
@@ -454,7 +456,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
                     playAttackSound(enemyLoc);
                     knockDirection = new Vector3f(enemyWalkDirection);
                     if (player.gotKilled(ENEMY_DAMAGE)) {
-                        //this.stop();
                     }
                 }
             } else {
