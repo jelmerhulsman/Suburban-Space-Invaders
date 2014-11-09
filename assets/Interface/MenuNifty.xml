@@ -3,11 +3,17 @@
     <useControls filename="nifty-default-controls.xml"/> 
     <useStyles filename="nifty-default-styles.xml"/> 
     <screen id="start" controller="mygame.MenuState">
-        <layer id="layer" childLayout="center">
-            <panel id="panel" height="100%" width="35%" align="center" valign="center" backgroundColor="#f60f" childLayout="center" visibleToMouse="true">
-                <control name="button" id="startbutton" width="100%" height="5%" visisbleToMouse="true" label="Start">
+        <layer id="foreground" childLayout="vertical" backgroundColor="#FFFFFF">
+            <panel id="panel_top" height="75%" width="25%" align="center" childLayout="center">
+                <image filename="Textures/logo.png" align="center">
+                </image>  
+            </panel>
+            <panel id="panel_mid" height="25%" width="100%" align="center" childLayout="center">  
+                <control name="button" id="startbutton" height="25%" width="25%" valign="center" childLayout="center"  visisbleToMouse="true" label="Start">
                     <interact onClick="startGame()"/> 
                 </control>
+                    <image filename="Textures/NHLlogo.jpg" align="right">
+                </image>  
             </panel>
         </layer>
     </screen>

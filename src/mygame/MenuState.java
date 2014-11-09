@@ -7,36 +7,30 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioRenderer;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.input.FlyByCamera;
 import com.jme3.input.InputManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.Window;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 /**
- *
+ * The menustate of the game.
  * @author Bralts & Hulsman
  */
 public class MenuState extends AbstractAppState implements ScreenController {
 
     public Node rootNode;
     public Main app;
-    public MenuState GUI;
     public AssetManager assetManager;
     private AppStateManager stateManager;
-    private BulletAppState physics;
     private FlyByCamera flyCam;
     private InputManager inputManager;
     private AudioRenderer audioRenderer;
     private ViewPort viewPort;
     private Nifty nifty;
-    public Screen screen;
-    public Window startMenu;
     public AudioNode menuMusic;
 
     public MenuState(Main app) {
@@ -51,20 +45,25 @@ public class MenuState extends AbstractAppState implements ScreenController {
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
-        this.physics = this.stateManager.getState(BulletAppState.class);
         this.flyCam = this.stateManager.getState(FlyCamAppState.class).getCamera();
         this.viewPort = this.app.getViewPort();
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
         startMenu();
-        startMenuMusic();
+        //startMenuMusic();
     }
 
+    /**
+     * Starts the gamerunning-state and properly exits the Nifty menu
+     */
     public void startGame() {
-            stateManager.attach(new GameRunningState());
-            nifty.exit();
+        stateManager.attach(new GameRunningState());
+        nifty.exit();
     }
 
+    /**
+     * Initialize the menu using data from the xml file
+     */
     public void startMenu() {
         flyCam.setEnabled(false);
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort);
@@ -75,6 +74,9 @@ public class MenuState extends AbstractAppState implements ScreenController {
         viewPort.addProcessor(niftyDisplay);
     }
 
+    /**
+     * Starts the menu music However unable to stop music due to a nifty bug
+     */
     public void startMenuMusic() {
         menuMusic = new AudioNode(assetManager, "Sounds/Menu_FX.wav", false);
         menuMusic.setPositional(false);
@@ -84,13 +86,22 @@ public class MenuState extends AbstractAppState implements ScreenController {
         //menuMusic.play();
     }
 
+    /**
+     * Abstract method
+     */
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
     }
 
+    /**
+     * Abstract method
+     */
     public void onStartScreen() {
     }
 
+    /**
+     * Abstract method
+     */
     public void onEndScreen() {
     }
 }

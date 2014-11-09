@@ -7,6 +7,7 @@ import com.jme3.scene.Node;
 
 /**
  * Living thing class, super of player and enemy class
+ *
  * @author Bralts & Hulsman
  */
 public class LivingThing extends Node {
@@ -19,18 +20,20 @@ public class LivingThing extends Node {
 
     public LivingThing() {
     }
-    
+
     /**
      * Returns health of this living thing
+     *
      * @return health
      */
     public float getHealth() {
         return health;
     }
-    
+
     /**
      * Moves the living thing in given direction
-     * @param direction 
+     *
+     * @param direction
      */
     public void movePawn(Vector3f direction) {
         try {
@@ -40,17 +43,18 @@ public class LivingThing extends Node {
             System.out.println("UNABLE TO MOVE! " + e.toString());
         }
     }
-    
+
     /**
      * Moves living thing in given knockback direction
-     * @param direction 
+     *
+     * @param direction
      */
     public void knockPawnBack(Vector3f direction) {
         Vector3f knockDirection = new Vector3f(direction);
         knockDirection = knockDirection.mult(knockBackWeakness);
         movePawn(knockDirection);
     }
-    
+
     /**
      * Trigger a small leap backwards for this living thing
      */
@@ -60,9 +64,10 @@ public class LivingThing extends Node {
         pawnControl.jump();
         pawnControl.setJumpSpeed(jumpSpeed);
     }
-    
+
     /**
      * Triggers a jump for this living thing
+     *
      * @return onGround
      */
     public boolean jump() {
@@ -73,9 +78,11 @@ public class LivingThing extends Node {
 
         return false;
     }
-    
+
     /**
-     * Substract damage from health and return whether this living thing is dead or not
+     * Substract damage from health and return whether this living thing is dead
+     * or not
+     *
      * @param damage
      * @return killed
      */

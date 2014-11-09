@@ -17,11 +17,17 @@ public class Main extends SimpleApplication {
     }
 
     @Override
+    /**
+     * First, boot up the menuState...
+     */
     public void simpleInitApp() {
         stateManager.attach(new MenuState(this));
     }
     
     @Override
+    /**
+     * Make sure the audioListener is properly moving with the player's location
+     */
     public void simpleUpdate(float tpf){
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());

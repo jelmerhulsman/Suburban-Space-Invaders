@@ -10,6 +10,7 @@ import com.jme3.math.Vector3f;
 
 /**
  * Player class
+ *
  * @author Bralts & Hulsman
  */
 public class Player extends LivingThing {
@@ -38,7 +39,7 @@ public class Player extends LivingThing {
         waveCounter = 0;
         moving = false;
     }
-    
+
     //Initializes character control for the class
     private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
         capsuleShape = new CapsuleCollisionShape(1f, 3.75f, 1);
@@ -50,7 +51,7 @@ public class Player extends LivingThing {
 
         pawnControl.setPhysicsLocation(spawnLocation);
     }
-    
+
     //Initializes audio for the class
     private void initAudio(AssetManager assetManager) {
         jump_snd = new AudioNode(assetManager, "Sounds/Player/Speler_spring.wav", false);
@@ -58,13 +59,13 @@ public class Player extends LivingThing {
         jump_snd.setLooping(false);
         jump_snd.setVolume(1f);
         this.attachChild(jump_snd);
-        
+
         walk1_snd = new AudioNode(assetManager, "Sounds/Player/Lopen1.wav", false);
         walk1_snd.setPositional(false);
         walk1_snd.setLooping(false);
         walk1_snd.setVolume(1f);
         this.attachChild(walk1_snd);
-        
+
         walk2_snd = new AudioNode(assetManager, "Sounds/Player/Lopen2.wav", false);
         walk2_snd.setPositional(false);
         walk2_snd.setLooping(false);
@@ -96,14 +97,14 @@ public class Player extends LivingThing {
         this.attachChild(hit4_snd);
 
     }
-    
+
     /**
      * Restores health of the player
      */
     public void restoreHealth() {
         health = maxHealth;
     }
-    
+
     /**
      * Trigger a groaning sound
      */
@@ -111,53 +112,57 @@ public class Player extends LivingThing {
         jump_snd.stop();
         jump_snd.play();
     }
-    
+
     /**
      * Return the amount of kills the player made
+     *
      * @return kills
      */
     public int getKills() {
         return killCounter;
     }
-    
+
     /**
      * Add a kill to the kill counter of the player
      */
     public void addKill() {
         killCounter++;
     }
-    
+
     /**
      * Return the amount of waves survived by the player
+     *
      * @return kills
      */
     public int getSurvivedWaves() {
         return waveCounter;
     }
-    
+
     /**
      * Add a wave to the wave counter of the player
      */
     public void addSurvivedWave() {
         waveCounter++;
     }
-    
+
     /**
      * Return whether the player is moving or not
-     * @return 
+     *
+     * @return
      */
     public boolean isMoving() {
         return moving;
     }
-    
+
     /**
      * Set the moving state of the player
-     * @param isMoving 
+     *
+     * @param isMoving
      */
     public void isMoving(boolean isMoving) {
         moving = isMoving;
     }
-    
+
     /**
      * Trigger walking sounds for the player
      */
@@ -171,9 +176,10 @@ public class Player extends LivingThing {
             walk2_snd.play();
         }
     }
-    
+
     /**
      * Plays random player hit sound and checks whether player dies or not
+     *
      * @param damage
      * @return killed
      */
