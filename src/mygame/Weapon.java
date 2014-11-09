@@ -7,6 +7,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
+ * Weapon class
  *
  * @author Bralts & Hulsman
  */
@@ -14,7 +15,6 @@ public class Weapon extends Node {
 
     //final variables
     final private float FIRE_RATE = 0.2f;
-    final private int MAX_ENERGY = 50;
     final private float RECHARGE_RATE = 0.6f;
     final private float SPREAD = 0.3f;
     //variables
@@ -40,11 +40,13 @@ public class Weapon extends Node {
         firingTimer = 0;
     }
 
+    //Initializes model for the class
     private void initModel(AssetManager assetManager) {
         Spatial model = assetManager.loadModel("Models/GrenadeLauncher/GrenadeLauncher.j3o");
         this.attachChild(model);
     }
 
+    //Initializes audio for the class
     private void initAudio(AssetManager assetManager) {
         bullet_snd = new AudioNode(assetManager, "Sounds/Weapon/space_gun.wav", false);
         bullet_snd.setPositional(false);
@@ -59,19 +61,39 @@ public class Weapon extends Node {
         this.attachChild(empty_snd);
     }
 
+    /**
+     * Returns the amount of energy this weapon has
+     *
+     * @return energy
+     */
     public float getEnergy() {
         return energy;
     }
 
+    /**
+     * Returns the amount of spread this weapon has
+     *
+     * @return spread
+     */
     public float getSpread() {
         return SPREAD;
     }
 
+    /**
+     * Increases the tpf timers
+     *
+     * @param tpf
+     */
     public void increaseTimers(float tpf) {
         energyTimer += tpf;
         firingTimer += tpf;
     }
 
+    /**
+     * Restores energy for this weapon, extra energy if the carrier moves
+     *
+     * @param isMoving
+     */
     public void restoreEnergy(boolean isMoving) {
         if (energyTimer >= RECHARGE_RATE && energy < maxEnergy && !isShooting) {
             if (isMoving) {
@@ -82,6 +104,11 @@ public class Weapon extends Node {
         }
     }
 
+    /**
+     * Checks wheter the gun is able to fire or not
+     *
+     * @return fire bullet
+     */
     public boolean shoot() {
         if (firingTimer >= FIRE_RATE && energy > 0 && empty_snd.getStatus() == AudioSource.Status.Stopped) {
             bullet_snd.stop();

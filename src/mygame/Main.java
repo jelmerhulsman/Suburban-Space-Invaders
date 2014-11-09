@@ -3,7 +3,8 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 
 /**
- *
+ * Little game about aliens invading the suburbs
+ * Your goal is to survive waves of aliens
  * @author Bralts & Hulsman
  */
 public class Main extends SimpleApplication {
@@ -19,7 +20,6 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         stateManager.attach(new MenuState(this));
     }
-    
     
     @Override
     public void simpleUpdate(float tpf){

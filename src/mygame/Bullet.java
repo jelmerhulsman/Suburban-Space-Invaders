@@ -13,7 +13,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Cylinder;
 
 /**
- *
+ * Bullet class
  * @author Bralts & Hulsman
  */
 public class Bullet extends Node {
@@ -35,13 +35,15 @@ public class Bullet extends Node {
         initGeometry();
         initPhysicsControl(bulletAppState);
     }
-
+    
+    //Initializes material for the class
     private void initMaterial(AssetManager assetManager) {
         bullet_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         bullet_mat.setColor("Color", ColorRGBA.Yellow);
         bullet_mat.setColor("GlowColor", ColorRGBA.Yellow);
     }
-
+    
+     //Initializes geometry for the class
     private void initGeometry() {
         bullet_geometry = new Geometry();
         Cylinder c = new Cylinder(25, 25, 0.075f, 1f, true);
@@ -51,7 +53,8 @@ public class Bullet extends Node {
 
         this.attachChild(bullet_geometry);
     }
-
+    
+     //Initializes physics control for the class
     private void initPhysicsControl(BulletAppState bulletAppState) {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         control = new RigidBodyControl(scs, 200f);
@@ -64,11 +67,18 @@ public class Bullet extends Node {
         bulletAppState.getPhysicsSpace().add(control);
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
-
+    
+    /**
+     * Returns the directon of this bullet
+     * @return direction
+     */
     public Vector3f getDirection() {
         return dir;
     }
-
+    
+    /**
+     * Remove this bullet
+     */
     public void removeBullet() {
         Vector3f farAway = new Vector3f(0, -20000f, 0);
         this.control.setPhysicsLocation(farAway);

@@ -16,7 +16,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 
 /**
- *
+ * Enemy class
  * @author Bralts & Hulsman
  */
 public class Enemy extends LivingThing {
@@ -28,7 +28,6 @@ public class Enemy extends LivingThing {
     private AudioNode hit1_snd, hit2_snd;
     private AudioNode aliendeath_snd;
     private AudioNode alienjump_snd;
-    
 
     public Enemy(AssetManager assetManager, BulletAppState bulletAppState, int maxHealth, Vector3f spawnLocation) {
         super();
@@ -48,13 +47,15 @@ public class Enemy extends LivingThing {
         knockBackJumpSpeed = 5f;
         knockBackWeakness = 1f;
     }
-
+    
+     //Initializes the model for the class
     private void initModel(AssetManager assetManager) {
         // Model extents -> x:5, y:2.5, z:4.5
         model = assetManager.loadModel("Models/Alien/Alien.j3o");
         this.attachChild(model);
     }
-
+    
+     //Initializes the sound for the class
     public void initAudio(AssetManager assetManager) {
         hit1_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Hit1.wav", false);
         hit1_snd.setPositional(true);
@@ -92,7 +93,8 @@ public class Enemy extends LivingThing {
         alienjump_snd.setVolume(0.6f);
         this.attachChild(alienjump_snd);
     }
-
+    
+     //Initializes character control for the class
     private void initCharacterControl(BulletAppState bulletAppState, Vector3f spawnLocation) {
         CylinderCollisionShape collisionShape = new CylinderCollisionShape(new Vector3f(1.5f, 2.5f, 1f), 1);
         pawnControl = new CharacterControl(collisionShape, 0.05f);
@@ -103,13 +105,15 @@ public class Enemy extends LivingThing {
         this.addControl(pawnControl);
         bulletAppState.getPhysicsSpace().add(pawnControl);
     }
-
+    
+     //Initializes material for the class
     private void initMaterial(AssetManager assetManager) {
         beam_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         beam_mat.setColor("Color", ColorRGBA.Cyan);
         beam_mat.setColor("GlowColor", ColorRGBA.Cyan);
     }
-
+    
+    //Initializes geomtery for the class
     private void initGeometry() {
         beam_geometry = new Geometry();
         Sphere s = new Sphere(25, 8, 8f);
@@ -117,12 +121,17 @@ public class Enemy extends LivingThing {
         beam_geometry.setMesh(s);
         beam_geometry.setMaterial(beam_mat);
     }
-
+    
+     //Initializes physics control for the class
     private void initPhysicsControl() {
         SphereCollisionShape scs = new SphereCollisionShape(0.075f);
         deathControl = new RigidBodyControl(scs, 200f);
     }
-
+    
+    /**
+     * Spawns a huge beam on location of this enemy (removes enemy)
+     * @param bulletAppState 
+     */
     public void killEffect(BulletAppState bulletAppState) {
         aliendeath_snd.setLocalTranslation(this.getLocalTranslation());
         aliendeath_snd.play();
@@ -143,6 +152,11 @@ public class Enemy extends LivingThing {
         bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
     }
 
+    /**
+     * Plays random enemy hit sound and checks whether enemy dies or not
+     * @param damage
+     * @return killed
+     */
     @Override
     public boolean gotKilled(float damage) {
         float randomSound = FastMath.rand.nextFloat();
@@ -155,7 +169,11 @@ public class Enemy extends LivingThing {
         }
         return super.gotKilled(damage);
     }
-
+    
+    /**
+     * Triggers jump for this enemy
+     * @return onGround
+     */
     @Override
     public boolean jump() {
         alienjump_snd.play();

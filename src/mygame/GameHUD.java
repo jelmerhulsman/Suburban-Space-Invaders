@@ -8,12 +8,12 @@ import com.jme3.ui.Picture;
 import org.lwjgl.opengl.Display;
 
 /**
- *
+ * HUD class, manages the game HUD
  * @author Bralts & Hulsman
  */
 public class GameHUD {
 
-    BitmapText energyText, healthText, scoreText, waveText;
+    BitmapText energyText, healthText, killsText, waveText;
     Picture inlineHealthBar, inlineEnergyBar;
     final int HEALTH_BAR_WIDTH = 300;
     final int HEALTH_BAR_X = 10 + 3;
@@ -25,9 +25,10 @@ public class GameHUD {
     public GameHUD(AssetManager assetManager, Node guiNode, int crossHairSize) {
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
-        initCrossHair(assetManager, guiNode, crossHairSize);
+        initCrosshair(assetManager, guiNode, crossHairSize);
     }
-
+    
+    //Initializes bars for the HUD
     private void initBars(AssetManager assetManager, Node guiNode) {
 
         inlineHealthBar = new Picture("Bar");
@@ -53,26 +54,52 @@ public class GameHUD {
         outlineBar.setPosition(barX, barY);
         guiNode.attachChild(outlineBar);
     }
-
+    
+    //Initializes score for the HUD
     private void initScore(AssetManager assetManager, Node guiNode) {
-        BitmapFont guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-
-        scoreText = new BitmapText(guiFont, false);
-        scoreText.setSize(guiFont.getCharSet().getRenderedSize());
-        scoreText.setText("Score : 0");
-        scoreText.setLocalTranslation(10, 100, 0);
-        guiNode.attachChild(scoreText);
-
+        final float SCALE_PICTURE = 0.4f;
+        final float SCALE_FONT = 1.5f;
+        
+        int width = 228;
+        int height = 68;
+        BitmapFont guiFont = assetManager.loadFont("Interface/Fonts/PokemonSolid.fnt");
+        Picture kills = new Picture("Score");
+        kills.setImage(assetManager, "Textures/text_kills.png", true);
+        kills.setWidth(width);
+        kills.setHeight(height);
+        kills.scale(SCALE_PICTURE);
+        kills.setLocalTranslation(10, 30, 0);
+        guiNode.attachChild(kills);
+        
+        killsText = new BitmapText(guiFont, false);
+        killsText.setSize(guiFont.getCharSet().getRenderedSize());
+        killsText.setText("0");
+        killsText.scale(SCALE_FONT);
+        killsText.setLocalTranslation(10, 10, 0);
+        guiNode.attachChild(killsText);
+        
+        width = 290;
+        height = 68;
+        Picture waves = new Picture("Waves");
+        waves.setImage(assetManager, "Textures/text_waves.png", true);
+        waves.setWidth(290);
+        waves.setHeight(68);
+        waves.scale(SCALE_PICTURE);
+        waves.setLocalTranslation(Display.getWidth() - width * SCALE_PICTURE - 10 , 30, 0);
+        guiNode.attachChild(waves);
+        
         waveText = new BitmapText(guiFont, false);
         waveText.setSize(guiFont.getCharSet().getRenderedSize());
-        waveText.setText("Waves survived : 0");
+        waveText.setText("0");
+        waveText.scale(SCALE_FONT);
         waveText.setLocalTranslation(10, 80, 0);
         guiNode.attachChild(waveText);
     }
-
-    public void initCrossHair(AssetManager assetManager, Node guiNode, int size) {
+    
+    //Initializes crosshair for the HUD
+    private void initCrosshair(AssetManager assetManager, Node guiNode, int size) {
         Picture crosshair = new Picture("HUD Picture");
-        crosshair.setImage(assetManager, "Textures/neon_crosshair.png", true);
+        crosshair.setImage(assetManager, "Textures/crosshair_neon.png", true);
 
         crosshair.setWidth(size);
         crosshair.setHeight(size);
@@ -83,14 +110,24 @@ public class GameHUD {
 
         guiNode.attachChild(crosshair);
     }
-
+    
+    /**
+     * Updates the bars in the hud
+     * @param percentageHealth
+     * @param percentageEnergy 
+     */
     public void updateBars(float percentageHealth, float percentageEnergy) {
         inlineHealthBar.setWidth(HEALTH_BAR_WIDTH * percentageHealth);
         inlineEnergyBar.setWidth(ENERGY_BAR_WIDTH * percentageEnergy);
     }
-
+    
+    /**
+     * Updates the score in the hud
+     * @param kills
+     * @param waves 
+     */
     public void updateScore(int kills, int waves) {
-        scoreText.setText("KILLS : " + kills);
-        waveText.setText("WAVES SURVIVED : " + waves);
+        killsText.setText("" + kills);
+        waveText.setText("" + waves);
     }
 }

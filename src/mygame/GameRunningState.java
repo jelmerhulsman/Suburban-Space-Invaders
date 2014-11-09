@@ -48,8 +48,8 @@ import java.util.ArrayList;
  * @author Bralts & Hulsman
  */
 public class GameRunningState extends AbstractAppState implements PhysicsCollisionListener {
-    //app basic variables
 
+    //app basic variables
     private SimpleApplication app;
     private Node rootNode;
     private AssetManager assetManager;
@@ -97,7 +97,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-
         this.app = (SimpleApplication) app; // can cast Application to something more specific
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
@@ -138,6 +137,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         themeSong.play();
     }
 
+    //Initializes physics for the game
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -145,12 +145,14 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
+    //Initializes scnene for the game
     private void initScene() {
         suburbs = assetManager.loadModel("Models/Suburbs/Suburbs.j3o");
         suburbs.scale(5f);
         rootNode.attachChild(suburbs);
     }
 
+    //Initializes scene controller for the game
     private void initSceneController() {
         CollisionShape suburbsShape = CollisionShapeFactory.createMeshShape(suburbs);
         suburbsControl = new RigidBodyControl(suburbsShape, 0f);
@@ -158,6 +160,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         bulletAppState.getPhysicsSpace().add(suburbsControl);
     }
 
+    //Initializes light for the game
     private void initLight() {
         BoundingBox suburbsBox = (BoundingBox) suburbs.getWorldBound();
 
@@ -172,6 +175,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rootNode.addLight(sun);
     }
 
+    //Initializes shadows for the game
     private void initShadow() {
         suburbs.setShadowMode(ShadowMode.CastAndReceive);
 
@@ -182,6 +186,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         viewPort.addProcessor(dlsr);
     }
 
+    //Initializes player for the game
     private void initPlayer() {
         playerWalkDirection = new Vector3f();
         left = false;
@@ -202,6 +207,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rootNode.attachChild(rayGun);
     }
 
+    //Initializes fog for the game
     public void initFog() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 
@@ -213,19 +219,17 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         viewPort.addProcessor(fpp);
     }
 
+    //Initializes various filters for the game
     private void initFilter() {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-
         BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
 
         FXAAFilter fxaa = new FXAAFilter();
-
         CartoonEdgeFilter cartoony = new CartoonEdgeFilter();
         cartoony.setEdgeWidth(1f);
         cartoony.setEdgeIntensity(0.5f);
 
         bloodOverlay = new ColorOverlayFilter(ColorRGBA.Red);
-
         fpp.addFilter(bloodOverlay);
         fpp.addFilter(bloom);
         fpp.addFilter(fxaa);
@@ -234,10 +238,12 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         viewPort.addProcessor(fpp);
     }
 
+    //Initializes game HUD for the game
     private void initGameHUD() {
         gameHUD = new GameHUD(assetManager, app.getGuiNode(), CROSSHAIR_SIZE);
     }
 
+    //Initializes the keys for the game
     private void initKeys() {
         inputManager.setCursorVisible(false);
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
@@ -260,20 +266,21 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         inputManager.addListener(analogListener, "Exit");
     }
 
+    //Initializes audio for the game
     private void initAudio() {
-        
+
         themeSong = new AudioNode(assetManager, "Sounds/Main_Theme_Loop.wav", false);
         themeSong.setPositional(false);
         themeSong.setLooping(true);
         themeSong.setVolume(0.5f);
         rootNode.attachChild(themeSong);
-        
+
         wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
         wave_snd.setPositional(false);
         wave_snd.setLooping(false);
         wave_snd.setVolume(0.5f);
         rootNode.attachChild(wave_snd);
-        
+
         attack1_snd = new AudioNode(assetManager, "Sounds/Alien/Attack1.wav", false);
         attack1_snd.setPositional(true);
         attack1_snd.setLooping(false);
@@ -291,7 +298,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         attack2_snd.setMaxDistance(1000f);
         attack2_snd.setVolume(1.5f);
         rootNode.attachChild(attack2_snd);
-        
+
         attack3_snd = new AudioNode(assetManager, "Sounds/Alien/Attack3.wav", false);
         attack3_snd.setPositional(true);
         attack3_snd.setLooping(false);
@@ -300,7 +307,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         attack3_snd.setMaxDistance(1000f);
         attack3_snd.setVolume(1.5f);
         rootNode.attachChild(attack3_snd);
-        
+
         attack4_snd = new AudioNode(assetManager, "Sounds/Alien/Attack4.wav", false);
         attack4_snd.setPositional(true);
         attack4_snd.setLooping(false);
@@ -309,7 +316,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         attack4_snd.setMaxDistance(1000f);
         attack4_snd.setVolume(1.5f);
         rootNode.attachChild(attack4_snd);
-        
+
         attack5_snd = new AudioNode(assetManager, "Sounds/Alien/Attack5.wav", false);
         attack5_snd.setPositional(true);
         attack5_snd.setLooping(false);
@@ -318,9 +325,14 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         attack5_snd.setMaxDistance(1000f);
         attack5_snd.setVolume(1.5f);
         rootNode.attachChild(attack5_snd);
-        
+
     }
 
+    /**
+     * Update loop for the game
+     *
+     * @param tpf
+     */
     @Override
     public void update(float tpf) {
         this.tpf = tpf;
@@ -341,6 +353,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         }
     }
 
+    /**
+     * Update loop for the player
+     */
     private void updatePlayer() {
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             bloodOverlay.setEnabled(false);
@@ -389,42 +404,39 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         app.getListener().setLocation(cam.getLocation());
         app.getListener().setRotation(cam.getRotation());
     }
-    
-    public void playAttackSound(Vector3f location)
-    {
+
+    /**
+     * Trigger a random attack sound on given location
+     *
+     * @param location
+     */
+    private void playAttackSound(Vector3f location) {
         float randomSound = FastMath.rand.nextFloat();
-        
-        if(randomSound < 0.2f)
-        {
+
+        if (randomSound < 0.2f) {
             attack1_snd.setLocalTranslation(location);
             attack1_snd.play();
-        }
-        else if(randomSound < 0.4f)
-        {
+        } else if (randomSound < 0.4f) {
             attack2_snd.setLocalTranslation(location);
             attack2_snd.play();
-        }
-        else if(randomSound < 0.6f)
-        {
+        } else if (randomSound < 0.6f) {
             attack3_snd.setLocalTranslation(location);
             attack3_snd.play();
-        }
-        else if(randomSound < 0.8f)
-        {
+        } else if (randomSound < 0.8f) {
             attack4_snd.setLocalTranslation(location);
             attack4_snd.play();
-        }
-        else
-        {
+        } else {
             attack5_snd.setLocalTranslation(location);
             attack5_snd.play();
         }
     }
 
+    /**
+     * Update loop for the enemies
+     */
     private void updateEnemy() {
-        Vector3f playerLoc = player.getWorldTranslation();
-
         for (Enemy e : enemies) {
+            Vector3f playerLoc = player.getWorldTranslation();
             Vector3f enemyLoc = e.getWorldTranslation();
             enemyWalkDirection.set(0, 0, 0);
             //app.fpsText.setText(Math.floor(enemyLoc.x) +", "+ Math.floor(enemyLoc.y) +", "+ Math.floor(enemyLoc.z));
@@ -463,6 +475,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         }
     }
 
+    /**
+     * Update loop for the weapon
+     */
     private void updateWeapon(float tpf) {
         Vector3f gunLoc = cam.getLocation().add(cam.getDirection().mult(3));
         rayGun.setLocalTranslation(gunLoc);
@@ -472,6 +487,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         rayGun.restoreEnergy(player.isMoving());
     }
 
+    /**
+     * Update loop for the game
+     */
     private void updateGameHUD() {
         float percentageHealth = player.getHealth() / PLAYER_HEALTH;
         float percentageEnergy = rayGun.getEnergy() / WEAPON_ENERGY;
@@ -486,6 +504,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         }
     }
 
+    /**
+     * Spawns new enemy wave
+     */
     private void spawnEnemyWave() {
         for (int i = 0; i < enemiesPerWave; i++) {
             Vector3f randomLoc;
@@ -502,6 +523,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             rootNode.attachChild(e);
         }
     }
+    /**
+     * Key listeners
+     */
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean keyPressed, float tpf) {
             if (binding.equals("Left")) {
@@ -546,6 +570,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             }
         }
     };
+    /**
+     * Key listeners
+     */
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String binding, float value, float tpf) {
             if (binding.equals("Shoot")) {
@@ -572,6 +599,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         }
     };
 
+    /**
+     * Collision checker for the bullets, enemies and the player
+     */
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
@@ -588,6 +618,11 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         }
     }
 
+    /**
+     * Exit the game on players dead or on players request
+     *
+     * @param dead
+     */
     private void exit(boolean dead) {
         if (dead) {
             //show score and go back to menu

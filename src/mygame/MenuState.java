@@ -57,13 +57,12 @@ public class MenuState extends AbstractAppState implements ScreenController {
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
         startMenu();
-        //startMenuMusic();
+        startMenuMusic();
     }
 
     public void startGame() {
-        stateManager.attach(new GameRunningState());
-        System.out.println("Booting up game!");
-        nifty.exit();
+            stateManager.attach(new GameRunningState());
+            nifty.exit();
     }
 
     public void startMenu() {
@@ -75,15 +74,14 @@ public class MenuState extends AbstractAppState implements ScreenController {
         nifty.gotoScreen("start");
         viewPort.addProcessor(niftyDisplay);
     }
-    
-    public void startMenuMusic()
-    {
+
+    public void startMenuMusic() {
         menuMusic = new AudioNode(assetManager, "Sounds/Menu_FX.wav", false);
         menuMusic.setPositional(false);
         menuMusic.setLooping(true);
         menuMusic.setVolume(0.5f);
         rootNode.attachChild(menuMusic);
-        menuMusic.play();
+        //menuMusic.play();
     }
 
     public void bind(Nifty nifty, Screen screen) {
