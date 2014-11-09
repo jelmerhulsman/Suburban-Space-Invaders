@@ -9,10 +9,10 @@
                 </image>  
             </panel>
             <panel id="panel_mid" height="25%" width="100%" align="center" childLayout="center">  
-                <control name="button" id="startbutton" height="25%" width="25%" valign="center" childLayout="center"  visisbleToMouse="true" label="Start">
+                <control name="button" id="startbutton" height="25%" width="15%" valign="center" childLayout="center"  visisbleToMouse="true" label="Start">
                     <interact onClick="startGame()"/> 
                 </control>
-                    <image filename="Textures/NHLlogo.jpg" align="right">
+                <image filename="Textures/NHLlogo.jpg" align="right">
                 </image>  
             </panel>
         </layer>
