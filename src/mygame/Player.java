@@ -184,7 +184,7 @@ public class Player extends LivingThing {
      * @return killed
      */
     @Override
-    public boolean gotKilled(float damage) {
+    public boolean gotHitAndKilled(float damage) {
         float randomSound = FastMath.rand.nextFloat();
         if (randomSound < 0.25f) {
             hit1_snd.setLocalTranslation(this.getLocalTranslation());
@@ -199,6 +199,6 @@ public class Player extends LivingThing {
             hit4_snd.setLocalTranslation(this.getLocalTranslation());
             hit4_snd.play();
         }
-        return super.gotKilled(damage);
+        return super.gotHitAndKilled(damage);
     }
 }

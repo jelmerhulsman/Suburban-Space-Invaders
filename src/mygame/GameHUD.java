@@ -3,7 +3,11 @@ package mygame;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import org.lwjgl.opengl.Display;
 
@@ -16,21 +20,23 @@ public class GameHUD {
 
     BitmapText energyText, healthText, killsText, waveText;
     Picture inlineHealthBar, inlineEnergyBar;
+    BitmapFont guiFont;
     final int HEALTH_BAR_WIDTH = 300;
-    final int HEALTH_BAR_X = 10 + 3;
-    final int HEALTH_BAR_Y = (Display.getHeight() - 10) - 27;
     final int ENERGY_BAR_WIDTH = 200;
-    final int ENERGY_BAR_X = 10 + 29;
-    final int ENERGY_BAR_Y = (Display.getHeight() - 10) - 40;
 
     public GameHUD(AssetManager assetManager, Node guiNode, int crossHairSize) {
+        guiFont = assetManager.loadFont("Interface/Fonts/PokemonSolid.fnt");
+        
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
-        initCrosshair(assetManager, guiNode, crossHairSize);
     }
 
     //Initializes bars for the HUD
     private void initBars(AssetManager assetManager, Node guiNode) {
+        final int HEALTH_BAR_X = 10 + 3;
+        final int HEALTH_BAR_Y = (Display.getHeight() - 10) - 27;
+        final int ENERGY_BAR_X = 10 + 29;
+        final int ENERGY_BAR_Y = (Display.getHeight() - 10) - 40;
 
         inlineHealthBar = new Picture("inHealthbar");
         inlineHealthBar.setImage(assetManager, "Textures/bar_health.png", true);
@@ -63,36 +69,40 @@ public class GameHUD {
 
         int width = 228;
         int height = 68;
-        BitmapFont guiFont = assetManager.loadFont("Interface/Fonts/PokemonSolid.fnt");
+        final float KILLS_X = 10f;
+        final float KILLS_Y = 30f;
         Picture kills = new Picture("Score");
         kills.setImage(assetManager, "Textures/text_kills.png", true);
         kills.setWidth(width);
         kills.setHeight(height);
         kills.scale(SCALE_PICTURE);
-        kills.setLocalTranslation(10, 30, 0);
+        kills.setLocalTranslation(KILLS_X, KILLS_Y, 0);
         guiNode.attachChild(kills);
 
         killsText = new BitmapText(guiFont, false);
         killsText.setSize(guiFont.getCharSet().getRenderedSize());
         killsText.setText("0");
         killsText.scale(SCALE_FONT);
-        killsText.setLocalTranslation(10, 25, 0);
+        killsText.setLocalTranslation(KILLS_X + (width * SCALE_PICTURE) / 2, KILLS_Y - 3, 0);
         guiNode.attachChild(killsText);
 
         width = 290;
+        height = 68;
+        final float WAVES_X = Display.getWidth() - (width * SCALE_PICTURE) - 10f;
+        final float WAVES_Y = 30f;
         Picture waves = new Picture("Waves");
         waves.setImage(assetManager, "Textures/text_waves.png", true);
-        waves.setWidth(290);
-        waves.setHeight(68);
+        waves.setWidth(width);
+        waves.setHeight(height);
         waves.scale(SCALE_PICTURE);
-        waves.setLocalTranslation(Display.getWidth() - width * SCALE_PICTURE - 10, 30, 0);
+        waves.setLocalTranslation(WAVES_X, WAVES_Y, 0);
         guiNode.attachChild(waves);
 
         waveText = new BitmapText(guiFont, false);
         waveText.setSize(guiFont.getCharSet().getRenderedSize());
         waveText.setText("0");
         waveText.scale(SCALE_FONT);
-        waveText.setLocalTranslation(Display.getWidth() - width * SCALE_PICTURE + 75, 25, 0);
+        waveText.setLocalTranslation(WAVES_X + (width * SCALE_PICTURE) / 2, WAVES_Y - 3, 0);
         guiNode.attachChild(waveText);
     }
 
@@ -131,5 +141,28 @@ public class GameHUD {
     public void updateScore(int kills, int waves) {
         killsText.setText("" + kills);
         waveText.setText("" + waves);
+    }
+    
+    /**
+     * Trigger game over screen
+     * @param assetManager
+     * @param guiNode 
+     */
+    public void gameOver(AssetManager assetManager, Node guiNode) {
+        Picture black = new Picture("HUD Picture");
+        black.setImage(assetManager, "Textures/black.jpg", false);
+        black.setWidth(Display.getWidth());
+        black.setHeight(Display.getHeight());
+        black.setPosition(0, 0);
+        guiNode.attachChild(black);
+        
+        BitmapText text = new BitmapText(guiFont, false);
+        text.setSize(guiFont.getCharSet().getRenderedSize());
+        text.setText("You lost! \n "
+                + "You killed " + killsText.getText() + " enemies. \n "
+                + "And you survided " + waveText.getText() + " waves!");
+        text.scale(2f);
+        text.setLocalTranslation(Display.getWidth() / 3, Display.getHeight() / 2, 0);
+        guiNode.attachChild(text);
     }
 }

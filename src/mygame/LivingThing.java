@@ -86,10 +86,12 @@ public class LivingThing extends Node {
      * @param damage
      * @return killed
      */
-    public boolean gotKilled(float damage) {
+    public boolean gotHitAndKilled(float damage) {
         if (health >= 0.1f) {
-            knockBackTimer = 0;
-            knockBackJump();
+            if (true) {
+                knockBackTimer = 0;
+                knockBackJump();
+            }
 
             health -= damage;
             if (health < 0.1f) {

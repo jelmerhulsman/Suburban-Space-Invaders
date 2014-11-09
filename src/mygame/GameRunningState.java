@@ -42,6 +42,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  *
@@ -75,6 +76,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     final private boolean ENABLE_SHADOWS = false;
     final private boolean ENABLE_FOG = false;
     //app variables
+    private boolean exit;
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
     private PointLight sun;
@@ -132,10 +134,10 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
 
+        exit = false;
         tpf = 0;
         enemiesPerWave = 1;
         spawnEnemyWave();
-        themeSong.play();
     }
 
     //Initializes physics for the game
@@ -190,6 +192,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     //Initializes player for the game
     private void initPlayer() {
         playerWalkDirection = new Vector3f();
+        knockDirection = new Vector3f();
         left = false;
         right = false;
         up = false;
@@ -274,8 +277,9 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         themeSong = new AudioNode(assetManager, "Sounds/Main_Theme_Loop.wav", false);
         themeSong.setPositional(false);
         themeSong.setLooping(true);
-        themeSong.setVolume(0.5f);
+        themeSong.setVolume(0.2f);
         rootNode.attachChild(themeSong);
+        themeSong.play();
 
         wave_snd = new AudioNode(assetManager, "Sounds/new_wave.wav", false);
         wave_snd.setPositional(false);
@@ -337,6 +341,13 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
      */
     @Override
     public void update(float tpf) {
+        if (exit) {
+            app.getTimer().reset();
+            while (app.getTimer().getTimeInSeconds() < 10f) {
+            }
+            app.stop();
+        }
+
         this.tpf = tpf;
 
         updatePlayer();
@@ -359,6 +370,13 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
      * Update loop for the player
      */
     private void updatePlayer() {
+        Vector3f playerLoc = player.getWorldTranslation();
+        if (playerLoc.y < -5f) {
+            if (player.gotHitAndKilled(PLAYER_HEALTH)) {
+                exit();
+            }
+        }
+
         if (player.knockBackTimer > KNOCKBACK_TIME) {
             bloodOverlay.setEnabled(false);
             camDir.set(cam.getDirection()).multLocal(PLAYER_SPEED);
@@ -396,7 +414,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             player.knockPawnBack(knockDirection);
         }
 
-        Vector3f playerLoc = player.getWorldTranslation();
         if (cam.getLocation().distance(playerLoc) > 0.1f) {
             player.isMoving(true);
         } else {
@@ -455,7 +472,8 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
                 if (enemyLoc.distance(playerLoc) <= ENEMY_RANGE) {
                     playAttackSound(enemyLoc);
                     knockDirection = new Vector3f(enemyWalkDirection);
-                    if (player.gotKilled(ENEMY_DAMAGE)) {
+                    if (player.gotHitAndKilled(ENEMY_DAMAGE)) {
+                        exit();
                     }
                 }
             } else {
@@ -595,7 +613,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             }
 
             if (binding.equals("Exit")) {
-                exit(false);
+                exit();
             }
         }
     };
@@ -607,7 +625,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         if (event.getNodeA() instanceof Enemy && event.getNodeB() instanceof Bullet) {
             Enemy e = (Enemy) event.getNodeA();
 
-            if (e.gotKilled(WEAPON_DAMAGE)) {
+            if (e.gotHitAndKilled(WEAPON_DAMAGE)) {
                 e.killEffect(bulletAppState);
                 enemies.remove(e);
                 player.addKill();
@@ -620,15 +638,11 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     }
 
     /**
-     * Exit the game on players dead or on players request
-     *
-     * @param dead
+     * Exit the game
      */
-    private void exit(boolean dead) {
-        if (dead) {
-            //show score and go back to menu
-        } else {
-            //go back to menu
-        }
+    private void exit() {
+        themeSong.stop();
+        gameHUD.gameOver(assetManager, app.getGuiNode());
+        exit = true;
     }
 }
