@@ -64,7 +64,7 @@ public class Enemy extends LivingThing {
         hit1_snd.setReverbEnabled(false);
         hit1_snd.setRefDistance(30f);
         hit1_snd.setMaxDistance(1000f);
-        hit1_snd.setVolume(4f);
+        hit1_snd.setVolume(5f);
         this.attachChild(hit1_snd);
 
         hit2_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Hit2.wav", false);
@@ -73,7 +73,7 @@ public class Enemy extends LivingThing {
         hit2_snd.setReverbEnabled(false);
         hit2_snd.setRefDistance(30f);
         hit2_snd.setMaxDistance(1000f);
-        hit2_snd.setVolume(4f);
+        hit2_snd.setVolume(5f);
         this.attachChild(hit2_snd);
 
         aliendeath_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Dead.wav", false);
@@ -82,7 +82,7 @@ public class Enemy extends LivingThing {
         aliendeath_snd.setReverbEnabled(false);
         aliendeath_snd.setRefDistance(30f);
         aliendeath_snd.setMaxDistance(1000f);
-        aliendeath_snd.setVolume(8f);
+        aliendeath_snd.setVolume(9f);
         this.attachChild(aliendeath_snd);
 
         alienjump_snd = new AudioNode(assetManager, "Sounds/Alien/Alien_Spring.wav", false);
@@ -91,7 +91,7 @@ public class Enemy extends LivingThing {
         alienjump_snd.setReverbEnabled(false);
         alienjump_snd.setRefDistance(30f);
         alienjump_snd.setMaxDistance(1000f);
-        alienjump_snd.setVolume(0.6f);
+        alienjump_snd.setVolume(0.75f);
         this.attachChild(alienjump_snd);
     }
 

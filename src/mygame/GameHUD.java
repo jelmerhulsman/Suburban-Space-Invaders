@@ -25,7 +25,7 @@ public class GameHUD {
 
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
-        initCrosshair(assetManager, 10);
+        initCrosshair(assetManager, 5);
 
         keymapping = new Picture("HUD Keymapping");
         keymapping.setImage(assetManager, "Textures/keymapping.png", true);
@@ -164,7 +164,7 @@ public class GameHUD {
      * @param guiNode
      */
     public void gameOver(AssetManager assetManager, Node guiNode) {
-        Picture black = new Picture("HUD Picture");
+        Picture black = new Picture("HUD BlackScreen");
         black.setImage(assetManager, "Textures/black.jpg", false);
         black.setWidth(Display.getWidth() * 2);
         black.setHeight(Display.getHeight() * 2);
@@ -174,9 +174,8 @@ public class GameHUD {
         BitmapText text = new BitmapText(guiFont, false);
         text.setSize(guiFont.getCharSet().getRenderedSize());
         text.setText("You lost! \n "
-                + "You killed " + killsText.getText() + " enemies. \n "
-                + "And you survided " + waveText.getText() + " waves!");
-        text.scale(2f);
+                + "You have killed " + killsText.getText() + " enemies. \n "
+                + "And you survived " + waveText.getText() + " waves!");
         text.setLocalTranslation(Display.getWidth() / 3, Display.getHeight() / 2, 0);
         guiNode.attachChild(text);
     }
