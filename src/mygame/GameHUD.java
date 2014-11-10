@@ -15,18 +15,19 @@ import org.lwjgl.opengl.Display;
 public class GameHUD {
 
     BitmapText energyText, healthText, killsText, waveText;
-    Picture inlineHealthBar, inlineEnergyBar, keymapping;
+    Picture inlineHealthBar, inlineEnergyBar, keymapping, crosshair;
     BitmapFont guiFont;
     final int HEALTH_BAR_WIDTH = 300;
     final int ENERGY_BAR_WIDTH = 200;
 
     public GameHUD(AssetManager assetManager, Node guiNode, int crossHairSize) {
         guiFont = assetManager.loadFont("Interface/Fonts/PokemonSolid.fnt");
-        
+
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
-        
-        keymapping = new Picture("HUD Picture");
+        initCrosshair(assetManager, 10);
+
+        keymapping = new Picture("HUD Keymapping");
         keymapping.setImage(assetManager, "Textures/keymapping.png", true);
         float width = Display.getWidth() * 0.9f;
         float height = Display.getHeight() * 0.9f;
@@ -114,8 +115,8 @@ public class GameHUD {
     }
 
     //Initializes crosshair for the HUD
-    private void initCrosshair(AssetManager assetManager, Node guiNode, int size) {
-        Picture crosshair = new Picture("HUD Picture");
+    private void initCrosshair(AssetManager assetManager, int size) {
+        crosshair = new Picture("HUD CrossHair");
         crosshair.setImage(assetManager, "Textures/crosshair_neon.png", true);
 
         crosshair.setWidth(size);
@@ -124,8 +125,6 @@ public class GameHUD {
         float width = Display.getWidth() / 2 - size / 2;
         float height = Display.getHeight() / 2 - size / 2;
         crosshair.setPosition(width, height);
-
-        guiNode.attachChild(crosshair);
     }
 
     /**
@@ -151,10 +150,11 @@ public class GameHUD {
     }
 
     /**
-     * Trigger stopIntro screen
+     * Stop intro screen
      */
     public void stopIntro(Node guiNode) {
         guiNode.detachChild(keymapping);
+        guiNode.attachChild(crosshair);
     }
 
     /**

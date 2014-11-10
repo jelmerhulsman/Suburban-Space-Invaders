@@ -346,25 +346,22 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             app.getTimer().reset();
             while (app.getTimer().getTimeInSeconds() < 10f) {
             }
-            
-            if (intro)
-            {
+
+            if (intro) {
                 gameHUD.stopIntro(app.getGuiNode());
                 run = true;
             }
-            
+
             if (exit) {
                 app.stop();
             }
         }
-        
-        if(!intro)
-        {
+
+        if (!intro) {
             intro();
         }
-        
-        this.tpf = tpf;
 
+        this.tpf = tpf;
         updatePlayer();
         updateEnemy();
         updateWeapon(tpf);
@@ -474,7 +471,6 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             Vector3f enemyLoc = e.getWorldTranslation();
             enemyWalkDirection.set(0, 0, 0);
             //app.fpsText.setText(Math.floor(enemyLoc.x) +", "+ Math.floor(enemyLoc.y) +", "+ Math.floor(enemyLoc.z));
-
             float moveX = FastMath.floor(playerLoc.x) - FastMath.floor(enemyLoc.x);
             float moveZ = FastMath.floor(playerLoc.z) - FastMath.floor(enemyLoc.z);
             float moveTotal = FastMath.abs(moveX) + FastMath.abs(moveZ);
@@ -651,7 +647,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             b.removeBullet();
         }
     }
-    
+
     /**
      * Intro to the game
      */

@@ -66,6 +66,7 @@ public class MenuState extends AbstractAppState implements ScreenController {
      * Initialize the menu using data from the xml file
      */
     public void startMenu() {
+        app.setDisplayFps(false);
         flyCam.setEnabled(false);
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort);
         nifty = niftyDisplay.getNifty();
