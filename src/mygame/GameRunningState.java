@@ -42,7 +42,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.shadow.PointLightShadowRenderer;
 import java.util.ArrayList;
-import java.util.Timer;
 
 /**
  *
@@ -76,7 +75,7 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
     final private boolean ENABLE_SHADOWS = false;
     final private boolean ENABLE_FOG = false;
     //app variables
-    private boolean exit;
+    private boolean intro, run, exit;
     private Spatial suburbs;
     private RigidBodyControl suburbsControl;
     private PointLight sun;
@@ -134,6 +133,8 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
         enemies = new ArrayList<Enemy>();
         enemyWalkDirection = new Vector3f();
 
+        intro = false;
+        run = false;
         exit = false;
         tpf = 0;
         enemiesPerWave = 1;
@@ -341,13 +342,27 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
      */
     @Override
     public void update(float tpf) {
-        if (exit) {
+        if ((intro && !run) || exit) {
             app.getTimer().reset();
             while (app.getTimer().getTimeInSeconds() < 10f) {
             }
-            app.stop();
+            
+            if (intro)
+            {
+                gameHUD.stopIntro(app.getGuiNode());
+                run = true;
+            }
+            
+            if (exit) {
+                app.stop();
+            }
         }
-
+        
+        if(!intro)
+        {
+            intro();
+        }
+        
         this.tpf = tpf;
 
         updatePlayer();
@@ -635,6 +650,14 @@ public class GameRunningState extends AbstractAppState implements PhysicsCollisi
             bulletDirection = b.getDirection();
             b.removeBullet();
         }
+    }
+    
+    /**
+     * Intro to the game
+     */
+    private void intro() {
+        intro = true;
+        run = false;
     }
 
     /**

@@ -3,11 +3,7 @@ package mygame;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import org.lwjgl.opengl.Display;
 
@@ -19,7 +15,7 @@ import org.lwjgl.opengl.Display;
 public class GameHUD {
 
     BitmapText energyText, healthText, killsText, waveText;
-    Picture inlineHealthBar, inlineEnergyBar;
+    Picture inlineHealthBar, inlineEnergyBar, keymapping;
     BitmapFont guiFont;
     final int HEALTH_BAR_WIDTH = 300;
     final int ENERGY_BAR_WIDTH = 200;
@@ -29,6 +25,17 @@ public class GameHUD {
         
         initBars(assetManager, guiNode);
         initScore(assetManager, guiNode);
+        
+        keymapping = new Picture("HUD Picture");
+        keymapping.setImage(assetManager, "Textures/keymapping.png", true);
+        float width = Display.getWidth() * 0.9f;
+        float height = Display.getHeight() * 0.9f;
+        keymapping.setWidth(width);
+        keymapping.setHeight(height);
+        width = Display.getWidth() / 2f - width / 2f;
+        height = Display.getHeight() / 2f - height / 2f;
+        keymapping.setPosition(width, height);
+        guiNode.attachChild(keymapping);
     }
 
     //Initializes bars for the HUD
@@ -142,20 +149,28 @@ public class GameHUD {
         killsText.setText("" + kills);
         waveText.setText("" + waves);
     }
-    
+
+    /**
+     * Trigger stopIntro screen
+     */
+    public void stopIntro(Node guiNode) {
+        guiNode.detachChild(keymapping);
+    }
+
     /**
      * Trigger game over screen
+     *
      * @param assetManager
-     * @param guiNode 
+     * @param guiNode
      */
     public void gameOver(AssetManager assetManager, Node guiNode) {
         Picture black = new Picture("HUD Picture");
         black.setImage(assetManager, "Textures/black.jpg", false);
-        black.setWidth(Display.getWidth());
-        black.setHeight(Display.getHeight());
+        black.setWidth(Display.getWidth() * 2);
+        black.setHeight(Display.getHeight() * 2);
         black.setPosition(0, 0);
         guiNode.attachChild(black);
-        
+
         BitmapText text = new BitmapText(guiFont, false);
         text.setSize(guiFont.getCharSet().getRenderedSize());
         text.setText("You lost! \n "
